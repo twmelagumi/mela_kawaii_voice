@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610012051">
+<link rel="stylesheet" href="assets/style.css?v=202610012118">
 <script>if(location.hash==="#songs") location.replace("songs.html");</script>
 </head>
 <body data-title-key="title">
@@ -85,7 +85,7 @@
   </div>
 </div>
 
-<script src="assets/common.js?v=202610012051"></script>
+<script src="assets/common.js?v=202610012118"></script>
 <script>
 /* ===== 聲音頁設定 ===== */
 // ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
@@ -178,13 +178,35 @@ function sheetToClips(text){
       title,quote:get(r,"quote"),note:get(r,"note"),tags:[...new Set(get(r,"tags").split(/[,，、\s]+/).map(x=>x.split(/[／\/]/)[0].replace(/^[#＃]/,"").trim()).filter(Boolean))].slice(0,12),
       streamDate:normDate(get(r,"date")),addedAt:2e12+i}; }).filter(Boolean);
 }
-async function loadAll(){
-  const tasks=[fetch("clips.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(d=>(Array.isArray(d)?d:d.clips||[]).filter(c=>c&&c.title&&c.id)).catch(()=>[])];
-  if(SHEET_CSV_URL) tasks.push(fetch(SHEET_CSV_URL+(SHEET_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()).then(r=>r.ok?r.text():"").then(sheetToClips).catch(e=>{ console.warn("sheet load failed",e); return []; }));
-  const lists=await Promise.all(tasks); const seen=new Set(); CLIPS=[];
-  for(const c of lists.flat()){ const key=(c.vid||c.url)+"@"+(c.start??""); if(seen.has(key)) continue; seen.add(key); CLIPS.push(c); }
+// Google 試算表 CSV 的快取：存在訪客瀏覽器（localStorage），SHEET_TTL 內不會再連 Google。
+// 過期時先用舊資料立刻顯示，再在背景抓新的，有變動才重畫。
+const SHEET_TTL = 5*60*1000; // 5 分鐘
+const SHEET_KEY = "mela-sheet:"+hash(SHEET_CSV_URL);
+function readSheetCache(){ try{ const c=JSON.parse(localStorage.getItem(SHEET_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
+function writeSheetCache(text){ try{ localStorage.setItem(SHEET_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} }
+async function fetchSheet(){
+  const r=await fetch(SHEET_CSV_URL+(SHEET_CSV_URL.includes("?")?"&":"?")+"_="+Date.now());
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const text=await r.text(); writeSheetCache(text); return text;
+}
+let jsonClips=[], sheetClips=[];
+function mergeClips(){
+  const seen=new Set(); CLIPS=[];
+  for(const c of [...jsonClips,...sheetClips]){ const key=(c.vid||c.url)+"@"+(c.start??""); if(seen.has(key)) continue; seen.add(key); CLIPS.push(c); }
   if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
   render();
+}
+async function loadAll(){
+  const jsonP=fetch("clips.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(d=>(Array.isArray(d)?d:d.clips||[]).filter(c=>c&&c.title&&c.id)).catch(()=>[]);
+  const cached=SHEET_CSV_URL?readSheetCache():null;
+  let sheetText="";
+  if(cached) sheetText=cached.text;                       // 有快取：先用快取，不等網路
+  else if(SHEET_CSV_URL) sheetText=await fetchSheet().catch(e=>{ console.warn("sheet load failed",e); return ""; });
+  jsonClips=await jsonP; sheetClips=sheetToClips(sheetText); mergeClips();
+  // 快取過期：背景更新，內容有變才重畫
+  if(cached&&Date.now()-cached.at>=SHEET_TTL){
+    fetchSheet().then(text=>{ if(text!==cached.text){ sheetClips=sheetToClips(text); mergeClips(); } }).catch(e=>console.warn("sheet refresh failed",e));
+  }
 }
 
 setLang(pickLang());
