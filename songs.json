@@ -7,10 +7,80 @@
     "streamDate": "2026-09-26"
   },
   {
-    "title": "喧げ★ぐるぐるTIME！",
+    "title": "騒げ★ぐるぐるTIME！",
     "artist": "アソビ★まわり隊！",
     "category": "original",
     "url": "https://www.youtube.com/watch?v=09PC6CQbHeQ",
     "streamDate": "2026-09-25"
+  },
+  {
+    "title": "すいみん不足",
+    "artist": "CHICKS",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:09:33",
+    "end": "00:13:10",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "モニタリング",
+    "artist": "DECO*27",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:17:50",
+    "end": "00:21:01",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "Sparkling Daydream",
+    "artist": "ZAQ",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:25:25",
+    "end": "00:29:42",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "フォニイ",
+    "artist": "ツミキ feat. 可不",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:34:00",
+    "end": "00:37:22",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "アイヲウタエ",
+    "artist": "春奈るな",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:43:00",
+    "end": "00:47:20",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "トウキョウ・シャンディ・ランデヴ",
+    "artist": "MAISONdes feat. 花譜, ツミキ",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "00:52:00",
+    "end": "00:55:15",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
+  },
+  {
+    "title": "Our Bright Parade",
+    "artist": "hololive IDOL PROJECT",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "start": "01:02:48",
+    "end": "01:07:19",
+    "note": "はじめての歌枠",
+    "streamDate": "2026-10-01"
   }
 ]
