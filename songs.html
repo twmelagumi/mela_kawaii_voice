@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610020008">
+<link rel="stylesheet" href="assets/style.css?v=202610020114">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -107,7 +107,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610020008"></script>
+<script src="assets/common.js?v=202610020114"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -220,7 +220,8 @@ function step(d){ if(!Q.ids.length) return; let i=Q.idx+d;
 function moveItem(i,d){ const j=i+d; if(j<0||j>=Q.ids.length) return; [Q.ids[i],Q.ids[j]]=[Q.ids[j],Q.ids[i]];
   if(Q.idx===i) Q.idx=j; else if(Q.idx===j) Q.idx=i; saveQueue(); renderQueue(); }
 function removeItem(i){ const wasNow=i===Q.idx; Q.ids.splice(i,1);
-  if(i<Q.idx) Q.idx--; else if(wasNow) Q.idx=Math.min(Q.idx,Q.ids.length-1)-1; // 讓「下一首」接到原本的下一首
+  // 刪掉正在播的歌時，指標退回前一格，這樣「下一首」（i）剛好就是原本排在它後面的歌
+  if(i<Q.idx||wasNow) Q.idx--;
   saveQueue(); renderQueue(); refreshAddButtons(); }
 function shuffleUpcoming(){ const head=Q.ids.slice(0,Q.idx+1), rest=Q.ids.slice(Q.idx+1);
   for(let i=rest.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [rest[i],rest[j]]=[rest[j],rest[i]]; }
@@ -246,9 +247,11 @@ function renderQueue(){
 // 只有「剛換歌超過 2 秒」而且「播放位置真的到了這首的結尾」才接下一首，避免一次跳兩首。
 window.onPlayerEnded=(c,p)=>{
   if(Date.now()-lastStartAt<2000) return;
-  const s=byId(Q.ids[Q.idx]); if(!s||!c||c.id!==s.id) return;
-  try{ const now=p.getCurrentTime(), endAt=s.end!=null?s.end:p.getDuration(); if(endAt&&now<endAt-3) return; }catch(e){}
-  if(Q.idx<Q.ids.length-1) startAt(Q.idx+1); else if(Q.repeat&&Q.ids.length) startAt(0); };
+  // 用「正在播的歌」(c) 判斷是否真的播完；它可能已經從清單刪掉了，所以不要求它還在 Q.idx 上
+  if(!c) return;
+  try{ const now=p.getCurrentTime(), endAt=c.end!=null?c.end:p.getDuration(); if(endAt&&now<endAt-3) return; }catch(e){}
+  const n=Q.idx+1;
+  if(n<Q.ids.length) startAt(n); else if(Q.repeat&&Q.ids.length) startAt(0); };
 window.onPlayerClosed=()=>renderQueue();
 
 /* ===== 事件 ===== */
