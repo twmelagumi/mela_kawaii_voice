@@ -1,0 +1,103 @@
+/* 熱千めら 聲音圖鑑 — shared styles for index.html (voices) and songs.html (songs).
+   Layout: header + page tabs, then each page's own content; playing opens a player sheet at the bottom. */
+:root{
+  --bg:#f1f5fa; --surface:#ffffff; --ink:#1d2836; --muted:#5f6d7e; --line:#d8e2ee;
+  --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#1f7ad0; --accent-soft:#e2f1ff; --wave:#b3c6da;
+  --f-display:"Zen Maru Gothic","Noto Sans TC","Noto Sans JP",system-ui,sans-serif;
+  --f-body:"Noto Sans TC","Noto Sans JP",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-code:"M PLUS 1 Code",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:14px; color-scheme:light;
+}
+html[lang="ja"]{--f-body:"Noto Sans JP","Noto Sans TC",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121821; --surface:#1b2330; --ink:#e8eff8; --muted:#9aa8b9; --line:#2d3a4b;
+  --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#7cc3ff; --accent-soft:#1a3350; --wave:#41546b; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+h1 .jp{color:var(--accent-text)}
+.sub{color:var(--muted);margin:6px 0 0;font-size:13px}
+.right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+@media (max-width:600px){.right{flex-direction:row;align-items:center;justify-content:space-between;width:100%}}
+.hrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.count{font-family:var(--f-code);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.count b{color:var(--ink);font-size:22px;font-weight:600}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
+.lang button{white-space:nowrap;border:none;background:transparent;padding:4px 12px;font-size:13px;border-radius:999px}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+button,.btn{font:inherit;cursor:pointer;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 16px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;line-height:1.2}
+button:hover,.btn:hover{border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 260px;min-width:0;position:relative}
+.search input{width:100%;padding:11px 16px 11px 40px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:var(--muted)}
+select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:5px 12px;background:transparent}
+.chip .n{font-family:var(--f-code);color:var(--muted);font-size:11px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] .n{color:var(--bg);opacity:.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pad{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.pad.playing{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.pad-top{display:flex;gap:12px;align-items:center}
+.play{flex:none;width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;border:none;padding:0}
+.play svg{width:20px;height:20px;fill:currentColor;margin-left:3px}
+.play:hover{transform:scale(1.06)}
+.wave{flex:1;min-width:0;height:38px;display:flex;align-items:center;gap:2px}
+.wave i{flex:1;background:var(--wave);border-radius:2px;min-height:3px}
+.pad:hover .wave i,.pad.playing .wave i{background:var(--accent)}
+.pad h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.35;overflow-wrap:anywhere}
+.quote{margin:0;font-size:14px;border-left:3px solid var(--accent-soft);padding-left:10px;overflow-wrap:anywhere}
+.note{margin:0;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.src{font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-text)}
+.ptags{display:flex;flex-wrap:wrap;gap:6px}
+.ptags button{font-size:12px;padding:2px 10px;border:none;background:var(--bg);color:var(--muted)}
+.ptags button:hover{color:var(--accent-text)}
+.pad-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.pad-foot a,.pad-foot button{font-size:12px;padding:5px 12px}
+.empty{grid-column:1/-1;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:28px 20px}
+.empty h2{margin:0 0 6px;font-family:var(--f-display);font-size:20px}
+.empty p{margin:0;color:var(--muted)}
+/* player sheet */
+.player{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.player-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:16px;align-items:start}
+.frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;background:#000;border-radius:10px;overflow:hidden}
+.frame iframe,.frame>div{position:absolute;inset:0;width:100%;height:100%;border:0}
+.xframe{max-height:60vh;overflow:auto;min-width:0}
+.pinfo{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pinfo h3{margin:0;font-family:var(--f-display);font-size:19px;overflow-wrap:anywhere}
+.pbtns{display:flex;flex-wrap:wrap;gap:8px}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+@media (max-width:700px){.player-in{grid-template-columns:1fr}.frame{max-height:40vh}}
+body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
+/* view tabs */
+.views{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.views a{text-decoration:none;border:none;border-radius:0;background:transparent;padding:10px 18px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.views a:hover{color:var(--ink)}
+.views a[aria-current="page"]{color:var(--accent-text);border-bottom-color:var(--accent)}
+.view{display:flex;flex-direction:column;gap:22px}
+/* song list */
+.setlist{display:flex;flex-direction:column;gap:18px}
+.sgroup{display:flex;flex-direction:column;gap:6px}
+.sgroup h2{margin:0;font-family:var(--f-code);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums;display:flex;gap:10px;align-items:baseline}
+.sgroup h2 span{font-family:var(--f-body);font-weight:400}
+.slist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.song{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.song:first-child{border-top:none}
+.song.playing{background:var(--accent-soft)}
+.song .play{width:38px;height:38px}
+.song .play svg{width:16px;height:16px}
+.sinfo{display:flex;flex-direction:column;min-width:0}
+.sinfo b{font-family:var(--f-display);font-weight:700;font-size:16px;line-height:1.35;overflow-wrap:anywhere}
+.sinfo span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.sside{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
+footer a{color:var(--accent-text)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.play:hover{transform:none}}

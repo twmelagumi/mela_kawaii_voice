@@ -7,117 +7,15 @@
 <meta name="description" content="熱千めら 直播聲音片段整理（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<style>
-/* Layout: a sampler-pad wall — header strip with search + tag rail, then a grid of clip "pads"; playing opens an in-page player sheet. */
-:root{
-  --bg:#f1f5fa; --surface:#ffffff; --ink:#1d2836; --muted:#5f6d7e; --line:#d8e2ee;
-  --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#1f7ad0; --accent-soft:#e2f1ff; --wave:#b3c6da;
-  --f-display:"Zen Maru Gothic","Noto Sans TC","Noto Sans JP",system-ui,sans-serif;
-  --f-body:"Noto Sans TC","Noto Sans JP",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
-  --f-code:"M PLUS 1 Code",ui-monospace,"SFMono-Regular",Menlo,monospace;
-  --r:14px; color-scheme:light;
-}
-html[lang="ja"]{--f-body:"Noto Sans JP","Noto Sans TC",system-ui,sans-serif}
-@media (prefers-color-scheme:dark){:root{
-  --bg:#121821; --surface:#1b2330; --ink:#e8eff8; --muted:#9aa8b9; --line:#2d3a4b;
-  --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#7cc3ff; --accent-soft:#1a3350; --wave:#41546b; color-scheme:dark}}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
-h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
-h1 .jp{color:var(--accent-text)}
-.sub{color:var(--muted);margin:6px 0 0;font-size:13px}
-.right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-@media (max-width:600px){.right{flex-direction:row;align-items:center;justify-content:space-between;width:100%}}
-.hrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.count{font-family:var(--f-code);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-.count b{color:var(--ink);font-size:22px;font-weight:600}
-.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
-.lang button{white-space:nowrap;border:none;background:transparent;padding:4px 12px;font-size:13px;border-radius:999px}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-button,.btn{font:inherit;cursor:pointer;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 16px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;line-height:1.2}
-button:hover,.btn:hover{border-color:var(--accent)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.search{flex:1 1 260px;min-width:0;position:relative}
-.search input{width:100%;padding:11px 16px 11px 40px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
-.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:var(--muted)}
-select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.tags{display:flex;flex-wrap:wrap;gap:8px}
-.chip{font-size:13px;padding:5px 12px;background:transparent}
-.chip .n{font-family:var(--f-code);color:var(--muted);font-size:11px}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.chip[aria-pressed="true"] .n{color:var(--bg);opacity:.7}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.pad{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.pad.playing{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-.pad-top{display:flex;gap:12px;align-items:center}
-.play{flex:none;width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;border:none;padding:0}
-.play svg{width:20px;height:20px;fill:currentColor;margin-left:3px}
-.play:hover{transform:scale(1.06)}
-.wave{flex:1;min-width:0;height:38px;display:flex;align-items:center;gap:2px}
-.wave i{flex:1;background:var(--wave);border-radius:2px;min-height:3px}
-.pad:hover .wave i,.pad.playing .wave i{background:var(--accent)}
-.pad h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.35;overflow-wrap:anywhere}
-.quote{margin:0;font-size:14px;border-left:3px solid var(--accent-soft);padding-left:10px;overflow-wrap:anywhere}
-.note{margin:0;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.src{font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-text)}
-.ptags{display:flex;flex-wrap:wrap;gap:6px}
-.ptags button{font-size:12px;padding:2px 10px;border:none;background:var(--bg);color:var(--muted)}
-.ptags button:hover{color:var(--accent-text)}
-.pad-foot{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
-.pad-foot a,.pad-foot button{font-size:12px;padding:5px 12px}
-.empty{grid-column:1/-1;background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:28px 20px}
-.empty h2{margin:0 0 6px;font-family:var(--f-display);font-size:20px}
-.empty p{margin:0;color:var(--muted)}
-/* player sheet */
-.player{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
-.player-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:16px;align-items:start}
-.frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;background:#000;border-radius:10px;overflow:hidden}
-.frame iframe,.frame>div{position:absolute;inset:0;width:100%;height:100%;border:0}
-.xframe{max-height:60vh;overflow:auto;min-width:0}
-.pinfo{display:flex;flex-direction:column;gap:8px;min-width:0}
-.pinfo h3{margin:0;font-family:var(--f-display);font-size:19px;overflow-wrap:anywhere}
-.pbtns{display:flex;flex-wrap:wrap;gap:8px}
-.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
-@media (max-width:700px){.player-in{grid-template-columns:1fr}.frame{max-height:40vh}}
-body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
-/* view tabs */
-.views{display:flex;gap:4px;border-bottom:1px solid var(--line)}
-.views button{border:none;border-radius:0;background:transparent;padding:10px 18px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
-.views button:hover{color:var(--ink)}
-.views button[aria-selected="true"]{color:var(--accent-text);border-bottom-color:var(--accent)}
-.view{display:flex;flex-direction:column;gap:22px}
-/* song list */
-.setlist{display:flex;flex-direction:column;gap:18px}
-.sgroup{display:flex;flex-direction:column;gap:6px}
-.sgroup h2{margin:0;font-family:var(--f-code);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums;display:flex;gap:10px;align-items:baseline}
-.sgroup h2 span{font-family:var(--f-body);font-weight:400}
-.slist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-.song{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
-.song:first-child{border-top:none}
-.song.playing{background:var(--accent-soft)}
-.song .play{width:38px;height:38px}
-.song .play svg{width:16px;height:16px}
-.sinfo{display:flex;flex-direction:column;min-width:0}
-.sinfo b{font-family:var(--f-display);font-weight:700;font-size:16px;line-height:1.35;overflow-wrap:anywhere}
-.sinfo span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.sside{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
-footer a{color:var(--accent-text)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.play:hover{transform:none}}
-</style>
+<link rel="stylesheet" href="assets/style.css">
+<script>if(location.hash==="#songs") location.replace("songs.html");</script>
 </head>
-<body>
+<body data-title-key="title">
 <div class="wrap">
   <header>
     <div>
       <h1><span class="jp">熱千めら</span> <span data-i18n="title"></span></h1>
-      <p class="sub" id="sub" data-i18n="sub"></p>
+      <p class="sub" data-i18n="sub"></p>
     </div>
     <div class="right">
       <div class="lang" role="group" aria-label="Language">
@@ -126,48 +24,32 @@ footer a{color:var(--accent-text)}
         <button type="button" data-lang="en">EN</button>
       </div>
       <div class="hrow">
-        <span class="count"><b id="count">0</b> <span id="countLabel" data-i18n="clips"></span></span>
+        <span class="count"><b id="count">0</b> <span data-i18n="clips"></span></span>
         <a class="btn primary" id="submitBtn" href="#" target="_blank" rel="noopener" hidden data-i18n="submit"></a>
       </div>
     </div>
   </header>
 
-  <nav class="views" role="tablist">
-    <button type="button" role="tab" data-view="voices" data-i18n="tabVoices"></button>
-    <button type="button" role="tab" data-view="songs" data-i18n="tabSongs"></button>
+  <nav class="views">
+    <a href="./" aria-current="page" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
   </nav>
 
-  <section class="view" id="voicesView">
-  <div class="tools">
-    <div class="search">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
-      <input id="q" type="search" data-i18n-ph="search">
+  <section class="view">
+    <div class="tools">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+        <input id="q" type="search" data-i18n-ph="search">
+      </div>
+      <select id="sort">
+        <option value="new" data-i18n="sortNew"></option>
+        <option value="stream" data-i18n="sortStream"></option>
+        <option value="short" data-i18n="sortShort"></option>
+      </select>
+      <button type="button" id="shuffle" data-i18n="random"></button>
     </div>
-    <select id="sort">
-      <option value="new" data-i18n="sortNew"></option>
-      <option value="stream" data-i18n="sortStream"></option>
-      <option value="short" data-i18n="sortShort"></option>
-    </select>
-    <button type="button" id="shuffle" data-i18n="random"></button>
-  </div>
-  <div class="tags" id="tags"></div>
-  <div class="grid" id="grid"></div>
-  </section>
-
-  <section class="view" id="songsView" hidden>
-  <div class="tools">
-    <div class="search">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
-      <input id="sq" type="search" data-i18n-ph="songSearch">
-    </div>
-    <select id="ssort">
-      <option value="date" data-i18n="sortDate"></option>
-      <option value="title" data-i18n="sortTitle"></option>
-      <option value="artist" data-i18n="sortArtist"></option>
-    </select>
-    <button type="button" id="sshuffle" data-i18n="randomSong"></button>
-  </div>
-  <div class="setlist" id="songList"></div>
+    <div class="tags" id="tags"></div>
+    <div class="grid" id="grid"></div>
   </section>
 
   <footer><span data-i18n="footer"></span></footer>
@@ -188,70 +70,37 @@ footer a{color:var(--accent-text)}
   </div>
 </div>
 
+<script src="assets/common.js"></script>
 <script>
-/* ===== settings ===== */
+/* ===== 聲音頁設定 ===== */
 // ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
 const SUBMIT_URL = "https://forms.gle/xqC6PYvhdrvtkV1N6";
 // ② Google 試算表「公開」分頁發佈成 CSV 的網址（…/pub?gid=…&single=true&output=csv）。留空就只讀 clips.json。
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=656485988&single=true&output=csv";
 
-const I18N={
+addStrings({
  zh:{title:"聲音圖鑑",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
-   sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",
-   close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",
-   none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",submit:"＋ 投稿片段",play:"播放",
-   tabVoices:"聲音",tabSongs:"歌曲",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
-   sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",artist:"原唱",unknownDate:"日期未知",
-   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。"},
+   sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",
+   noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
  ja:{title:"ボイス図鑑",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
-   sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",
-   close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",
-   none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",submit:"＋ クリップを投稿",play:"再生",
-   tabVoices:"ボイス",tabSongs:"歌",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
-   sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",artist:"原曲",unknownDate:"日付不明",
-   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。"},
+   sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",
+   noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
  en:{title:"Voice Library",sub:"Laughs, weird noises and famous lines from Mera's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
-   sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",
-   close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",
-   none:"No clips yet",noneHint:"Approved clips will show up here.",footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",submit:"+ Submit a clip",play:"Play",
-   tabVoices:"Voices",tabSongs:"Songs",subSongs:"Songs Mera has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
-   sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",artist:"Original",unknownDate:"Unknown date",
-   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword."}
-};
+   sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",
+   noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
+});
+// 標籤翻譯（標籤本身用中文存，切換語言時顯示對應文字）
 const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
  "名台詞":{ja:"名言",en:"Iconic line"},"歌聲":{ja:"歌声",en:"Singing"},"可愛":{ja:"かわいい",en:"Cute"},"崩潰":{ja:"発狂",en:"Meltdown"},
  "打噴嚏":{ja:"くしゃみ",en:"Sneeze"},"打哈欠":{ja:"あくび",en:"Yawn"},"哼歌":{ja:"鼻歌",en:"Humming"},"語錄":{ja:"語録",en:"Quote"}};
-
-const $=id=>document.getElementById(id);
-let CLIPS=[], SONGS=[], songsLoaded=false, view="voices";
-let lang="zh", activeTag=null, current=null, ytPlayer=null, ytReady=null;
-
-function pickLang(){ let l=null; try{l=localStorage.getItem("mela-lang")}catch(e){}
-  if(!I18N[l]){ const n=(navigator.language||"").toLowerCase(); l=n.startsWith("ja")?"ja":n.startsWith("zh")?"zh":"en"; } return l; }
-const t=k=>I18N[lang][k]??k;
 const tagName=tg=>lang==="zh"?tg:(TAG_I18N[tg]?.[lang]||tg);
-function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
-  document.documentElement.lang={zh:"zh-Hant",ja:"ja",en:"en"}[l];
-  document.title=`熱千めら ${t("title")}`;
-  document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
-  document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
-  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
-  applyView(); if(current) fillInfo(current);
-}
 
-/* ===== helpers ===== */
-function fmt(s){ if(s==null) return ""; s=Math.max(0,Math.floor(s)); const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60,p=n=>String(n).padStart(2,"0"); return h?`${h}:${p(m)}:${p(x)}`:`${m}:${p(x)}`; }
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function hash(s){let h=2166136261;for(const ch of String(s)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
+let CLIPS=[], activeTag=null;
+
+/* ===== 畫面 ===== */
 function wave(seed){ let h=hash(seed),o=""; for(let i=0;i<28;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0; const env=Math.sin(Math.PI*(i+.5)/28); o+=`<i style="height:${12+Math.round((h%88)*(.35+.65*env))}%"></i>`;} return o; }
-const origUrl=c=>c.src==="youtube"?`https://www.youtube.com/watch?v=${encodeURIComponent(c.vid)}${c.start?`&t=${c.start}s`:""}`:c.url;
-const dur=c=>(c.end!=null&&c.start!=null&&c.end>c.start)?c.end-c.start:null;
-function metaHTML(c){ const d=dur(c); const time=c.start!=null?fmt(c.start)+(c.end!=null?" – "+fmt(c.end):""):(c.src==="youtube"?t("fromStart"):"");
-  return `${c.artist?`<span>${t("artist")}: ${esc(c.artist)}</span>`:""}<span class="src">${c.src==="youtube"?"YouTube":"X"}</span>${time?`<span>${time}</span>`:""}${d?`<span>${d} ${t("sec")}</span>`:""}${c.streamDate?`<span>${esc(c.streamDate)}</span>`:""}`; }
-
-/* ===== render ===== */
-const playSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
 function render(){
+  $("count").textContent=CLIPS.length;
   const q=$("q").value.trim().toLowerCase();
   let list=CLIPS.filter(c=>(!activeTag||(c.tags||[]).includes(activeTag)) &&
     (!q||[c.title,c.quote,c.note,...(c.tags||[]).map(x=>x+" "+tagName(x))].join(" ").toLowerCase().includes(q)));
@@ -272,104 +121,22 @@ function render(){
     <div class="pad-foot"><button type="button" data-copy="${esc(c.id)}">${t("copy")}</button></div>
   </article>`).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
 }
+window.onLangChange=render;
 
-/* ===== songs ===== */
-function renderSongs(){
-  const box=$("songList"); if(!box) return;
-  if(!songsLoaded){ box.innerHTML=""; return; }
-  if(!SONGS.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongs")}</h2><p>${t("noSongsHint")}</p></div>`; return; }
-  const q=$("sq").value.trim().toLowerCase();
-  let list=SONGS.filter(s=>!q||[s.title,s.artist,s.note,s.streamDate].join(" ").toLowerCase().includes(q));
-  if(!list.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
-  const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
-  const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
-      <button type="button" class="play" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}">${playSvg}</button>
-      <div class="sinfo"><b>${esc(s.title)}</b>${s.artist?`<span>${esc(s.artist)}</span>`:""}</div>
-      <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
-    </div>`;
-  if(mode==="date"){
-    list.sort((a,b)=>String(b.streamDate||"").localeCompare(String(a.streamDate||""))||(a.start??0)-(b.start??0)||a.order-b.order);
-    const groups=[]; for(const s of list){ const k=s.streamDate||""; if(!groups.length||groups[groups.length-1].k!==k) groups.push({k,items:[]}); groups[groups.length-1].items.push(s); }
-    box.innerHTML=groups.map(g=>`<section class="sgroup"><h2>${g.k?esc(g.k):`<span>${t("unknownDate")}</span>`}<span>${g.items.length} ${t("songs")}</span></h2>
-      <div class="slist">${g.items.map(s=>row(s,false)).join("")}</div></section>`).join("");
-  }else{
-    const key=mode==="title"?"title":"artist";
-    list.sort((a,b)=>coll.compare(a[key]||"",b[key]||"")||String(b.streamDate||"").localeCompare(String(a.streamDate||"")));
-    box.innerHTML=`<div class="slist">${list.map(s=>row(s,true)).join("")}</div>`;
-  }
-}
-function applyView(){
-  const v=view;
-  $("voicesView").hidden=v!=="voices"; $("songsView").hidden=v!=="songs";
-  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
-  $("sub").textContent=t(v==="songs"?"subSongs":"sub");
-  $("count").textContent=v==="songs"?SONGS.length:CLIPS.length;
-  $("countLabel").textContent=t(v==="songs"?"songs":"clips");
-  $("submitBtn").hidden=!(SUBMIT_URL&&v==="voices");
-  if(v==="songs") renderSongs(); else render();
-}
-function setView(v){ view=v==="songs"?"songs":"voices"; try{ history.replaceState(null,"",view==="songs"?"#songs":location.pathname+location.search); }catch(e){} applyView(); if(view==="songs"&&!songsLoaded) loadSongs(); }
-async function loadSongs(){
-  let d=[]; try{ const r=await fetch("songs.json",{cache:"no-cache"}); if(r.ok) d=await r.json(); }catch(e){ console.warn("songs.json load failed",e); }
-  const arr=Array.isArray(d)?d:(d.songs||[]);
-  SONGS=arr.map((x,i)=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null;
-    let start=typeof x.start==="number"?x.start:parseTime(x.start); const end=typeof x.end==="number"?x.end:parseTime(x.end); if(start==null&&p.t!=null) start=p.t;
-    return {id:"s"+hash(p.vid+"|"+(start??"")+"|"+x.title).toString(36),src:"youtube",vid:p.vid,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
-      title:String(x.title),artist:x.artist?String(x.artist):"",streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
-  songsLoaded=true; applyView();
-}
-
-/* ===== player ===== */
-function loadYT(){ if(ytReady) return ytReady; ytReady=new Promise(res=>{ window.onYouTubeIframeAPIReady=res; const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); }); return ytReady; }
-function fillInfo(c){ $("pTitle").textContent=c.title; $("pMeta").innerHTML=metaHTML(c); $("pOpen").href=origUrl(c); $("pOpen").textContent=c.src==="youtube"?t("openOriginal"):t("openX"); $("pReplay").hidden=c.src!=="youtube"; }
-async function play(c){
-  current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c);
-  document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
-  document.querySelectorAll(`[data-id="${CSS.escape(c.id)}"]`).forEach(el=>el.classList.add("playing"));
-  const stage=$("stage");
-  if(c.src==="youtube"){
-    const opts={videoId:c.vid,startSeconds:c.start||0}; if(c.end&&c.end>(c.start||0)) opts.endSeconds=c.end;
-    if(ytPlayer&&stage.querySelector(".frame")){ ytPlayer.loadVideoById(opts); return; }
-    stage.innerHTML='<div class="frame"><div id="yt"></div></div>';
-    await loadYT();
-    ytPlayer=new YT.Player("yt",{videoId:c.vid,playerVars:{autoplay:1,playsinline:1,rel:0,start:c.start||0,...(opts.endSeconds?{end:opts.endSeconds}:{}),origin:location.origin},
-      events:{onReady:e=>e.target.playVideo()}});
-  }else{
-    ytPlayer?.destroy?.(); ytPlayer=null;
-    stage.innerHTML=`<div class="xframe"><blockquote class="twitter-tweet" data-dnt="true" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(c.url)}"></a></blockquote></div>`;
-    if(window.twttr?.widgets) twttr.widgets.load(stage);
-    else{ const s=document.createElement("script"); s.src="https://platform.twitter.com/widgets.js"; s.async=true; document.head.appendChild(s); }
-  }
-}
-function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; ytPlayer.loadVideoById(o);} }
-function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing")); }
-
-/* ===== events ===== */
+/* ===== 事件 ===== */
 document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b) return;
   const find=id=>CLIPS.find(c=>c.id===id);
-  if(b.dataset.lang) return setLang(b.dataset.lang);
-  if(b.dataset.view) return setView(b.dataset.view);
   if(b.dataset.play) return play(find(b.dataset.play));
-  if(b.dataset.splay) return play(SONGS.find(s=>s.id===b.dataset.splay));
   if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return render(); }
   if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return render(); }
   if(b.dataset.copy){ const u=origUrl(find(b.dataset.copy)); try{ await navigator.clipboard.writeText(u); b.textContent=t("copied"); setTimeout(()=>b.textContent=t("copy"),1500);}catch(err){ prompt("",u); } }
 });
 $("q").addEventListener("input",render); $("sort").addEventListener("change",render);
-$("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
-$("sshuffle").onclick=()=>{ if(SONGS.length) play(SONGS[Math.floor(Math.random()*SONGS.length)]); };
-$("pReplay").onclick=replay; $("pClose").onclick=closePlayer;
 $("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*CLIPS.length)]); };
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&current) closePlayer(); });
-if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; }
-view=location.hash==="#songs"?"songs":"voices";
-setLang(pickLang());
-loadAll();
-loadSongs();
-window.addEventListener("hashchange",()=>setView(location.hash==="#songs"?"songs":"voices"));
+if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
 
-/* ===== data loading: clips.json + Google Sheet (published CSV) ===== */
+/* ===== 讀資料：clips.json + Google 試算表（發佈的 CSV） ===== */
 function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
   for(let i=0;i<text.length;i++){ const ch=text[i];
     if(q){ if(ch==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; }
@@ -378,27 +145,6 @@ function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
     else f+=ch; }
   if(f!==""||row.length){ row.push(f); rows.push(row); } return rows.filter(r=>r.some(c=>c.trim()!==""));
 }
-function parseTime(v){ v=String(v??"").trim().replace(/[：]/g,":");
-  if(/^\d*\.\d+$/.test(v)&&+v<1) return Math.round(+v*86400); // 試算表把時間存成「一天的幾分之幾」
-  v=v.replace(/\.\d+$/,""); if(!v) return null;
-  // 試算表有時會把 0:01:40 顯示成「上午 12:01:40」之類的時刻格式，在這裡轉回秒數
-  const pm=/下午|午後|PM/i.test(v), am=/上午|午前|AM/i.test(v); v=v.replace(/上午|下午|午前|午後|AM|PM/gi,"").trim();
-  if(/^\d+$/.test(v)) return +v; const p=v.split(":").map(Number); if(p.some(isNaN)||p.length>3) return null;
-  if(p.length===3&&(am||pm)){ if(am&&p[0]===12) p[0]=0; if(pm&&p[0]<12) p[0]+=12; }
-  return p.reduce((a,x)=>a*60+x,0); }
-function parseClipUrl(u){ try{ const url=new URL(String(u).trim()); const host=url.hostname.replace(/^www\.|^m\./,"");
-    if(host==="youtu.be"||host.endsWith("youtube.com")){ let id=url.searchParams.get("v"); if(host==="youtu.be") id=url.pathname.slice(1).split("/")[0];
-      const pm=url.pathname.match(/^\/(live|shorts|embed)\/([\w-]{6,})/); if(!id&&pm) id=pm[2]; if(!id) return null;
-      const tt=url.searchParams.get("t")||url.searchParams.get("start"); let t=null;
-      if(tt){ const m=tt.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/); t=m?(+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0):null; }
-      return {src:"youtube",vid:id,url:`https://www.youtube.com/watch?v=${id}`,t}; }
-    if(["x.com","twitter.com","mobile.twitter.com"].includes(host)&&/\/status\/\d+/.test(url.pathname)) return {src:"x",url:url.origin+url.pathname};
-  }catch(e){} return null; }
-function normDate(v){ v=String(v||"").trim(); const p2=n=>String(n).padStart(2,"0");
-  // 試算表日期序號（例如 46295 = 2026-09-30）
-  if(/^\d{5}(\.\d+)?$/.test(v)){ const d=new Date(Date.UTC(1899,11,30)+Math.floor(+v)*864e5); return `${d.getUTCFullYear()}-${p2(d.getUTCMonth()+1)}-${p2(d.getUTCDate())}`; }
-  let m=v.match(/(\d{4})\D(\d{1,2})\D(\d{1,2})/); if(m) return `${m[1]}-${p2(m[2])}-${p2(m[3])}`;
-  m=v.match(/^(\d{1,2})\D(\d{1,2})\D(\d{4})/); if(m) return `${m[3]}-${p2(m[1])}-${p2(m[2])}`; return v||null; }
 // 依標題文字找欄位，表單題目順序不同也沒關係
 const COLS={ts:["時間戳記","タイムスタンプ","timestamp"],url:["網址","url","link","連結"],start:["開始","开始","start"],end:["結束","结束","終了","end"],title:["標題","タイトル","title"],
   quote:["台詞","セリフ","quote"],tags:["標籤","タグ","tag"],note:["備註","メモ","note"],date:["日期","配信日","date"]};
@@ -421,8 +167,11 @@ async function loadAll(){
   const lists=await Promise.all(tasks); const seen=new Set(); CLIPS=[];
   for(const c of lists.flat()){ const key=(c.vid||c.url)+"@"+(c.start??""); if(seen.has(key)) continue; seen.add(key); CLIPS.push(c); }
   if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
-  applyView();
+  render();
 }
+
+setLang(pickLang());
+loadAll();
 </script>
 </body>
 </html>
