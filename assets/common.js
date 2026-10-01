@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-01 23:25";
+const LAST_UPDATED = "2026-10-02 00:08";
 
 /* ===== 共用翻譯 ===== */
 const I18N={
@@ -23,21 +23,24 @@ const I18N={
    holoOfficial:"hololive 官方介紹",
    dcPromo:"友宣",dcLabel:"非官方粉絲 めら組 Discord 頻道",dcJoin:"歡迎加入一起討論",
    reportLabel:"網站有錯誤或問題？",reportLink:"問題回報 →",
-   updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作"},
+   updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
+   rights:"本站為志工維護的非官方粉絲網站。影片由 hololive production 與熱千めら製作，影片的權利歸原創作者所有。"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
    tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
    holoOfficial:"ホロライブ公式",
    dcPromo:"相互宣伝",dcLabel:"非公式ファン めら組 Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！",
    reportLabel:"不具合や間違いを見つけたら",reportLink:"問題を報告 →",
-   updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました"},
+   updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
+   rights:"当サイトは有志が運営する非公式ファンサイトです。動画はホロライブプロダクションおよび熱千めらが制作したもので、動画の権利は各制作者に帰属します。"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
    tabVoices:"Voices",tabSongs:"Songs",artist:"Original",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
    holoOfficial:"hololive official page",
    dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!",
    reportLabel:"Found a bug or a mistake?",reportLink:"Report it →",
-   updatedLabel:"Last updated:",madeWith:"Built with help from Claude"}
+   updatedLabel:"Last updated:",madeWith:"Built with help from Claude",
+   rights:"This site is an unofficial fan site maintained by volunteers. Videos were produced by Hololive Production and Achichi Mela; rights to the videos belong to their creators."}
 };
 function addStrings(more){ for(const l in more) Object.assign(I18N[l],more[l]); }
 
