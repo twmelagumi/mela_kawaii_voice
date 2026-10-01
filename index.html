@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610020114">
+<link rel="stylesheet" href="assets/style.css?v=202610020132">
 <script>if(location.hash==="#songs") location.replace("songs.html");</script>
 </head>
 <body data-title-key="title">
@@ -51,6 +51,7 @@
     </div>
     <div class="tags" id="tags"></div>
     <div class="grid" id="grid"></div>
+    <div class="more" id="moreWrap" hidden><button type="button" id="moreBtn"></button></div>
   </section>
 
   <footer>
@@ -92,7 +93,7 @@
   </div>
 </div>
 
-<script src="assets/common.js?v=202610020114"></script>
+<script src="assets/common.js?v=202610020132"></script>
 <script>
 /* ===== 聲音頁設定 ===== */
 // ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
@@ -103,13 +104,13 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIET
 addStrings({
  zh:{title:"聲音圖鑑",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
    sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",
-   noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
+   showMore:"顯示更多（還有 {n} 段）",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
  ja:{title:"ボイス図鑑",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
    sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",
-   noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
+   showMore:"もっと見る（残り {n} 件）",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
  en:{title:"Voice Library",sub:"Laughs, weird noises and famous lines from Mela's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
    sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",
-   noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
+   showMore:"Show more ({n} left)",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
 });
 // 標籤翻譯（標籤本身用中文存，切換語言時顯示對應文字）
 const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
@@ -118,6 +119,10 @@ const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"S
 const tagName=tg=>lang==="zh"?tg:(TAG_I18N[tg]?.[lang]||tg);
 
 let CLIPS=[], activeTag=null;
+// 一次只畫 PAGE_SIZE 張卡片，下面用「顯示更多」再多畫一批（搜尋、篩選仍然是對全部資料）
+const PAGE_SIZE=48;
+let shown=PAGE_SIZE;
+function refilter(){ shown=PAGE_SIZE; render(); }
 
 /* ===== 畫面 ===== */
 function wave(seed){ let h=hash(seed),o=""; for(let i=0;i<28;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0; const env=Math.sin(Math.PI*(i+.5)/28); o+=`<i style="height:${12+Math.round((h%88)*(.35+.65*env))}%"></i>`;} return o; }
@@ -133,8 +138,11 @@ function render(){
   const tags=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
   $("tags").innerHTML=tags.length?`<button type="button" class="chip" data-chip="" aria-pressed="${!activeTag}">${t("all")}</button>`+
     tags.map(x=>`<button type="button" class="chip" data-chip="${esc(x)}" aria-pressed="${activeTag===x}">${esc(tagName(x))} <span class="n">${counts[x]}</span></button>`).join(""):"";
+  $("moreWrap").hidden=true;
   if(!CLIPS.length){ $("grid").innerHTML=`<div class="empty"><h2>${t("none")}</h2><p>${t("noneHint")}</p></div>`; return; }
-  $("grid").innerHTML=list.length?list.map(c=>`<article class="pad${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
+  const rest=list.length-shown;
+  if(rest>0){ $("moreWrap").hidden=false; $("moreBtn").textContent=t("showMore").replace("{n}",rest); }
+  $("grid").innerHTML=list.length?list.slice(0,shown).map(c=>`<article class="pad${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
     <div class="pad-top">${c.src==="youtube"&&c.vid
       ?`<button type="button" class="thumb" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(c.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>`
       :`<button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button>`}<div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
@@ -152,11 +160,12 @@ document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b) return;
   const find=id=>CLIPS.find(c=>c.id===id);
   if(b.dataset.play) return play(find(b.dataset.play));
-  if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return render(); }
-  if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return render(); }
+  if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return refilter(); }
+  if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return refilter(); }
   if(b.dataset.copy){ const u=origUrl(find(b.dataset.copy)); try{ await navigator.clipboard.writeText(u); b.textContent=t("copied"); setTimeout(()=>b.textContent=t("copy"),1500);}catch(err){ prompt("",u); } }
 });
-$("q").addEventListener("input",render); $("sort").addEventListener("change",render);
+$("q").addEventListener("input",refilter); $("sort").addEventListener("change",refilter);
+$("moreBtn").onclick=()=>{ shown+=PAGE_SIZE; render(); };
 $("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*CLIPS.length)]); };
 if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
 

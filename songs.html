@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610020114">
+<link rel="stylesheet" href="assets/style.css?v=202610020132">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -50,6 +50,8 @@
     </div>
     <div class="tags" id="cats"></div>
     <div class="tags singer-chips" id="singerChips" hidden></div>
+    <div class="tags period" id="yearChips" hidden></div>
+    <div class="tags period" id="monthChips" hidden></div>
     <div class="setlist" id="songList"></div>
   </section>
 
@@ -107,7 +109,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610020114"></script>
+<script src="assets/common.js?v=202610020132"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -119,24 +121,28 @@ addStrings({
  zh:{titleSongs:"歌單",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
    sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",unknownDate:"日期未知",
    catAll:"全部",cat_original:"Original",cat_cover:"Cover",cat_clip:"歌回",cat_other:"Other",
-   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",singersLabel:"演唱",withLabel:"合唱對象",
+   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",singersLabel:"演唱",withLabel:"合唱對象",periodLabel:"期間",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthFmt:"{m} 月",expand:"展開",collapse:"收合",
    addQueue:"加入待播清單",inQueue:"已在待播清單",added:"已加入待播清單",playAll:"▶ 全部播放",playList:"▶ 播放目前列表",queue:"待播清單",prev:"⏮ 上一首",next:"下一首 ⏭",
    shuffleQ:"打亂順序",repeat:"循環",clearQ:"清空",queueEmpty:"清單是空的。按歌曲右邊的 ＋ 加入。",resumeQ:"▶ 待播清單",moveUp:"上移",moveDown:"下移",remove:"移除"},
  ja:{titleSongs:"歌リスト",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
    sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",unknownDate:"日付不明",
    catAll:"すべて",cat_original:"オリジナル",cat_cover:"カバー",cat_clip:"歌枠",cat_other:"その他",
-   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",singersLabel:"歌唱",withLabel:"コラボ相手",
+   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",singersLabel:"歌唱",withLabel:"コラボ相手",periodLabel:"期間",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthFmt:"{m}月",expand:"開く",collapse:"閉じる",
    addQueue:"再生キューに追加",inQueue:"キューに追加済み",added:"再生キューに追加しました",playAll:"▶ すべて再生",playList:"▶ 表示中の曲を再生",queue:"再生キュー",prev:"⏮ 前へ",next:"次へ ⏭",
    shuffleQ:"シャッフル",repeat:"リピート",clearQ:"クリア",queueEmpty:"キューは空です。曲の右の ＋ で追加できます。",resumeQ:"▶ 再生キュー",moveUp:"上へ",moveDown:"下へ",remove:"削除"},
  en:{titleSongs:"Song List",subSongs:"Songs Mela has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
    sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",unknownDate:"Unknown date",
    catAll:"All",cat_original:"Original",cat_cover:"Cover",cat_clip:"Karaoke",cat_other:"Other",
-   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",singersLabel:"Vocals",withLabel:"Sung with",
+   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",singersLabel:"Vocals",withLabel:"Sung with",periodLabel:"Period",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthFmt:"",expand:"Expand",collapse:"Collapse",
    addQueue:"Add to queue",inQueue:"Already in queue",added:"Added to queue",playAll:"▶ Play all",playList:"▶ Play this list",queue:"Queue",prev:"⏮ Prev",next:"Next ⏭",
    shuffleQ:"Shuffle",repeat:"Repeat",clearQ:"Clear",queueEmpty:"The queue is empty. Use ＋ next to a song to add it.",resumeQ:"▶ Queue",moveUp:"Move up",moveDown:"Move down",remove:"Remove"}
 });
 
-let SONGS=[], songsLoaded=false, activeCat=null, activeSinger=null;
+let SONGS=[], songsLoaded=false, activeCat=null, activeSinger=null, activeYear=null, activeMonth=null;
+// 依配信日期分組時，只預設展開最近幾場；有篩選或搜尋時全部展開。手動點過的分組會記住。
+const RECENT_GROUPS=3;
+const groupOpen={};
+function monthName(m){ return lang==="en"?new Intl.DateTimeFormat("en",{month:"short"}).format(new Date(2000,m-1,1)):t("monthFmt").replace("{m}",m); }
 const MAIN_SINGER="熱千めら";
 function parseSingers(v){ const a=(Array.isArray(v)?v:String(v||"").split(/\s*[\/／、,，]\s*/)).map(x=>String(x).trim()).filter(Boolean); return a.length?[...new Set(a)]:[MAIN_SINGER]; }
 const isDuet=s=>!(s.singers.length===1&&s.singers[0]===MAIN_SINGER);
@@ -163,8 +169,21 @@ function renderSongs(){
   $("singerChips").hidden=!names.length;
   $("singerChips").innerHTML=names.length?`<span class="chips-label">${t("withLabel")}</span><button type="button" class="chip" data-singer="" aria-pressed="${!activeSinger}">${t("catAll")}</button>`+
     names.map(n=>`<button type="button" class="chip" data-singer="${esc(n)}" aria-pressed="${activeSinger===n}">${esc(n)} <span class="n">${sc[n]}</span></button>`).join(""):"";
+  // 期間：年份 → 月份
+  const ym={}; SONGS.forEach(s=>{ const m=/^(\d{4})-(\d{2})/.exec(s.streamDate||""); if(m){ (ym[m[1]]=ym[m[1]]||{})[+m[2]]=(ym[m[1]][+m[2]]||0)+1; } });
+  const years=Object.keys(ym).sort().reverse(), ycount=y=>Object.values(ym[y]).reduce((a,b)=>a+b,0);
+  if(activeYear&&!ym[activeYear]){ activeYear=null; activeMonth=null; }
+  $("yearChips").hidden=!years.length;
+  $("yearChips").innerHTML=years.length?`<span class="chips-label">${t("periodLabel")}</span><button type="button" class="chip" data-year="" aria-pressed="${!activeYear}">${t("allPeriod")}</button>`+
+    years.map(y=>`<button type="button" class="chip" data-year="${y}" aria-pressed="${activeYear===y}">${t("yearFmt").replace("{y}",y)} <span class="n">${ycount(y)}</span></button>`).join(""):"";
+  const months=activeYear?Object.keys(ym[activeYear]).map(Number).sort((a,b)=>b-a):[];
+  $("monthChips").hidden=!activeYear;
+  $("monthChips").innerHTML=activeYear?`<span class="chips-label">${t("yearFmt").replace("{y}",activeYear)}</span><button type="button" class="chip" data-month="" aria-pressed="${!activeMonth}">${t("wholeYear")}</button>`+
+    months.map(m=>`<button type="button" class="chip" data-month="${m}" aria-pressed="${activeMonth===m}">${monthName(m)} <span class="n">${ym[activeYear][m]}</span></button>`).join(""):"";
+  const inPeriod=s=>{ if(!activeYear) return true; const m=/^(\d{4})-(\d{2})/.exec(s.streamDate||""); return !!m&&m[1]===activeYear&&(!activeMonth||+m[2]===activeMonth); };
   const q=$("sq").value.trim().toLowerCase();
-  let list=SONGS.filter(s=>(!activeCat||s.category===activeCat)&&(!activeSinger||s.singers.includes(activeSinger))&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category),...s.singers].join(" ").toLowerCase().includes(q)));
+  const filtering=!!(activeCat||activeSinger||activeYear||q);
+  let list=SONGS.filter(s=>inPeriod(s)&&(!activeCat||s.category===activeCat)&&(!activeSinger||s.singers.includes(activeSinger))&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category),...s.singers].join(" ").toLowerCase().includes(q)));
   if(!list.length){ lastVisible=[]; box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
@@ -177,8 +196,9 @@ function renderSongs(){
     // 依配信日期分組（新的在上），同一場依開始時間排
     list.sort((a,b)=>String(b.streamDate||"").localeCompare(String(a.streamDate||""))||(a.start??0)-(b.start??0)||a.order-b.order);
     const groups=[]; lastGroups=groups; for(const s of list){ const k=s.streamDate||""; if(!groups.length||groups[groups.length-1].k!==k) groups.push({k,items:[]}); groups[groups.length-1].items.push(s); }
-    box.innerHTML=groups.map((g,gi)=>`<section class="sgroup"><h2>${g.k?esc(g.k):`<span>${t("unknownDate")}</span>`}<span>${g.items.length} ${t("songs")}</span><button type="button" class="gplay" data-gplay="${gi}">${t("playAll")}</button></h2>
-      <div class="slist">${g.items.map(s=>row(s,false)).join("")}</div></section>`).join("");
+    box.innerHTML=groups.map((g,gi)=>{ const open=g.k in groupOpen?groupOpen[g.k]:(filtering||gi<RECENT_GROUPS);
+      return `<section class="sgroup${open?"":" closed"}"><h2><button type="button" class="gtoggle" data-gtoggle="${esc(g.k)}" data-open="${open}" aria-expanded="${open}" title="${t(open?"collapse":"expand")}"><span class="garrow" aria-hidden="true">${open?"▾":"▸"}</span>${g.k?esc(g.k):t("unknownDate")}</button><span>${g.items.length} ${t("songs")}</span><button type="button" class="gplay" data-gplay="${gi}">${t("playAll")}</button></h2>
+      ${open?`<div class="slist">${g.items.map(s=>row(s,false)).join("")}</div>`:""}</section>`; }).join("");
   }else{
     const key=mode==="title"?"title":"artist";
     list.sort((a,b)=>coll.compare(a[key]||"",b[key]||"")||String(b.streamDate||"").localeCompare(String(a.streamDate||"")));
@@ -263,6 +283,9 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button[data-spl
   const qd=e.target.closest("[data-qdown]"); if(qd) moveItem(+qd.dataset.qdown,1);
   const qr=e.target.closest("[data-qrm]"); if(qr) removeItem(+qr.dataset.qrm);
   const c=e.target.closest("button[data-cat]"); if(c){ activeCat=c.dataset.cat||null; renderSongs(); }
+  const yb=e.target.closest("button[data-year]"); if(yb){ activeYear=yb.dataset.year||null; activeMonth=null; renderSongs(); }
+  const mb=e.target.closest("button[data-month]"); if(mb){ activeMonth=mb.dataset.month?+mb.dataset.month:null; renderSongs(); }
+  const gt=e.target.closest("button[data-gtoggle]"); if(gt){ groupOpen[gt.dataset.gtoggle]=gt.dataset.open!=="true"; renderSongs(); }
   const sg=e.target.closest("button[data-singer]"); if(sg){ const n=sg.dataset.singer||null; activeSinger=(n===MAIN_SINGER)?null:n; renderSongs(); if(n) $("singerChips").scrollIntoView({block:"nearest",behavior:"smooth"}); } });
 $("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
 $("sshuffle").onclick=()=>{ if(SONGS.length) playNow(SONGS[Math.floor(Math.random()*SONGS.length)]); };
