@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610012201">
+<link rel="stylesheet" href="assets/style.css?v=202610012231">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -46,6 +46,7 @@
         <option value="artist" data-i18n="sortArtist"></option>
       </select>
       <button type="button" id="sshuffle" data-i18n="randomSong"></button>
+      <button type="button" id="playVisible" data-i18n="playList"></button>
     </div>
     <div class="tags" id="cats"></div>
     <div class="setlist" id="songList"></div>
@@ -75,15 +76,30 @@
       <h3 id="pTitle"></h3>
       <div class="meta" id="pMeta"></div>
       <div class="pbtns">
+        <button type="button" id="qPrev" data-i18n="prev"></button>
         <button type="button" class="primary" id="pReplay" data-i18n="replay"></button>
+        <button type="button" id="qNext" data-i18n="next"></button>
         <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
         <button type="button" id="pClose" data-i18n="close"></button>
+      </div>
+      <div class="queue" id="queue">
+        <div class="qhead">
+          <button type="button" class="qtoggle" id="qToggle" aria-expanded="true"><span data-i18n="queue"></span> <span class="n" id="qCount"></span> <span id="qArrow">▾</span></button>
+          <span class="sp"></span>
+          <button type="button" id="qShuffle" data-i18n="shuffleQ"></button>
+          <button type="button" id="qRepeat" aria-pressed="false" data-i18n="repeat"></button>
+          <button type="button" id="qClear" data-i18n="clearQ"></button>
+        </div>
+        <ol class="qlist" id="qList"></ol>
       </div>
     </div>
   </div>
 </div>
 
-<script src="assets/common.js?v=202610012201"></script>
+<button type="button" class="btn primary qfab" id="qFab" hidden></button>
+<div class="toast" id="toast" hidden></div>
+
+<script src="assets/common.js?v=202610012231"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -94,15 +110,21 @@ addStrings({
  zh:{titleSongs:"歌單",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
    sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",unknownDate:"日期未知",
    catAll:"全部",cat_original:"Original",cat_cover:"Cover",cat_clip:"歌回",cat_other:"Other",
-   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。"},
+   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",
+   addQueue:"加入待播清單",inQueue:"已在待播清單",added:"已加入待播清單",playAll:"▶ 全部播放",playList:"▶ 播放目前列表",queue:"待播清單",prev:"⏮ 上一首",next:"下一首 ⏭",
+   shuffleQ:"打亂順序",repeat:"循環",clearQ:"清空",queueEmpty:"清單是空的。按歌曲右邊的 ＋ 加入。",resumeQ:"▶ 待播清單",moveUp:"上移",moveDown:"下移",remove:"移除"},
  ja:{titleSongs:"歌リスト",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
    sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",unknownDate:"日付不明",
    catAll:"すべて",cat_original:"オリジナル",cat_cover:"カバー",cat_clip:"歌枠",cat_other:"その他",
-   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。"},
+   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",
+   addQueue:"再生キューに追加",inQueue:"キューに追加済み",added:"再生キューに追加しました",playAll:"▶ すべて再生",playList:"▶ 表示中の曲を再生",queue:"再生キュー",prev:"⏮ 前へ",next:"次へ ⏭",
+   shuffleQ:"シャッフル",repeat:"リピート",clearQ:"クリア",queueEmpty:"キューは空です。曲の右の ＋ で追加できます。",resumeQ:"▶ 再生キュー",moveUp:"上へ",moveDown:"下へ",remove:"削除"},
  en:{titleSongs:"Song List",subSongs:"Songs Mela has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
    sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",unknownDate:"Unknown date",
    catAll:"All",cat_original:"Original",cat_cover:"Cover",cat_clip:"Karaoke",cat_other:"Other",
-   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword."}
+   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",
+   addQueue:"Add to queue",inQueue:"Already in queue",added:"Added to queue",playAll:"▶ Play all",playList:"▶ Play this list",queue:"Queue",prev:"⏮ Prev",next:"Next ⏭",
+   shuffleQ:"Shuffle",repeat:"Repeat",clearQ:"Clear",queueEmpty:"The queue is empty. Use ＋ next to a song to add it.",resumeQ:"▶ Queue",moveUp:"Move up",moveDown:"Move down",remove:"Remove"}
 });
 
 let SONGS=[], songsLoaded=false, activeCat=null;
@@ -125,32 +147,102 @@ function renderSongs(){
     CATS.filter(c=>counts[c]).map(c=>`<button type="button" class="chip" data-cat="${c}" aria-pressed="${activeCat===c}">${t("cat_"+c)} <span class="n">${counts[c]}</span></button>`).join("");
   const q=$("sq").value.trim().toLowerCase();
   let list=SONGS.filter(s=>(!activeCat||s.category===activeCat)&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category)].join(" ").toLowerCase().includes(q)));
-  if(!list.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
+  if(!list.length){ lastVisible=[]; box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
       <button type="button" class="thumb" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(s.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>
       <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span></div>
       <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
+      ${addBtn(s)}
     </div>`;
   if(mode==="date"){
     // 依配信日期分組（新的在上），同一場依開始時間排
     list.sort((a,b)=>String(b.streamDate||"").localeCompare(String(a.streamDate||""))||(a.start??0)-(b.start??0)||a.order-b.order);
-    const groups=[]; for(const s of list){ const k=s.streamDate||""; if(!groups.length||groups[groups.length-1].k!==k) groups.push({k,items:[]}); groups[groups.length-1].items.push(s); }
-    box.innerHTML=groups.map(g=>`<section class="sgroup"><h2>${g.k?esc(g.k):`<span>${t("unknownDate")}</span>`}<span>${g.items.length} ${t("songs")}</span></h2>
+    const groups=[]; lastGroups=groups; for(const s of list){ const k=s.streamDate||""; if(!groups.length||groups[groups.length-1].k!==k) groups.push({k,items:[]}); groups[groups.length-1].items.push(s); }
+    box.innerHTML=groups.map((g,gi)=>`<section class="sgroup"><h2>${g.k?esc(g.k):`<span>${t("unknownDate")}</span>`}<span>${g.items.length} ${t("songs")}</span><button type="button" class="gplay" data-gplay="${gi}">${t("playAll")}</button></h2>
       <div class="slist">${g.items.map(s=>row(s,false)).join("")}</div></section>`).join("");
   }else{
     const key=mode==="title"?"title":"artist";
     list.sort((a,b)=>coll.compare(a[key]||"",b[key]||"")||String(b.streamDate||"").localeCompare(String(a.streamDate||"")));
     box.innerHTML=`<div class="slist">${list.map(s=>row(s,true)).join("")}</div>`;
   }
+  lastVisible=mode==="date"?lastGroups.flatMap(g=>g.items):list;
 }
-window.onLangChange=renderSongs;
+window.onLangChange=()=>{ renderSongs(); renderQueue(); };
+
+/* ===== 待播清單 =====
+ * Q.ids：歌曲 id 的順序；Q.idx：目前播到第幾首；Q.repeat：播完整個清單後從頭再來。
+ * 存在訪客瀏覽器（localStorage），重新整理後還在。
+ */
+const QKEY="mela-queue";
+let Q={ids:[],idx:-1,repeat:false}, qOpen=!matchMedia("(max-width:700px)").matches, lastGroups=[], lastVisible=[];
+const byId=id=>SONGS.find(s=>s.id===id);
+function saveQueue(){ try{ localStorage.setItem(QKEY,JSON.stringify(Q)); }catch(e){} }
+function loadQueue(){ try{ const q=JSON.parse(localStorage.getItem(QKEY)||"null"); if(q&&Array.isArray(q.ids)){
+    const ids=q.ids.filter(id=>byId(id)); // 已經從 songs.json 移除的歌就略過
+    Q={ids,idx:Math.min(typeof q.idx==="number"?q.idx:-1,ids.length-1),repeat:!!q.repeat}; } }catch(e){} }
+function toast(msg){ const el=$("toast"); el.textContent=msg; el.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(()=>el.hidden=true,1800); }
+function addBtn(s){ const inq=Q.ids.includes(s.id); return `<button type="button" class="qadd${inq?" inq":""}" data-qadd="${esc(s.id)}" aria-label="${t(inq?"inQueue":"addQueue")}: ${esc(s.title)}" title="${t(inq?"inQueue":"addQueue")}">${inq?"✓":"＋"}</button>`; }
+function startAt(i){ Q.idx=i; saveQueue(); const s=byId(Q.ids[i]); if(s) play(s); renderQueue(); refreshAddButtons(); }
+// ▶ 直接播：插在目前這首後面並立刻播放（清單之後照常往下）
+function playNow(s){ if(!s) return; const at=Q.ids.indexOf(s.id);
+  if(at>=0) return startAt(at);
+  const pos=Q.idx>=0&&!$("player").hidden?Q.idx+1:Q.ids.length; Q.ids.splice(pos,0,s.id); startAt(pos); }
+// ＋ 加到清單最後；沒在播放時直接開始
+function addToQueue(s){ if(!s) return;
+  if(Q.ids.includes(s.id)){ toast(t("inQueue")); return; }
+  Q.ids.push(s.id); saveQueue();
+  if($("player").hidden) startAt(Q.ids.length-1); else { toast(t("added")); renderQueue(); refreshAddButtons(); } }
+// 全部播放：用這組歌取代清單，從第一首開始
+function playList(list){ if(!list.length) return; Q.ids=list.map(s=>s.id); startAt(0); }
+function jumpTo(i){ if(i>=0&&i<Q.ids.length) startAt(i); }
+function step(d){ if(!Q.ids.length) return; let i=Q.idx+d;
+  if(i>=Q.ids.length){ if(!Q.repeat) return; i=0; } if(i<0){ if(!Q.repeat) return; i=Q.ids.length-1; } startAt(i); }
+function moveItem(i,d){ const j=i+d; if(j<0||j>=Q.ids.length) return; [Q.ids[i],Q.ids[j]]=[Q.ids[j],Q.ids[i]];
+  if(Q.idx===i) Q.idx=j; else if(Q.idx===j) Q.idx=i; saveQueue(); renderQueue(); }
+function removeItem(i){ const wasNow=i===Q.idx; Q.ids.splice(i,1);
+  if(i<Q.idx) Q.idx--; else if(wasNow) Q.idx=Math.min(Q.idx,Q.ids.length-1)-1; // 讓「下一首」接到原本的下一首
+  saveQueue(); renderQueue(); refreshAddButtons(); }
+function shuffleUpcoming(){ const head=Q.ids.slice(0,Q.idx+1), rest=Q.ids.slice(Q.idx+1);
+  for(let i=rest.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [rest[i],rest[j]]=[rest[j],rest[i]]; }
+  Q.ids=head.concat(rest); saveQueue(); renderQueue(); }
+function clearQueue(){ const cur=current&&Q.ids[Q.idx]===current.id?current.id:null; Q.ids=cur?[cur]:[]; Q.idx=cur?0:-1; saveQueue(); renderQueue(); refreshAddButtons(); }
+function refreshAddButtons(){ document.querySelectorAll("button[data-qadd]").forEach(b=>{ const s=byId(b.dataset.qadd); if(s) b.outerHTML=addBtn(s); }); }
+function renderQueue(){
+  $("qCount").textContent=Q.ids.length?`${Math.max(Q.idx+1,0)}/${Q.ids.length}`:"0";
+  $("qArrow").textContent=qOpen?"▾":"▸"; $("qToggle").setAttribute("aria-expanded",qOpen);
+  $("qRepeat").setAttribute("aria-pressed",Q.repeat);
+  $("qList").hidden=!qOpen;
+  $("qList").innerHTML=Q.ids.length?Q.ids.map((id,i)=>{ const s=byId(id); if(!s) return "";
+    return `<li class="${i===Q.idx?"now":""}"><span class="qn">${i===Q.idx?"▶":i+1}</span>
+      <button type="button" class="qt" data-qjump="${i}"><b>${esc(s.title)}</b><span>${esc(s.artist)}${s.streamDate?" · "+esc(s.streamDate):""}</span></button>
+      <span class="qops"><button type="button" data-qup="${i}" aria-label="${t("moveUp")}" title="${t("moveUp")}">↑</button><button type="button" data-qdown="${i}" aria-label="${t("moveDown")}" title="${t("moveDown")}">↓</button><button type="button" data-qrm="${i}" aria-label="${t("remove")}" title="${t("remove")}">✕</button></span></li>`; }).join("")
+    :`<li><span></span><p class="qempty">${t("queueEmpty")}</p><span></span></li>`;
+  const playerOpen=!$("player").hidden;
+  $("qPrev").disabled=!(Q.repeat?Q.ids.length:Q.idx>0); $("qNext").disabled=!(Q.repeat?Q.ids.length:Q.idx<Q.ids.length-1);
+  $("qFab").hidden=playerOpen||!Q.ids.length; $("qFab").textContent=`${t("resumeQ")} (${Q.ids.length})`;
+}
+// 一首播完（或播到 end 時間）→ 下一首；最後一首播完且沒開循環就停在那裡
+window.onPlayerEnded=()=>{ if(Q.idx<Q.ids.length-1) startAt(Q.idx+1); else if(Q.repeat&&Q.ids.length) startAt(0); };
+window.onPlayerClosed=()=>renderQueue();
 
 /* ===== 事件 ===== */
-document.addEventListener("click",e=>{ const b=e.target.closest("button[data-splay]"); if(b) play(SONGS.find(s=>s.id===b.dataset.splay));
+document.addEventListener("click",e=>{ const b=e.target.closest("button[data-splay]"); if(b) playNow(SONGS.find(s=>s.id===b.dataset.splay));
+  const a=e.target.closest("button[data-qadd]"); if(a) addToQueue(SONGS.find(s=>s.id===a.dataset.qadd));
+  const g=e.target.closest("button[data-gplay]"); if(g&&lastGroups[+g.dataset.gplay]) playList(lastGroups[+g.dataset.gplay].items);
+  const qj=e.target.closest("[data-qjump]"); if(qj) jumpTo(+qj.dataset.qjump);
+  const qu=e.target.closest("[data-qup]"); if(qu) moveItem(+qu.dataset.qup,-1);
+  const qd=e.target.closest("[data-qdown]"); if(qd) moveItem(+qd.dataset.qdown,1);
+  const qr=e.target.closest("[data-qrm]"); if(qr) removeItem(+qr.dataset.qrm);
   const c=e.target.closest("button[data-cat]"); if(c){ activeCat=c.dataset.cat||null; renderSongs(); } });
 $("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
-$("sshuffle").onclick=()=>{ if(SONGS.length) play(SONGS[Math.floor(Math.random()*SONGS.length)]); };
+$("sshuffle").onclick=()=>{ if(SONGS.length) playNow(SONGS[Math.floor(Math.random()*SONGS.length)]); };
+$("playVisible").onclick=()=>{ if(lastVisible.length) playList(lastVisible); };
+$("qPrev").onclick=()=>step(-1); $("qNext").onclick=()=>step(1);
+$("qShuffle").onclick=shuffleUpcoming; $("qClear").onclick=clearQueue;
+$("qRepeat").onclick=()=>{ Q.repeat=!Q.repeat; saveQueue(); renderQueue(); };
+$("qToggle").onclick=()=>{ qOpen=!qOpen; renderQueue(); };
+$("qFab").onclick=()=>{ if(Q.ids.length) jumpTo(Math.max(0,Math.min(Q.idx,Q.ids.length-1))); };
 
 /* ===== 讀資料：songs.json ===== */
 async function loadSongs(){
@@ -160,7 +252,7 @@ async function loadSongs(){
     let start=parseTime(x.start); const end=parseTime(x.end); if(start==null&&p.t!=null) start=p.t;
     return {id:"s"+hash(p.vid+"|"+(start??"")+"|"+x.title).toString(36),src:"youtube",vid:p.vid,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
       title:String(x.title),artist:x.artist?String(x.artist):"",category:normCat(x.category),streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
-  songsLoaded=true; renderSongs();
+  songsLoaded=true; loadQueue(); renderSongs(); renderQueue();
 }
 
 setLang(pickLang());

@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-01 22:01";
+const LAST_UPDATED = "2026-10-01 22:31";
 
 /* ===== 共用翻譯 ===== */
 const I18N={
@@ -103,7 +103,9 @@ async function play(c){
     stage.innerHTML='<div class="frame"><div id="yt"></div></div>';
     await loadYT();
     ytPlayer=new YT.Player("yt",{videoId:c.vid,playerVars:{autoplay:1,playsinline:1,rel:0,start:c.start||0,...(opts.endSeconds?{end:opts.endSeconds}:{}),origin:location.origin},
-      events:{onReady:e=>e.target.playVideo()}});
+      events:{onReady:e=>e.target.playVideo(),
+        // 播完（含播到 end 時間）時通知頁面，歌單頁用來接下一首
+        onStateChange:e=>{ if(e.data===0&&typeof window.onPlayerEnded==="function") window.onPlayerEnded(current); }}});
   }else{
     ytPlayer?.destroy?.(); ytPlayer=null;
     stage.innerHTML=`<div class="xframe"><blockquote class="twitter-tweet" data-dnt="true" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(c.url)}"></a></blockquote></div>`;
@@ -112,7 +114,8 @@ async function play(c){
   }
 }
 function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; ytPlayer.loadVideoById(o);} }
-function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing")); }
+function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
+  if(typeof window.onPlayerClosed==="function") window.onPlayerClosed(); }
 
 /* ===== 頁尾：最後更新時間 ===== */
 function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; el.textContent=LAST_UPDATED; $("updated").hidden=false; }

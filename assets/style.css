@@ -66,7 +66,7 @@ select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(-
 .empty h2{margin:0 0 6px;font-family:var(--f-display);font-size:20px}
 .empty p{margin:0;color:var(--muted)}
 /* player sheet */
-.player{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.player{position:fixed;left:0;right:0;bottom:0;z-index:10;max-height:92vh;overflow-y:auto;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
 .player-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:16px;align-items:start}
 .frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;background:#000;border-radius:10px;overflow:hidden}
 .frame iframe,.frame>div{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -77,6 +77,34 @@ select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(-
 .primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 @media (max-width:700px){.player-in{grid-template-columns:1fr}.frame{max-height:40vh}}
 body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
+/* ===== 待播清單（歌單頁） ===== */
+.slist .song{grid-template-columns:auto minmax(0,1fr) auto auto}
+.qadd{width:34px;height:34px;padding:0;justify-content:center;font-size:20px;line-height:1;flex:none}
+.qadd.inq{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent-soft)}
+.sgroup h2 .gplay{margin-left:auto;font-family:var(--f-body);font-size:12px;font-weight:700;padding:4px 12px;color:var(--accent-text);letter-spacing:0}
+.queue{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.qhead{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.qhead .qtoggle{font-weight:700;border:none;padding:4px 2px;background:transparent}
+.qhead .qtoggle .n{font-family:var(--f-code);color:var(--muted);font-weight:400}
+.qhead .sp{flex:1}
+.qhead button:not(.qtoggle){font-size:12px;padding:4px 10px}
+.qhead button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent)}
+.qlist{list-style:none;margin:0;padding:0;max-height:32vh;overflow-y:auto;border:1px solid var(--line);border-radius:10px}
+.qlist li{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 8px;border-top:1px solid var(--line);font-size:13px}
+.qlist li:first-child{border-top:none}
+.qlist li.now{background:var(--accent-soft)}
+.qlist .qn{font-family:var(--f-code);color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.qlist li.now .qn{color:var(--accent-text);font-weight:700}
+.qlist .qt{border:none;background:transparent;padding:0;text-align:left;display:flex;flex-direction:column;align-items:flex-start;width:100%;min-width:0;border-radius:4px}
+.qlist .qt b{font-weight:700;overflow-wrap:anywhere}
+.qlist .qt span{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.qlist .qops{display:flex;gap:2px}
+.qlist .qops button{width:28px;height:28px;padding:0;justify-content:center;border:none;background:transparent;color:var(--muted);font-size:14px}
+.qlist .qops button:hover{color:var(--ink);background:var(--bg)}
+.qempty{margin:0;color:var(--muted);font-size:13px}
+.qfab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:13px;max-width:calc(100% - 32px)}
+body.has-player .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top,0px))}
 /* view tabs */
 .views{display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .views a{text-decoration:none;border:none;border-radius:0;background:transparent;padding:10px 18px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
