@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610012231">
+<link rel="stylesheet" href="assets/style.css?v=202610012237">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -99,7 +99,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610012231"></script>
+<script src="assets/common.js?v=202610012237"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -183,7 +183,8 @@ function loadQueue(){ try{ const q=JSON.parse(localStorage.getItem(QKEY)||"null"
     Q={ids,idx:Math.min(typeof q.idx==="number"?q.idx:-1,ids.length-1),repeat:!!q.repeat}; } }catch(e){} }
 function toast(msg){ const el=$("toast"); el.textContent=msg; el.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(()=>el.hidden=true,1800); }
 function addBtn(s){ const inq=Q.ids.includes(s.id); return `<button type="button" class="qadd${inq?" inq":""}" data-qadd="${esc(s.id)}" aria-label="${t(inq?"inQueue":"addQueue")}: ${esc(s.title)}" title="${t(inq?"inQueue":"addQueue")}">${inq?"✓":"＋"}</button>`; }
-function startAt(i){ Q.idx=i; saveQueue(); const s=byId(Q.ids[i]); if(s) play(s); renderQueue(); refreshAddButtons(); }
+let lastStartAt=0;
+function startAt(i){ Q.idx=i; lastStartAt=Date.now(); saveQueue(); const s=byId(Q.ids[i]); if(s) play(s); renderQueue(); refreshAddButtons(); }
 // ▶ 直接播：插在目前這首後面並立刻播放（清單之後照常往下）
 function playNow(s){ if(!s) return; const at=Q.ids.indexOf(s.id);
   if(at>=0) return startAt(at);
@@ -223,7 +224,13 @@ function renderQueue(){
   $("qFab").hidden=playerOpen||!Q.ids.length; $("qFab").textContent=`${t("resumeQ")} (${Q.ids.length})`;
 }
 // 一首播完（或播到 end 時間）→ 下一首；最後一首播完且沒開循環就停在那裡
-window.onPlayerEnded=()=>{ if(Q.idx<Q.ids.length-1) startAt(Q.idx+1); else if(Q.repeat&&Q.ids.length) startAt(0); };
+// YouTube 播到 end 時間時，常會連續送出兩次「播放結束」，或在換歌後補送一次舊的。
+// 只有「剛換歌超過 2 秒」而且「播放位置真的到了這首的結尾」才接下一首，避免一次跳兩首。
+window.onPlayerEnded=(c,p)=>{
+  if(Date.now()-lastStartAt<2000) return;
+  const s=byId(Q.ids[Q.idx]); if(!s||!c||c.id!==s.id) return;
+  try{ const now=p.getCurrentTime(), endAt=s.end!=null?s.end:p.getDuration(); if(endAt&&now<endAt-3) return; }catch(e){}
+  if(Q.idx<Q.ids.length-1) startAt(Q.idx+1); else if(Q.repeat&&Q.ids.length) startAt(0); };
 window.onPlayerClosed=()=>renderQueue();
 
 /* ===== 事件 ===== */
