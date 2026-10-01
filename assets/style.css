@@ -79,6 +79,12 @@ select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(-
 body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
 /* ===== 待播清單（歌單頁） ===== */
 .slist .song{grid-template-columns:auto minmax(0,1fr) auto auto}
+.singers{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin-top:2px}
+.singers i{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-right:2px}
+.singers button{border:none;background:transparent;padding:0;font-size:13px;color:var(--accent-text);border-radius:4px}
+.singers button:hover{text-decoration:underline}
+.singers .sl{color:var(--muted)}
+.chips-label{font-size:12px;font-weight:700;color:var(--muted);align-self:center;margin-right:2px}
 .qadd{width:34px;height:34px;padding:0;justify-content:center;font-size:20px;line-height:1;flex:none}
 .qadd.inq{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent-soft)}
 .sgroup h2 .gplay{margin-left:auto;font-family:var(--f-body);font-size:12px;font-weight:700;padding:4px 12px;color:var(--accent-text);letter-spacing:0}

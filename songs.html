@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610012308">
+<link rel="stylesheet" href="assets/style.css?v=202610012318">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -49,6 +49,7 @@
       <button type="button" id="playVisible" data-i18n="playList"></button>
     </div>
     <div class="tags" id="cats"></div>
+    <div class="tags singer-chips" id="singerChips" hidden></div>
     <div class="setlist" id="songList"></div>
   </section>
 
@@ -104,35 +105,39 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610012308"></script>
+<script src="assets/common.js?v=202610012318"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
  * 每首歌：{ "title": 歌名, "artist": 原唱, "category": "cover", "url": YouTube 網址, "start": "1:02:03", "end": "1:06:10", "streamDate": "2026-09-30" }
  * category（分類）：original / cover / clip（歌回）/ other，沒填就當 other
+ * singers（演唱者）：合唱曲才需要填，例如 ["熱千めら","宙科そぴあ"] 或 "熱千めら / 宙科そぴあ"；沒填就當作めら一個人唱
  */
 addStrings({
  zh:{titleSongs:"歌單",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
    sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",unknownDate:"日期未知",
    catAll:"全部",cat_original:"Original",cat_cover:"Cover",cat_clip:"歌回",cat_other:"Other",
-   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",
+   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",singersLabel:"演唱",withLabel:"合唱對象",
    addQueue:"加入待播清單",inQueue:"已在待播清單",added:"已加入待播清單",playAll:"▶ 全部播放",playList:"▶ 播放目前列表",queue:"待播清單",prev:"⏮ 上一首",next:"下一首 ⏭",
    shuffleQ:"打亂順序",repeat:"循環",clearQ:"清空",queueEmpty:"清單是空的。按歌曲右邊的 ＋ 加入。",resumeQ:"▶ 待播清單",moveUp:"上移",moveDown:"下移",remove:"移除"},
  ja:{titleSongs:"歌リスト",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
    sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",unknownDate:"日付不明",
    catAll:"すべて",cat_original:"オリジナル",cat_cover:"カバー",cat_clip:"歌枠",cat_other:"その他",
-   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",
+   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",singersLabel:"歌唱",withLabel:"コラボ相手",
    addQueue:"再生キューに追加",inQueue:"キューに追加済み",added:"再生キューに追加しました",playAll:"▶ すべて再生",playList:"▶ 表示中の曲を再生",queue:"再生キュー",prev:"⏮ 前へ",next:"次へ ⏭",
    shuffleQ:"シャッフル",repeat:"リピート",clearQ:"クリア",queueEmpty:"キューは空です。曲の右の ＋ で追加できます。",resumeQ:"▶ 再生キュー",moveUp:"上へ",moveDown:"下へ",remove:"削除"},
  en:{titleSongs:"Song List",subSongs:"Songs Mela has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
    sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",unknownDate:"Unknown date",
    catAll:"All",cat_original:"Original",cat_cover:"Cover",cat_clip:"Karaoke",cat_other:"Other",
-   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",
+   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",singersLabel:"Vocals",withLabel:"Sung with",
    addQueue:"Add to queue",inQueue:"Already in queue",added:"Added to queue",playAll:"▶ Play all",playList:"▶ Play this list",queue:"Queue",prev:"⏮ Prev",next:"Next ⏭",
    shuffleQ:"Shuffle",repeat:"Repeat",clearQ:"Clear",queueEmpty:"The queue is empty. Use ＋ next to a song to add it.",resumeQ:"▶ Queue",moveUp:"Move up",moveDown:"Move down",remove:"Remove"}
 });
 
-let SONGS=[], songsLoaded=false, activeCat=null;
+let SONGS=[], songsLoaded=false, activeCat=null, activeSinger=null;
+const MAIN_SINGER="熱千めら";
+function parseSingers(v){ const a=(Array.isArray(v)?v:String(v||"").split(/\s*[\/／、,，]\s*/)).map(x=>String(x).trim()).filter(Boolean); return a.length?[...new Set(a)]:[MAIN_SINGER]; }
+const isDuet=s=>!(s.singers.length===1&&s.singers[0]===MAIN_SINGER);
 // 分類（顯示順序）。songs.json 的 category 可以寫英文代碼或常見中日文寫法
 const CATS=["original","cover","clip","other"];
 function normCat(v){ v=String(v||"").trim().toLowerCase();
@@ -150,13 +155,19 @@ function renderSongs(){
   const counts={}; SONGS.forEach(s=>counts[s.category]=(counts[s.category]||0)+1);
   $("cats").innerHTML=`<button type="button" class="chip" data-cat="" aria-pressed="${!activeCat}">${t("catAll")} <span class="n">${SONGS.length}</span></button>`+
     CATS.filter(c=>counts[c]).map(c=>`<button type="button" class="chip" data-cat="${c}" aria-pressed="${activeCat===c}">${t("cat_"+c)} <span class="n">${counts[c]}</span></button>`).join("");
+  // 合唱對象：列出めら以外出現過的演唱者，點了只看跟這個人一起唱的歌
+  const sc={}; SONGS.forEach(s=>s.singers.forEach(n=>{ if(n!==MAIN_SINGER) sc[n]=(sc[n]||0)+1; }));
+  const names=Object.keys(sc).sort((a,b)=>sc[b]-sc[a]||a.localeCompare(b));
+  $("singerChips").hidden=!names.length;
+  $("singerChips").innerHTML=names.length?`<span class="chips-label">${t("withLabel")}</span><button type="button" class="chip" data-singer="" aria-pressed="${!activeSinger}">${t("catAll")}</button>`+
+    names.map(n=>`<button type="button" class="chip" data-singer="${esc(n)}" aria-pressed="${activeSinger===n}">${esc(n)} <span class="n">${sc[n]}</span></button>`).join(""):"";
   const q=$("sq").value.trim().toLowerCase();
-  let list=SONGS.filter(s=>(!activeCat||s.category===activeCat)&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category)].join(" ").toLowerCase().includes(q)));
+  let list=SONGS.filter(s=>(!activeCat||s.category===activeCat)&&(!activeSinger||s.singers.includes(activeSinger))&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category),...s.singers].join(" ").toLowerCase().includes(q)));
   if(!list.length){ lastVisible=[]; box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
       <button type="button" class="thumb" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(s.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>
-      <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span></div>
+      <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span>${isDuet(s)?`<span class="singers"><i>${t("singersLabel")}</i>${s.singers.map(n=>`<button type="button" data-singer="${esc(n)}">${esc(n)}</button>`).join('<span class="sl">/</span>')}</span>`:""}</div>
       <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
       ${addBtn(s)}
     </div>`;
@@ -246,7 +257,8 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button[data-spl
   const qu=e.target.closest("[data-qup]"); if(qu) moveItem(+qu.dataset.qup,-1);
   const qd=e.target.closest("[data-qdown]"); if(qd) moveItem(+qd.dataset.qdown,1);
   const qr=e.target.closest("[data-qrm]"); if(qr) removeItem(+qr.dataset.qrm);
-  const c=e.target.closest("button[data-cat]"); if(c){ activeCat=c.dataset.cat||null; renderSongs(); } });
+  const c=e.target.closest("button[data-cat]"); if(c){ activeCat=c.dataset.cat||null; renderSongs(); }
+  const sg=e.target.closest("button[data-singer]"); if(sg){ const n=sg.dataset.singer||null; activeSinger=(n===MAIN_SINGER)?null:n; renderSongs(); if(n) $("singerChips").scrollIntoView({block:"nearest",behavior:"smooth"}); } });
 $("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
 $("sshuffle").onclick=()=>{ if(SONGS.length) playNow(SONGS[Math.floor(Math.random()*SONGS.length)]); };
 $("playVisible").onclick=()=>{ if(lastVisible.length) playList(lastVisible); };
@@ -263,7 +275,7 @@ async function loadSongs(){
   SONGS=arr.map((x,i)=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null;
     let start=parseTime(x.start); const end=parseTime(x.end); if(start==null&&p.t!=null) start=p.t;
     return {id:"s"+hash(p.vid+"|"+(start??"")+"|"+x.title).toString(36),src:"youtube",vid:p.vid,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
-      title:String(x.title),artist:x.artist?String(x.artist):"",category:normCat(x.category),streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
+      title:String(x.title),artist:x.artist?String(x.artist):"",category:normCat(x.category),singers:parseSingers(x.singers),streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
   songsLoaded=true; loadQueue(); renderSongs(); renderQueue();
 }
 
