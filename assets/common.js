@@ -12,13 +12,16 @@
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
    tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",
-   footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。"},
+   footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
+   dcPromo:"友宣",dcLabel:"非官方粉絲 Mela Gumi's Discord 頻道",dcJoin:"歡迎加入一起討論"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
    tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",
-   footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。"},
+   footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
+   dcPromo:"相互宣伝",dcLabel:"非公式ファン Mela Gumi's Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
    tabVoices:"Voices",tabSongs:"Songs",artist:"Original",
-   footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!"}
+   footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
+   dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!"}
 };
 function addStrings(more){ for(const l in more) Object.assign(I18N[l],more[l]); }
 
