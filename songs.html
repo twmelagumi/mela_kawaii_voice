@@ -113,7 +113,7 @@ function renderSongs(){
   if(!list.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
-      <button type="button" class="play" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}">${playSvg}</button>
+      <button type="button" class="thumb" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(s.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>
       <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span></div>
       <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
     </div>`;

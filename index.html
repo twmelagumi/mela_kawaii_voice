@@ -113,7 +113,9 @@ function render(){
     tags.map(x=>`<button type="button" class="chip" data-chip="${esc(x)}" aria-pressed="${activeTag===x}">${esc(tagName(x))} <span class="n">${counts[x]}</span></button>`).join(""):"";
   if(!CLIPS.length){ $("grid").innerHTML=`<div class="empty"><h2>${t("none")}</h2><p>${t("noneHint")}</p></div>`; return; }
   $("grid").innerHTML=list.length?list.map(c=>`<article class="pad${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
-    <div class="pad-top"><button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button><div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
+    <div class="pad-top">${c.src==="youtube"&&c.vid
+      ?`<button type="button" class="thumb" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(c.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>`
+      :`<button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button>`}<div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
     <h3>${esc(c.title)}</h3>
     ${c.quote?`<p class="quote">「${esc(c.quote)}」</p>`:""}${c.note?`<p class="note">${esc(c.note)}</p>`:""}
     <div class="meta">${metaHTML(c)}</div>
