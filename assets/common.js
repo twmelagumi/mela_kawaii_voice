@@ -8,20 +8,27 @@
  *   <body data-title-key="…">           分頁標題用哪個翻譯 key
  */
 
+/* ===== 共用設定 ===== */
+// 問題回報用 Google 表單的連結（例如 https://forms.gle/xxxx）。留空就不顯示頁尾的「問題回報」。
+const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
+
 /* ===== 共用翻譯 ===== */
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
    tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
-   dcPromo:"友宣",dcLabel:"非官方粉絲 Mela Gumi's Discord 頻道",dcJoin:"歡迎加入一起討論"},
+   dcPromo:"友宣",dcLabel:"非官方粉絲 Mela Gumi's Discord 頻道",dcJoin:"歡迎加入一起討論",
+   reportLabel:"網站有錯誤或問題？",reportLink:"問題回報 →"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
    tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
-   dcPromo:"相互宣伝",dcLabel:"非公式ファン Mela Gumi's Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！"},
+   dcPromo:"相互宣伝",dcLabel:"非公式ファン Mela Gumi's Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！",
+   reportLabel:"不具合や間違いを見つけたら",reportLink:"問題を報告 →"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
    tabVoices:"Voices",tabSongs:"Songs",artist:"Original",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
-   dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!"}
+   dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!",
+   reportLabel:"Found a bug or a mistake?",reportLink:"Report it →"}
 };
 function addStrings(more){ for(const l in more) Object.assign(I18N[l],more[l]); }
 
@@ -103,4 +110,5 @@ function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHT
 /* ===== 共用事件 ===== */
 document.addEventListener("click",e=>{ const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&current) closePlayer(); });
-document.addEventListener("DOMContentLoaded",()=>{ $("pReplay").onclick=replay; $("pClose").onclick=closePlayer; });
+document.addEventListener("DOMContentLoaded",()=>{ $("pReplay").onclick=replay; $("pClose").onclick=closePlayer;
+  const r=document.querySelector(".report"); if(r&&REPORT_URL){ $("reportLink").href=REPORT_URL; r.hidden=false; } });
