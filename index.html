@@ -22,6 +22,7 @@ html[lang="ja"]{--f-body:"Noto Sans JP","Noto Sans TC",system-ui,sans-serif}
   --bg:#121821; --surface:#1b2330; --ink:#e8eff8; --muted:#9aa8b9; --line:#2d3a4b;
   --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#7cc3ff; --accent-soft:#1a3350; --wave:#41546b; color-scheme:dark}}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
@@ -35,7 +36,7 @@ h1 .jp{color:var(--accent-text)}
 .count{font-family:var(--f-code);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .count b{color:var(--ink);font-size:22px;font-weight:600}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
-.lang button{border:none;background:transparent;padding:4px 12px;font-size:13px;border-radius:999px}
+.lang button{white-space:nowrap;border:none;background:transparent;padding:4px 12px;font-size:13px;border-radius:999px}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 button,.btn{font:inherit;cursor:pointer;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 16px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;line-height:1.2}
 button:hover,.btn:hover{border-color:var(--accent)}
@@ -85,6 +86,27 @@ select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(-
 .primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 @media (max-width:700px){.player-in{grid-template-columns:1fr}.frame{max-height:40vh}}
 body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
+/* view tabs */
+.views{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.views button{border:none;border-radius:0;background:transparent;padding:10px 18px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.views button:hover{color:var(--ink)}
+.views button[aria-selected="true"]{color:var(--accent-text);border-bottom-color:var(--accent)}
+.view{display:flex;flex-direction:column;gap:22px}
+/* song list */
+.setlist{display:flex;flex-direction:column;gap:18px}
+.sgroup{display:flex;flex-direction:column;gap:6px}
+.sgroup h2{margin:0;font-family:var(--f-code);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums;display:flex;gap:10px;align-items:baseline}
+.sgroup h2 span{font-family:var(--f-body);font-weight:400}
+.slist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.song{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.song:first-child{border-top:none}
+.song.playing{background:var(--accent-soft)}
+.song .play{width:38px;height:38px}
+.song .play svg{width:16px;height:16px}
+.sinfo{display:flex;flex-direction:column;min-width:0}
+.sinfo b{font-family:var(--f-display);font-weight:700;font-size:16px;line-height:1.35;overflow-wrap:anywhere}
+.sinfo span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.sside{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
 footer a{color:var(--accent-text)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.play:hover{transform:none}}
@@ -95,7 +117,7 @@ footer a{color:var(--accent-text)}
   <header>
     <div>
       <h1><span class="jp">熱千めら</span> <span data-i18n="title"></span></h1>
-      <p class="sub" data-i18n="sub"></p>
+      <p class="sub" id="sub" data-i18n="sub"></p>
     </div>
     <div class="right">
       <div class="lang" role="group" aria-label="Language">
@@ -104,12 +126,18 @@ footer a{color:var(--accent-text)}
         <button type="button" data-lang="en">EN</button>
       </div>
       <div class="hrow">
-        <span class="count"><b id="count">0</b> <span data-i18n="clips"></span></span>
+        <span class="count"><b id="count">0</b> <span id="countLabel" data-i18n="clips"></span></span>
         <a class="btn primary" id="submitBtn" href="#" target="_blank" rel="noopener" hidden data-i18n="submit"></a>
       </div>
     </div>
   </header>
 
+  <nav class="views" role="tablist">
+    <button type="button" role="tab" data-view="voices" data-i18n="tabVoices"></button>
+    <button type="button" role="tab" data-view="songs" data-i18n="tabSongs"></button>
+  </nav>
+
+  <section class="view" id="voicesView">
   <div class="tools">
     <div class="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
@@ -124,6 +152,23 @@ footer a{color:var(--accent-text)}
   </div>
   <div class="tags" id="tags"></div>
   <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="view" id="songsView" hidden>
+  <div class="tools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+      <input id="sq" type="search" data-i18n-ph="songSearch">
+    </div>
+    <select id="ssort">
+      <option value="date" data-i18n="sortDate"></option>
+      <option value="title" data-i18n="sortTitle"></option>
+      <option value="artist" data-i18n="sortArtist"></option>
+    </select>
+    <button type="button" id="sshuffle" data-i18n="randomSong"></button>
+  </div>
+  <div class="setlist" id="songList"></div>
+  </section>
 
   <footer><span data-i18n="footer"></span></footer>
 </div>
@@ -154,22 +199,31 @@ const I18N={
  zh:{title:"聲音圖鑑",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
    sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",
    close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",
-   none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",submit:"＋ 投稿片段",play:"播放"},
+   none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",submit:"＋ 投稿片段",play:"播放",
+   tabVoices:"聲音",tabSongs:"歌曲",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
+   sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",artist:"原唱",unknownDate:"日期未知",
+   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。"},
  ja:{title:"ボイス図鑑",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
    sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",
    close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",
-   none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",submit:"＋ クリップを投稿",play:"再生"},
+   none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",submit:"＋ クリップを投稿",play:"再生",
+   tabVoices:"ボイス",tabSongs:"歌",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
+   sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",artist:"原曲",unknownDate:"日付不明",
+   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。"},
  en:{title:"Voice Library",sub:"Laughs, weird noises and famous lines from Mera's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
    sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",
    close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",
-   none:"No clips yet",noneHint:"Approved clips will show up here.",footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",submit:"+ Submit a clip",play:"Play"}
+   none:"No clips yet",noneHint:"Approved clips will show up here.",footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",submit:"+ Submit a clip",play:"Play",
+   tabVoices:"Voices",tabSongs:"Songs",subSongs:"Songs Mera has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
+   sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",artist:"Original",unknownDate:"Unknown date",
+   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword."}
 };
 const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
  "名台詞":{ja:"名言",en:"Iconic line"},"歌聲":{ja:"歌声",en:"Singing"},"可愛":{ja:"かわいい",en:"Cute"},"崩潰":{ja:"発狂",en:"Meltdown"},
  "打噴嚏":{ja:"くしゃみ",en:"Sneeze"},"打哈欠":{ja:"あくび",en:"Yawn"},"哼歌":{ja:"鼻歌",en:"Humming"},"語錄":{ja:"語録",en:"Quote"}};
 
 const $=id=>document.getElementById(id);
-let CLIPS=[];
+let CLIPS=[], SONGS=[], songsLoaded=false, view="voices";
 let lang="zh", activeTag=null, current=null, ytPlayer=null, ytReady=null;
 
 function pickLang(){ let l=null; try{l=localStorage.getItem("mela-lang")}catch(e){}
@@ -182,7 +236,7 @@ function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
   document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
-  render(); if(current) fillInfo(current);
+  applyView(); if(current) fillInfo(current);
 }
 
 /* ===== helpers ===== */
@@ -193,7 +247,7 @@ function wave(seed){ let h=hash(seed),o=""; for(let i=0;i<28;i++){h=Math.imul(h^
 const origUrl=c=>c.src==="youtube"?`https://www.youtube.com/watch?v=${encodeURIComponent(c.vid)}${c.start?`&t=${c.start}s`:""}`:c.url;
 const dur=c=>(c.end!=null&&c.start!=null&&c.end>c.start)?c.end-c.start:null;
 function metaHTML(c){ const d=dur(c); const time=c.start!=null?fmt(c.start)+(c.end!=null?" – "+fmt(c.end):""):(c.src==="youtube"?t("fromStart"):"");
-  return `<span class="src">${c.src==="youtube"?"YouTube":"X"}</span>${time?`<span>${time}</span>`:""}${d?`<span>${d} ${t("sec")}</span>`:""}${c.streamDate?`<span>${esc(c.streamDate)}</span>`:""}`; }
+  return `${c.artist?`<span>${t("artist")}: ${esc(c.artist)}</span>`:""}<span class="src">${c.src==="youtube"?"YouTube":"X"}</span>${time?`<span>${time}</span>`:""}${d?`<span>${d} ${t("sec")}</span>`:""}${c.streamDate?`<span>${esc(c.streamDate)}</span>`:""}`; }
 
 /* ===== render ===== */
 const playSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
@@ -204,7 +258,6 @@ function render(){
   const s=$("sort").value;
   list.sort((a,b)=>s==="stream"?String(b.streamDate||"").localeCompare(String(a.streamDate||""))
     :s==="short"?(dur(a)??1e9)-(dur(b)??1e9):(b.addedAt||0)-(a.addedAt||0));
-  $("count").textContent=CLIPS.length;
   const counts={}; CLIPS.forEach(c=>(c.tags||[]).forEach(x=>counts[x]=(counts[x]||0)+1));
   const tags=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
   $("tags").innerHTML=tags.length?`<button type="button" class="chip" data-chip="" aria-pressed="${!activeTag}">${t("all")}</button>`+
@@ -220,13 +273,59 @@ function render(){
   </article>`).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
 }
 
+/* ===== songs ===== */
+function renderSongs(){
+  const box=$("songList"); if(!box) return;
+  if(!songsLoaded){ box.innerHTML=""; return; }
+  if(!SONGS.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongs")}</h2><p>${t("noSongsHint")}</p></div>`; return; }
+  const q=$("sq").value.trim().toLowerCase();
+  let list=SONGS.filter(s=>!q||[s.title,s.artist,s.note,s.streamDate].join(" ").toLowerCase().includes(q));
+  if(!list.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
+  const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
+  const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
+      <button type="button" class="play" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}">${playSvg}</button>
+      <div class="sinfo"><b>${esc(s.title)}</b>${s.artist?`<span>${esc(s.artist)}</span>`:""}</div>
+      <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
+    </div>`;
+  if(mode==="date"){
+    list.sort((a,b)=>String(b.streamDate||"").localeCompare(String(a.streamDate||""))||(a.start??0)-(b.start??0)||a.order-b.order);
+    const groups=[]; for(const s of list){ const k=s.streamDate||""; if(!groups.length||groups[groups.length-1].k!==k) groups.push({k,items:[]}); groups[groups.length-1].items.push(s); }
+    box.innerHTML=groups.map(g=>`<section class="sgroup"><h2>${g.k?esc(g.k):`<span>${t("unknownDate")}</span>`}<span>${g.items.length} ${t("songs")}</span></h2>
+      <div class="slist">${g.items.map(s=>row(s,false)).join("")}</div></section>`).join("");
+  }else{
+    const key=mode==="title"?"title":"artist";
+    list.sort((a,b)=>coll.compare(a[key]||"",b[key]||"")||String(b.streamDate||"").localeCompare(String(a.streamDate||"")));
+    box.innerHTML=`<div class="slist">${list.map(s=>row(s,true)).join("")}</div>`;
+  }
+}
+function applyView(){
+  const v=view;
+  $("voicesView").hidden=v!=="voices"; $("songsView").hidden=v!=="songs";
+  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
+  $("sub").textContent=t(v==="songs"?"subSongs":"sub");
+  $("count").textContent=v==="songs"?SONGS.length:CLIPS.length;
+  $("countLabel").textContent=t(v==="songs"?"songs":"clips");
+  $("submitBtn").hidden=!(SUBMIT_URL&&v==="voices");
+  if(v==="songs") renderSongs(); else render();
+}
+function setView(v){ view=v==="songs"?"songs":"voices"; try{ history.replaceState(null,"",view==="songs"?"#songs":location.pathname+location.search); }catch(e){} applyView(); if(view==="songs"&&!songsLoaded) loadSongs(); }
+async function loadSongs(){
+  let d=[]; try{ const r=await fetch("songs.json",{cache:"no-cache"}); if(r.ok) d=await r.json(); }catch(e){ console.warn("songs.json load failed",e); }
+  const arr=Array.isArray(d)?d:(d.songs||[]);
+  SONGS=arr.map((x,i)=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null;
+    let start=typeof x.start==="number"?x.start:parseTime(x.start); const end=typeof x.end==="number"?x.end:parseTime(x.end); if(start==null&&p.t!=null) start=p.t;
+    return {id:"s"+hash(p.vid+"|"+(start??"")+"|"+x.title).toString(36),src:"youtube",vid:p.vid,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
+      title:String(x.title),artist:x.artist?String(x.artist):"",streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
+  songsLoaded=true; applyView();
+}
+
 /* ===== player ===== */
 function loadYT(){ if(ytReady) return ytReady; ytReady=new Promise(res=>{ window.onYouTubeIframeAPIReady=res; const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); }); return ytReady; }
 function fillInfo(c){ $("pTitle").textContent=c.title; $("pMeta").innerHTML=metaHTML(c); $("pOpen").href=origUrl(c); $("pOpen").textContent=c.src==="youtube"?t("openOriginal"):t("openX"); $("pReplay").hidden=c.src!=="youtube"; }
 async function play(c){
   current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c);
-  document.querySelectorAll(".pad.playing").forEach(p=>p.classList.remove("playing"));
-  document.querySelector(`.pad[data-id="${CSS.escape(c.id)}"]`)?.classList.add("playing");
+  document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
+  document.querySelectorAll(`[data-id="${CSS.escape(c.id)}"]`).forEach(el=>el.classList.add("playing"));
   const stage=$("stage");
   if(c.src==="youtube"){
     const opts={videoId:c.vid,startSeconds:c.start||0}; if(c.end&&c.end>(c.start||0)) opts.endSeconds=c.end;
@@ -243,25 +342,32 @@ async function play(c){
   }
 }
 function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; ytPlayer.loadVideoById(o);} }
-function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".pad.playing").forEach(p=>p.classList.remove("playing")); }
+function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing")); }
 
 /* ===== events ===== */
 document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b) return;
   const find=id=>CLIPS.find(c=>c.id===id);
   if(b.dataset.lang) return setLang(b.dataset.lang);
+  if(b.dataset.view) return setView(b.dataset.view);
   if(b.dataset.play) return play(find(b.dataset.play));
+  if(b.dataset.splay) return play(SONGS.find(s=>s.id===b.dataset.splay));
   if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return render(); }
   if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return render(); }
   if(b.dataset.copy){ const u=origUrl(find(b.dataset.copy)); try{ await navigator.clipboard.writeText(u); b.textContent=t("copied"); setTimeout(()=>b.textContent=t("copy"),1500);}catch(err){ prompt("",u); } }
 });
 $("q").addEventListener("input",render); $("sort").addEventListener("change",render);
+$("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
+$("sshuffle").onclick=()=>{ if(SONGS.length) play(SONGS[Math.floor(Math.random()*SONGS.length)]); };
 $("pReplay").onclick=replay; $("pClose").onclick=closePlayer;
 $("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*CLIPS.length)]); };
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&current) closePlayer(); });
-if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
+if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; }
+view=location.hash==="#songs"?"songs":"voices";
 setLang(pickLang());
 loadAll();
+loadSongs();
+window.addEventListener("hashchange",()=>setView(location.hash==="#songs"?"songs":"voices"));
 
 /* ===== data loading: clips.json + Google Sheet (published CSV) ===== */
 function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
@@ -315,7 +421,7 @@ async function loadAll(){
   const lists=await Promise.all(tasks); const seen=new Set(); CLIPS=[];
   for(const c of lists.flat()){ const key=(c.vid||c.url)+"@"+(c.start??""); if(seen.has(key)) continue; seen.add(key); CLIPS.push(c); }
   if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
-  render();
+  applyView();
 }
 </script>
 </body>
