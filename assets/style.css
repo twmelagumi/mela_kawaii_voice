@@ -97,6 +97,9 @@ body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
 .sinfo{display:flex;flex-direction:column;min-width:0}
 .sinfo b{font-family:var(--f-display);font-weight:700;font-size:16px;line-height:1.35;overflow-wrap:anywhere}
 .sinfo span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.cat{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.03em;padding:1px 7px;border-radius:6px;margin-right:8px;background:var(--accent-soft);color:var(--accent-text);white-space:nowrap}
+.cat-original{background:var(--accent);color:var(--accent-ink)}
+.cat-other{background:var(--bg);color:var(--muted)}
 .sside{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px}
 footer a{color:var(--accent-text)}

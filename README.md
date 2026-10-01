@@ -123,6 +123,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
   {
     "title": "歌名",
     "artist": "原唱歌手",
+    "category": "clip",
     "url": "https://www.youtube.com/watch?v=影片ID",
     "start": "1:02:03",
     "end": "1:06:10",
@@ -131,6 +132,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
   {
     "title": "第二首歌名",
     "artist": "原唱歌手",
+    "category": "cover",
     "url": "https://www.youtube.com/watch?v=影片ID",
     "start": "1:07:30",
     "streamDate": "2026-09-30"
@@ -142,6 +144,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 |---|---|---|
 | `title` | ✔ | 歌名 |
 | `artist` |  | 原唱歌手 |
+| `category` |  | 分類：`original`（原創曲）、`cover`（翻唱）、`clip`（歌回Clip）、`other`（其他）。沒填就算 other |
 | `url` | ✔ | YouTube 網址（watch、youtu.be、live 都可以；網址裡有 `t=` 會當成開始時間） |
 | `start` |  | 開始時間，`"1:02:03"` 或秒數 `3723` |
 | `end` |  | 結束時間，填了播放器會在這裡自動停 |

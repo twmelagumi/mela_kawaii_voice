@@ -46,6 +46,7 @@
       </select>
       <button type="button" id="sshuffle" data-i18n="randomSong"></button>
     </div>
+    <div class="tags" id="cats"></div>
     <div class="setlist" id="songList"></div>
   </section>
 
@@ -71,21 +72,32 @@
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
- * 每首歌：{ "title": 歌名, "artist": 原唱, "url": YouTube 網址, "start": "1:02:03", "end": "1:06:10", "streamDate": "2026-09-30" }
+ * 每首歌：{ "title": 歌名, "artist": 原唱, "category": "cover", "url": YouTube 網址, "start": "1:02:03", "end": "1:06:10", "streamDate": "2026-09-30" }
+ * category（分類）：original / cover / clip（歌回Clip）/ other，沒填就當 other
  */
 addStrings({
  zh:{titleSongs:"歌單",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
    sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",unknownDate:"日期未知",
+   catAll:"全部",cat_original:"Original",cat_cover:"Cover",cat_clip:"歌回Clip",cat_other:"Other",
    noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。"},
  ja:{titleSongs:"歌リスト",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
    sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",unknownDate:"日付不明",
+   catAll:"すべて",cat_original:"オリジナル",cat_cover:"カバー",cat_clip:"歌枠切り抜き",cat_other:"その他",
    noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。"},
  en:{titleSongs:"Song List",subSongs:"Songs Mera has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
    sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",unknownDate:"Unknown date",
+   catAll:"All",cat_original:"Original",cat_cover:"Cover",cat_clip:"Karaoke clip",cat_other:"Other",
    noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword."}
 });
 
-let SONGS=[], songsLoaded=false;
+let SONGS=[], songsLoaded=false, activeCat=null;
+// 分類（顯示順序）。songs.json 的 category 可以寫英文代碼或常見中日文寫法
+const CATS=["original","cover","clip","other"];
+function normCat(v){ v=String(v||"").trim().toLowerCase();
+  if(/^(original|orig|オリジナル|原創|原创|オリ曲)$/.test(v)) return "original";
+  if(/^(cover|カバー|翻唱|歌ってみた)$/.test(v)) return "cover";
+  if(/^(clip|歌回clip|歌回|歌枠|歌枠切り抜き|切り抜き|karaoke)$/.test(v)) return "clip";
+  return "other"; }
 
 /* ===== 畫面 ===== */
 function renderSongs(){
@@ -93,13 +105,16 @@ function renderSongs(){
   const box=$("songList");
   if(!songsLoaded){ box.innerHTML=""; return; }
   if(!SONGS.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongs")}</h2><p>${t("noSongsHint")}</p></div>`; return; }
+  const counts={}; SONGS.forEach(s=>counts[s.category]=(counts[s.category]||0)+1);
+  $("cats").innerHTML=`<button type="button" class="chip" data-cat="" aria-pressed="${!activeCat}">${t("catAll")} <span class="n">${SONGS.length}</span></button>`+
+    CATS.filter(c=>counts[c]).map(c=>`<button type="button" class="chip" data-cat="${c}" aria-pressed="${activeCat===c}">${t("cat_"+c)} <span class="n">${counts[c]}</span></button>`).join("");
   const q=$("sq").value.trim().toLowerCase();
-  let list=SONGS.filter(s=>!q||[s.title,s.artist,s.note,s.streamDate].join(" ").toLowerCase().includes(q));
+  let list=SONGS.filter(s=>(!activeCat||s.category===activeCat)&&(!q||[s.title,s.artist,s.note,s.streamDate,t("cat_"+s.category)].join(" ").toLowerCase().includes(q)));
   if(!list.length){ box.innerHTML=`<div class="empty"><h2>${t("noSongMatch")}</h2><p>${t("noSongMatchHint")}</p></div>`; return; }
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
       <button type="button" class="play" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}">${playSvg}</button>
-      <div class="sinfo"><b>${esc(s.title)}</b>${s.artist?`<span>${esc(s.artist)}</span>`:""}</div>
+      <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span></div>
       <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}</div>
     </div>`;
   if(mode==="date"){
@@ -117,7 +132,8 @@ function renderSongs(){
 window.onLangChange=renderSongs;
 
 /* ===== 事件 ===== */
-document.addEventListener("click",e=>{ const b=e.target.closest("button[data-splay]"); if(b) play(SONGS.find(s=>s.id===b.dataset.splay)); });
+document.addEventListener("click",e=>{ const b=e.target.closest("button[data-splay]"); if(b) play(SONGS.find(s=>s.id===b.dataset.splay));
+  const c=e.target.closest("button[data-cat]"); if(c){ activeCat=c.dataset.cat||null; renderSongs(); } });
 $("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
 $("sshuffle").onclick=()=>{ if(SONGS.length) play(SONGS[Math.floor(Math.random()*SONGS.length)]); };
 
@@ -128,7 +144,7 @@ async function loadSongs(){
   SONGS=arr.map((x,i)=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null;
     let start=parseTime(x.start); const end=parseTime(x.end); if(start==null&&p.t!=null) start=p.t;
     return {id:"s"+hash(p.vid+"|"+(start??"")+"|"+x.title).toString(36),src:"youtube",vid:p.vid,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
-      title:String(x.title),artist:x.artist?String(x.artist):"",streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
+      title:String(x.title),artist:x.artist?String(x.artist):"",category:normCat(x.category),streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
   songsLoaded=true; renderSongs();
 }
 
