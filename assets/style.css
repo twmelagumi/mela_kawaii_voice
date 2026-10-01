@@ -138,6 +138,19 @@ body.has-player .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top,0px))
 .sside{display:flex;flex-direction:column;align-items:flex-end;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:8px}
 footer p{margin:0}
+/* 官方連結按鈕（頁尾最上方） */
+.official{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:10px}
+.ob{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:10px 18px;border-radius:999px;color:#fff;text-decoration:none;font-size:15px;box-shadow:0 6px 16px rgba(0,0,0,.14);transition:transform .15s,filter .15s;min-width:0}
+.ob:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.ob b{font-weight:700;overflow-wrap:anywhere}
+.ob span{font-size:12px;font-weight:700;opacity:.85;letter-spacing:.04em}
+.ob svg{width:16px;height:16px;fill:currentColor;flex:none}
+.ob-yt{background:#e5001a}
+.ob-x{background:#151515;border:1px solid #3a3a3a}
+.ob-holo{background:#0094bb}
+footer .ob,footer .ob:hover{color:#fff}
+@media (max-width:640px){.official{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.ob,.ob:hover{transform:none;transition:none}}
 footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 .dc{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink)}
 .dc-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;padding:2px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text)}
