@@ -111,6 +111,8 @@ body.has-player.player-mini .wrap{padding-bottom:120px}
 .picks{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:calc(var(--r) + 4px);background:var(--accent-soft)}
 .picks-title{margin:0;font-family:var(--f-display);font-size:18px;color:var(--accent-text);display:flex;align-items:center;gap:6px}
 .pad.pick{border-color:var(--accent)}
+.picks-title .gplay{margin-left:auto;font-family:var(--f-body);font-size:12px;font-weight:700;padding:4px 12px;color:var(--accent-text)}
+.picks .slist{border-color:var(--accent)}
 .more{display:flex;justify-content:center}
 .more button{padding:10px 24px;font-weight:700}
 .sgroup h2 .gtoggle{border:none;background:transparent;padding:2px 4px 2px 0;font:inherit;color:inherit;gap:6px;border-radius:6px}
