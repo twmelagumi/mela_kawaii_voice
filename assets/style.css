@@ -77,6 +77,29 @@ select{font:inherit;padding:10px 14px;border-radius:999px;border:1px solid var(-
 .primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 @media (max-width:700px){.player-in{grid-template-columns:1fr}.frame{max-height:40vh}}
 body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
+/* 縮小按鈕：放在播放器右上角 */
+.pmin{position:absolute;top:8px;right:12px;z-index:2;width:36px;height:36px;padding:0;justify-content:center;border-radius:8px;background:var(--surface);color:var(--muted)}
+.pmin svg{width:18px;height:18px;fill:currentColor}
+.pmin:hover{color:var(--ink)}
+.player:not(.mini) .pinfo h3{padding-right:44px}
+.player.mini .pmin{display:none}
+@media (max-width:700px){.player:not(.mini){padding-top:50px}.player:not(.mini) .pinfo h3{padding-right:0}}
+/* 縮小模式 */
+.pmini{display:none;gap:6px;align-items:center}
+.pmini .pm{width:38px;height:38px;padding:0;justify-content:center;font-size:15px}
+.pmini .pm svg{width:16px;height:16px;fill:currentColor}
+.pmini #mToggle{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.player.mini{padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));overflow:hidden}
+.player.mini .player-in{grid-template-columns:128px minmax(0,1fr);gap:12px;align-items:center}
+.player.mini .frame{border-radius:6px}
+.player.mini .xframe{max-height:72px;overflow:hidden}
+.player.mini .pinfo{flex-direction:row;align-items:center;gap:10px}
+.player.mini .pinfo h3{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pnote{margin:0;font-size:12px;line-height:1.5;color:var(--muted);max-width:68ch}
+.player.mini .meta,.player.mini .pbtns,.player.mini .queue,.player.mini .pnote{display:none}
+.player.mini .pmini{display:flex}
+body.has-player.player-mini .wrap{padding-bottom:120px}
+@media (max-width:700px){.player.mini .player-in{grid-template-columns:96px minmax(0,1fr)}.player.mini .pinfo{flex-direction:column;align-items:stretch;gap:4px}.player.mini .pinfo h3{font-size:14px}.pmini .pm{width:34px;height:34px}}
 /* ===== 待播清單（歌單頁） ===== */
 .slist .song{grid-template-columns:auto minmax(0,1fr) auto auto}
 .singers{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin-top:2px}

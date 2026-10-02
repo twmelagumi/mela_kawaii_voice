@@ -13,12 +13,13 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-02 01:32";
+const LAST_UPDATED = "2026-10-02 08:54";
 
 /* ===== 共用翻譯 ===== */
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
-   tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",
+   tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",pMinimize:"縮小播放器",
+   playerNote:"ⓘ 本頁使用 YouTube 嵌入式播放，可能不會列入你的 YouTube 觀看紀錄。",pExpand:"展開播放器",pPause:"暫停",pPlay:"播放",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
    holoOfficial:"hololive 官方介紹",
    dcPromo:"友宣",dcLabel:"非官方粉絲 めら組 Discord 頻道",dcJoin:"歡迎加入一起討論",
@@ -26,7 +27,8 @@ const I18N={
    updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
    rights:"本站為志工維護的非官方粉絲網站。影片由 hololive production 與熱千めら製作，影片的權利歸原創作者所有。"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
-   tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",
+   tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",pMinimize:"プレーヤーを小さくする",
+   playerNote:"ⓘ このページは YouTube の埋め込みプレーヤーで再生するため、ご自身の視聴履歴に残らない場合があります。",pExpand:"プレーヤーを開く",pPause:"一時停止",pPlay:"再生",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
    holoOfficial:"ホロライブ公式",
    dcPromo:"相互宣伝",dcLabel:"非公式ファン めら組 Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！",
@@ -34,7 +36,8 @@ const I18N={
    updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
    rights:"当サイトは有志が運営する非公式ファンサイトです。動画はホロライブプロダクションおよび熱千めらが制作したもので、動画の権利は各制作者に帰属します。"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
-   tabVoices:"Voices",tabSongs:"Songs",artist:"Original",
+   tabVoices:"Voices",tabSongs:"Songs",artist:"Original",pMinimize:"Minimize player",
+   playerNote:"ⓘ Videos play in YouTube's embedded player, so they may not show up in your YouTube watch history.",pExpand:"Expand player",pPause:"Pause",pPlay:"Play",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
    holoOfficial:"hololive official page",
    dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!",
@@ -55,6 +58,8 @@ function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
   const tk=document.body.dataset.titleKey; if(tk) document.title=`熱千めら ${t(tk)}`;
   document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+  document.querySelectorAll("[data-i18n-title]").forEach(el=>{ el.title=t(el.dataset.i18nTitle); el.setAttribute("aria-label",el.title); });
+  updateToggle();
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
   showUpdated();
   if(typeof window.onLangChange==="function") window.onLangChange();
@@ -99,7 +104,7 @@ function loadYT(){ if(ytReady) return ytReady; ytReady=new Promise(res=>{ window
 function fillInfo(c){ $("pTitle").textContent=c.title; $("pMeta").innerHTML=metaHTML(c); $("pOpen").href=origUrl(c); $("pOpen").textContent=c.src==="youtube"?t("openOriginal"):t("openX"); $("pReplay").hidden=c.src!=="youtube"; }
 async function play(c){
   if(!c) return;
-  current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c);
+  current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c); isPlaying=true; updateToggle();
   document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
   document.querySelectorAll(`[data-id="${CSS.escape(c.id)}"]`).forEach(el=>el.classList.add("playing"));
   const stage=$("stage");
@@ -111,7 +116,8 @@ async function play(c){
     ytPlayer=new YT.Player("yt",{videoId:c.vid,playerVars:{autoplay:1,playsinline:1,rel:0,start:c.start||0,...(opts.endSeconds?{end:opts.endSeconds}:{}),origin:location.origin},
       events:{onReady:e=>e.target.playVideo(),
         // 播完（含播到 end 時間）時通知頁面，歌單頁用來接下一首
-        onStateChange:e=>{ if(e.data===0&&typeof window.onPlayerEnded==="function") window.onPlayerEnded(current,e.target); }}});
+        onStateChange:e=>{ isPlaying=e.data===1||e.data===3; updateToggle();
+          if(e.data===0&&typeof window.onPlayerEnded==="function") window.onPlayerEnded(current,e.target); }}});
   }else{
     ytPlayer?.destroy?.(); ytPlayer=null;
     stage.innerHTML=`<div class="xframe"><blockquote class="twitter-tweet" data-dnt="true" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(c.url)}"></a></blockquote></div>`;
@@ -120,6 +126,15 @@ async function play(c){
   }
 }
 function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; ytPlayer.loadVideoById(o);} }
+/* ===== 縮小播放器：影片縮成畫面下方的小條，繼續播放，可以繼續看頁面 ===== */
+let isPlaying=false;
+const PAUSE_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+function setMini(on){ const p=$("player"); if(!p) return; p.classList.toggle("mini",on); document.body.classList.toggle("player-mini",on);
+  try{ localStorage.setItem("mela-mini",on?"1":"0"); }catch(e){} }
+function updateToggle(){ const b=$("mToggle"); if(!b) return; b.innerHTML=isPlaying?PAUSE_SVG:playSvg; b.title=t(isPlaying?"pPause":"pPlay"); b.setAttribute("aria-label",b.title);
+  b.disabled=!(current&&current.src==="youtube"); }
+function togglePlay(){ if(!ytPlayer||!ytPlayer.getPlayerState) return; if(ytPlayer.getPlayerState()===1) ytPlayer.pauseVideo(); else ytPlayer.playVideo(); }
+
 function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
   if(typeof window.onPlayerClosed==="function") window.onPlayerClosed(); }
 
@@ -130,4 +145,6 @@ function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; 
 document.addEventListener("click",e=>{ const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&current) closePlayer(); });
 document.addEventListener("DOMContentLoaded",()=>{ $("pReplay").onclick=replay; $("pClose").onclick=closePlayer;
+  if($("pMin")){ $("pMin").onclick=()=>setMini(true); $("mMax").onclick=()=>setMini(false); $("mClose").onclick=closePlayer; $("mToggle").onclick=togglePlay;
+    let m=false; try{ m=localStorage.getItem("mela-mini")==="1"; }catch(e){} setMini(m); updateToggle(); }
   const r=document.querySelector(".report"); if(r&&REPORT_URL){ $("reportLink").href=REPORT_URL; r.hidden=false; } });

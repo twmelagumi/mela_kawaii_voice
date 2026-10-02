@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610020132">
+<link rel="stylesheet" href="assets/style.css?v=202610020854">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -80,6 +80,7 @@
 </div>
 
 <div class="player" id="player" hidden>
+  <button type="button" class="pmin" id="pMin" data-i18n-title="pMinimize"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-7 9z"/></svg></button>
   <div class="player-in">
     <div id="stage"></div>
     <div class="pinfo">
@@ -91,6 +92,14 @@
         <button type="button" id="qNext" data-i18n="next"></button>
         <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
         <button type="button" id="pClose" data-i18n="close"></button>
+      </div>
+      <p class="pnote" data-i18n="playerNote"></p>
+      <div class="pmini">
+        <button type="button" class="pm" id="mPrev" data-i18n-title="prev">⏮</button>
+        <button type="button" class="pm" id="mToggle"></button>
+        <button type="button" class="pm" id="mNext" data-i18n-title="next">⏭</button>
+        <button type="button" class="pm" id="mMax" data-i18n-title="pExpand">▴</button>
+        <button type="button" class="pm" id="mClose" data-i18n-title="close">✕</button>
       </div>
       <div class="queue" id="queue">
         <div class="qhead">
@@ -109,7 +118,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610020132"></script>
+<script src="assets/common.js?v=202610020854"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -259,7 +268,7 @@ function renderQueue(){
       <span class="qops"><button type="button" data-qup="${i}" aria-label="${t("moveUp")}" title="${t("moveUp")}">↑</button><button type="button" data-qdown="${i}" aria-label="${t("moveDown")}" title="${t("moveDown")}">↓</button><button type="button" data-qrm="${i}" aria-label="${t("remove")}" title="${t("remove")}">✕</button></span></li>`; }).join("")
     :`<li><span></span><p class="qempty">${t("queueEmpty")}</p><span></span></li>`;
   const playerOpen=!$("player").hidden;
-  $("qPrev").disabled=!(Q.repeat?Q.ids.length:Q.idx>0); $("qNext").disabled=!(Q.repeat?Q.ids.length:Q.idx<Q.ids.length-1);
+  $("qPrev").disabled=$("mPrev").disabled=!(Q.repeat?Q.ids.length:Q.idx>0); $("qNext").disabled=$("mNext").disabled=!(Q.repeat?Q.ids.length:Q.idx<Q.ids.length-1);
   $("qFab").hidden=playerOpen||!Q.ids.length; $("qFab").textContent=`${t("resumeQ")} (${Q.ids.length})`;
 }
 // 一首播完（或播到 end 時間）→ 下一首；最後一首播完且沒開循環就停在那裡
@@ -290,7 +299,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button[data-spl
 $("sq").addEventListener("input",renderSongs); $("ssort").addEventListener("change",renderSongs);
 $("sshuffle").onclick=()=>{ if(SONGS.length) playNow(SONGS[Math.floor(Math.random()*SONGS.length)]); };
 $("playVisible").onclick=()=>{ if(lastVisible.length) playList(lastVisible); };
-$("qPrev").onclick=()=>step(-1); $("qNext").onclick=()=>step(1);
+$("qPrev").onclick=$("mPrev").onclick=()=>step(-1); $("qNext").onclick=$("mNext").onclick=()=>step(1);
 $("qShuffle").onclick=shuffleUpcoming; $("qClear").onclick=clearQueue;
 $("qRepeat").onclick=()=>{ Q.repeat=!Q.repeat; saveQueue(); renderQueue(); };
 $("qToggle").onclick=()=>{ qOpen=!qOpen; renderQueue(); };
