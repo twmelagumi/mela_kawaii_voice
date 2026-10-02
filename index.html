@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610020854">
+<link rel="stylesheet" href="assets/style.css?v=202610022129">
 <script>if(location.hash==="#songs") location.replace("songs.html");</script>
 </head>
 <body data-title-key="title">
@@ -50,6 +50,10 @@
       <button type="button" id="shuffle" data-i18n="random"></button>
     </div>
     <div class="tags" id="tags"></div>
+    <section class="picks" id="picks" hidden>
+      <h2 class="picks-title"><span aria-hidden="true">★</span> <span data-i18n="todayPick"></span></h2>
+      <div class="grid" id="pickGrid"></div>
+    </section>
     <div class="grid" id="grid"></div>
     <div class="more" id="moreWrap" hidden><button type="button" id="moreBtn"></button></div>
   </section>
@@ -100,7 +104,7 @@
   </div>
 </div>
 
-<script src="assets/common.js?v=202610020854"></script>
+<script src="assets/common.js?v=202610022129"></script>
 <script>
 /* ===== 聲音頁設定 ===== */
 // ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
@@ -111,13 +115,13 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIET
 addStrings({
  zh:{title:"聲音圖鑑",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
    sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",
-   showMore:"顯示更多（還有 {n} 段）",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
+   todayPick:"今日推薦",showMore:"顯示更多（還有 {n} 段）",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
  ja:{title:"ボイス図鑑",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
    sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",
-   showMore:"もっと見る（残り {n} 件）",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
+   todayPick:"今日のおすすめ",showMore:"もっと見る（残り {n} 件）",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
  en:{title:"Voice Library",sub:"Laughs, weird noises and famous lines from Mela's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
    sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",
-   showMore:"Show more ({n} left)",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
+   todayPick:"Today's picks",showMore:"Show more ({n} left)",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
 });
 // 標籤翻譯（標籤本身用中文存，切換語言時顯示對應文字）
 const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
@@ -149,7 +153,13 @@ function render(){
   if(!CLIPS.length){ $("grid").innerHTML=`<div class="empty"><h2>${t("none")}</h2><p>${t("noneHint")}</p></div>`; return; }
   const rest=list.length-shown;
   if(rest>0){ $("moreWrap").hidden=false; $("moreBtn").textContent=t("showMore").replace("{n}",rest); }
-  $("grid").innerHTML=list.length?list.slice(0,shown).map(c=>`<article class="pad${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
+  // 今日推薦：試算表「推薦」欄打勾（或 clips.json 的 "pick": true）的片段。搜尋或篩選標籤時先收起來，避免和結果混在一起。
+  const picks=CLIPS.filter(c=>c.pick);
+  $("picks").hidden=!picks.length||!!q||!!activeTag;
+  $("pickGrid").innerHTML=picks.map(c=>card(c,true)).join("");
+  $("grid").innerHTML=list.length?list.slice(0,shown).map(c=>card(c)).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
+}
+function card(c,isPick){ return `<article class="pad${isPick?" pick":""}${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
     <div class="pad-top">${c.src==="youtube"&&c.vid
       ?`<button type="button" class="thumb" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(c.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>`
       :`<button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button>`}<div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
@@ -158,8 +168,7 @@ function render(){
     <div class="meta">${metaHTML(c)}</div>
     ${(c.tags||[]).length?`<div class="ptags">${c.tags.map(x=>`<button type="button" data-tag="${esc(x)}">#${esc(tagName(x))}</button>`).join("")}</div>`:""}
     <div class="pad-foot"><button type="button" data-copy="${esc(c.id)}">${t("copy")}</button></div>
-  </article>`).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
-}
+  </article>`; }
 window.onLangChange=render;
 
 /* ===== 事件 ===== */
@@ -187,7 +196,9 @@ function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
 }
 // 依標題文字找欄位，表單題目順序不同也沒關係
 const COLS={ts:["時間戳記","タイムスタンプ","timestamp"],url:["網址","url","link","連結"],start:["開始","开始","start"],end:["結束","结束","終了","end"],title:["標題","タイトル","title"],
-  quote:["台詞","セリフ","quote"],tags:["標籤","タグ","tag"],note:["備註","メモ","note"],date:["日期","配信日","date"]};
+  quote:["台詞","セリフ","quote"],tags:["標籤","タグ","tag"],note:["備註","メモ","note"],date:["日期","配信日","date"],pick:["推薦","おすすめ","pick","recommend"]};
+// 「推薦」欄：打勾（TRUE）或填 v、1、是、○ 都算推薦
+const isYes=v=>/^(true|v|y|yes|1|是|○|◯|✓|✔|x)$/i.test(String(v||"").trim());
 function sheetToClips(text){
   const rows=parseCSV(text); if(rows.length<2) return [];
   const head=rows[0].map(h=>h.trim().toLowerCase()); const idx={};
@@ -199,7 +210,7 @@ function sheetToClips(text){
     let start=parseTime(get(r,"start")); const end=parseTime(get(r,"end")); if(start==null&&p.t!=null) start=p.t;
     return {id:"g"+hash(get(r,"ts")+"|"+get(r,"url")+"|"+i).toString(36),src:p.src,vid:p.vid||null,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
       title,quote:get(r,"quote"),note:get(r,"note"),tags:[...new Set(get(r,"tags").split(/[,，、\s]+/).map(x=>x.split(/[／\/]/)[0].replace(/^[#＃]/,"").trim()).filter(Boolean))].slice(0,12),
-      streamDate:normDate(get(r,"date")),addedAt:2e12+i}; }).filter(Boolean);
+      streamDate:normDate(get(r,"date")),pick:isYes(get(r,"pick")),addedAt:2e12+i}; }).filter(Boolean);
 }
 // Google 試算表 CSV 的快取：存在訪客瀏覽器（localStorage），SHEET_TTL 內不會再連 Google。
 // 過期時先用舊資料立刻顯示，再在背景抓新的，有變動才重畫。
@@ -215,7 +226,10 @@ async function fetchSheet(){
 let jsonClips=[], sheetClips=[];
 function mergeClips(){
   const seen=new Set(); CLIPS=[];
-  for(const c of [...jsonClips,...sheetClips]){ const key=(c.vid||c.url)+"@"+(c.start??""); if(seen.has(key)) continue; seen.add(key); CLIPS.push(c); }
+  const byKey={};
+  for(const c of [...jsonClips,...sheetClips]){ const key=(c.vid||c.url)+"@"+(c.start??"");
+    if(seen.has(key)){ if(c.pick) byKey[key].pick=true; continue; } // 重複的片段：只要任一邊標了推薦就算推薦
+    seen.add(key); const copy={...c}; byKey[key]=copy; CLIPS.push(copy); }
   if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
   render();
 }
