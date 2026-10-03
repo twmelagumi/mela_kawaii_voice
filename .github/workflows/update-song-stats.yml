@@ -1,0 +1,54 @@
+# 歌單：每兩天從 YouTube 抓原創曲／Cover 影片的播放次數，寫進 song_stats.json 並 commit。
+# 也可以到 GitHub 的 Actions 分頁 → Update song stats → Run workflow 手動執行（第一次上線後先手動跑一次）。
+name: Update song stats
+
+on:
+  schedule:
+    - cron: "23 1 */2 * *"   # 每月 1、3、5…日 UTC 01:23＝台灣時間 09:23（月底 31 日接 1 日時會連兩天）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: update-song-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch view counts
+        env:
+          # 跟編年史共用：repo Settings → Secrets and variables → Actions → YT_API_KEY
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+        run: python scripts/update_song_stats.py
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- song_stats.json && git ls-files --error-unmatch song_stats.json >/dev/null 2>&1; then
+            echo "no changes"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add song_stats.json
+          git commit -m "Songs: update view counts from YouTube"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Actions 推的 commit 有時不會觸發 GitHub Pages 重新部署，這裡手動叫一次（失敗也沒關係）
+      - name: Rebuild GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

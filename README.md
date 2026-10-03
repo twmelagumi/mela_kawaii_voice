@@ -181,6 +181,15 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 4. `clips.json` 裡的片段也可以加 `"pick": true`。
 5. 訪客在搜尋或篩選標籤時，推薦區塊會暫時收起來。
 
+### 播放次數（原創曲／Cover）
+
+歌單裡分類是 `original`、`cover` 的歌，會在日期旁邊顯示 YouTube 播放次數（整支影片的數字；歌回片段不顯示）。
+
+- 資料檔：`song_stats.json`，由 GitHub Actions「Update song stats」（`.github/workflows/update-song-stats.yml` → `scripts/update_song_stats.py`）每兩天台灣時間早上 9 點多自動更新並 commit，不用手動改。
+- API 金鑰和編年史共用 `YT_API_KEY`（見下面「YouTube API 金鑰」）。
+- 第一次上線、或新增原創曲／Cover 後想馬上看到數字：GitHub → Actions → Update song stats → Run workflow。
+- 想改更新頻率：改 workflow 裡的 `cron`（目前 `23 1 */2 * *`）。
+
 ## 「編年史」分頁（timeline.html）
 
 一條時間線，顯示直播、影片、紀念日。預設只顯示最近一年（含即將到來的紀念日），可以切換年份、月份、種類。
