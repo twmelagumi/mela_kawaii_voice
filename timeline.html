@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031943">
+<link rel="stylesheet" href="assets/style.css?v=202610032008">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -83,7 +83,7 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610031943"></script>
+<script src="assets/common.js?v=202610032008"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -111,21 +111,21 @@ addStrings({
    sideLabel:"排法",sideAlt:"左右交錯",sideType:"依種類分邊",newFirst:"新 → 舊",oldFirst:"舊 → 新",toToday:"跳到今天",today:"今天",
    periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",daysAgo:"{n} 天前",
    msYear:"出道 {n} 週年",yearly:"{t} {n} 週年",
-   autoTitle:"這天唱的歌",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
+   autoTitle:"這天唱的歌",earlier:"更早",nItems:"{n} 件",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
    empty:"還沒有事件",emptyHint:"更新 timeline.json 後就會出現在這裡。",k_song:"歌"},
  ja:{titleTimeline:"年表",subTimeline:"めらちゃんの配信・動画・記念日を、時間の流れにそってたどれます。",events:"件",
    ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"動画",ty_short:"ショート",ty_event:"イベント",ty_offline:"公式イベント",ty_live:"LIVE",ty_anniv:"記念日",ty_auto:"収録",withLabel:"コラボ相手",openLink:"リンクを開く",upcoming:"予定",startAt:"{t} 開始",
    sideLabel:"並べ方",sideAlt:"左右交互",sideType:"種類で左右",newFirst:"新しい順",oldFirst:"古い順",toToday:"今日へ",today:"今日",
    periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",daysAgo:"{n} 日前",
    msYear:"デビュー {n} 周年",yearly:"{t} {n} 周年",
-   autoTitle:"この日の歌",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
+   autoTitle:"この日の歌",earlier:"それ以前",nItems:"{n} 件",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
    empty:"まだイベントがありません",emptyHint:"timeline.json を更新するとここに表示されます。",k_song:"歌"},
  en:{titleTimeline:"Timeline",subTimeline:"Mela's streams, videos and anniversaries, one dot at a time.",events:"events",
    ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Video",ty_short:"Shorts",ty_event:"Event",ty_offline:"Offline Event",ty_live:"LIVE",ty_anniv:"Anniversary",ty_auto:"Clips",withLabel:"With",openLink:"Open link",upcoming:"Upcoming",startAt:"starts {t}",
    sideLabel:"Layout",sideAlt:"Alternate",sideType:"By type",newFirst:"Newest first",oldFirst:"Oldest first",toToday:"Jump to today",today:"Today",
    periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",daysAgo:"{n} days ago",
    msYear:"Debut anniversary #{n}",yearly:"{t} — year {n}",
-   autoTitle:"Songs from this day",songsN:"{n} songs",moreN:"{n} more ▾",less:"Show less ▴",
+   autoTitle:"Songs from this day",earlier:"earlier",nItems:"{n}",songsN:"{n} songs",moreN:"{n} more ▾",less:"Show less ▴",
    empty:"No events yet",emptyHint:"Add some to timeline.json and they'll show up here.",k_song:"Song"}
 });
 const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
@@ -148,6 +148,10 @@ const vidOf=u=>{ const p=parseClipUrl(u||""); return p&&p.src==="youtube"?p.vid:
 let raw=[], songs=[], items=[];
 let fType="all", order="desc", side="alt";
 let period="recent", fMonth=null; // period：recent＝最近一年（預設）／all／"2026" 這樣的年份；fMonth：選了年份後的月份
+// 精簡顯示：最近 RECENT_DAYS 天（和未來的）完整顯示；更早的按月份收起來，展開後是一行一行的精簡列，點了才顯示完整卡片
+// （篩選種類、或選了特定月份時全部完整顯示）
+const RECENT_DAYS=30;
+const openMonths=new Set(), openCards=new Set(), shown=new Set(); // 展開的月份／卡片；已經淡入過的（重畫時不再重播動畫）
 try{ order=localStorage.getItem("mela-tl-order")||order; side=localStorage.getItem("mela-tl-side")||side; }catch(e){}
 
 async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-cache"}); return r.ok?await r.json():[]; }catch(e){ return []; } }
@@ -232,16 +236,24 @@ function subsHTML(e){ if(!e.subs.length) return "";
   const more=e.subs.length>SUB_SHOW?`<li class="more"><button type="button" data-more="${e.id}">${tf("moreN",{n:e.subs.length-SUB_SHOW})}</button></li>`:"";
   return `<ul class="tl-sub">${e.subs.map(li).join("")}${more}</ul>`; }
 
-function cardHTML(e,isL,future){
+function cardHTML(e,isL,future,foldable){
   const counts=e.subs.length?tf("songsN",{n:e.subs.length}):"";
   const link=e.vid?null:linkOf(e.url);
-  const acts=e.vid?`<div class="tl-acts"><a class="btn" href="${esc(e.url)}" target="_blank" rel="noopener">YouTube ↗</a></div>`
-    :link?`<div class="tl-acts"><a class="btn" href="${esc(link.href)}" target="_blank" rel="noopener">${link.x?t("openX"):t("openLink")} ↗</a></div>`:"";
-  return `<article class="tl-item tl-type-${e.type} ${e.type}${isL?" l":""}${future?" future":""}" data-id="${e.id}">
+  const btns=(e.vid?`<a class="btn" href="${esc(e.url)}" target="_blank" rel="noopener">YouTube ↗</a>`
+    :link?`<a class="btn" href="${esc(link.href)}" target="_blank" rel="noopener">${link.x?t("openX"):t("openLink")} ↗</a>`:"")
+    +(foldable?`<button type="button" data-card="${e.id}">${t("less")}</button>`:"");
+  const acts=btns?`<div class="tl-acts">${btns}</div>`:"";
+  return `<article class="tl-item tl-type-${e.type} ${e.type}${isL?" l":""}${future?" future":""}${shown.has(e.id)?" in":""}" data-id="${e.id}">
     ${dateHTML(e)}<span class="tl-dot" aria-hidden="true"></span>
     <div class="tl-card"><span class="tl-badge">${t("ty_"+e.type)}${e.upcoming?` · ${t("upcoming")}`:""}${counts?` · ${counts}`:""}</span>
       ${e.vid?`<a class="thumb tl-thumb" href="${ytLink(e.vid)}" target="_blank" rel="noopener" aria-label="YouTube: ${esc(titleOf(e))}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(e.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.parentNode.hidden=true"><span class="tplay">${playSvg}</span></a>`:""}
       <h3>${esc(titleOf(e))}</h3>${e.with&&e.with.length?`<p class="tl-with"><i>${t("withLabel")}</i>${e.with.map(n=>`<span>${esc(n)}</span>`).join("")}</p>`:""}${e.note?`<p class="note">${esc(e.note)}</p>`:""}${subsHTML(e)}${acts}</div></article>`; }
+
+// 精簡列：圓點＋日期＋種類＋標題，點了展開成完整卡片
+function miniHTML(e){ const d=D(e.date), md=`${String(d.getUTCMonth()+1).padStart(2,"0")}.${String(d.getUTCDate()).padStart(2,"0")}`;
+  return `<article class="tl-item tl-mini tl-type-${e.type} ${e.type}${shown.has(e.id)?" in":""}" data-id="${e.id}">
+    <div class="tl-date"><b>${md}</b></div><span class="tl-dot" aria-hidden="true"></span>
+    <button type="button" class="tl-mini-row" data-card="${e.id}" aria-expanded="false"><b class="d">${md}</b><span class="tl-badge">${t("ty_"+e.type)}</span><span class="t">${esc(titleOf(e))}</span></button></article>`; }
 
 function render(){
   // 自動產生的每年紀念日（N 週年、生日）只顯示下一次（篩選「紀念日」時全部顯示）；其他未來的事件（預定直播等）都顯示
@@ -281,17 +293,24 @@ function render(){
   if(!list.length){ $("tl").innerHTML=(items.length?`<div class="empty"><h2>${t("emptyPeriod")}</h2></div>`:`<div class="empty"><h2>${t("empty")}</h2><p>${t("emptyHint")}</p></div>`)+olderBtn; return; }
   // 「今天」標記只在期間包含今天時顯示
   const td=iso(TODAY), showToday=period==="all"||period==="recent"||(period===td.slice(0,4)&&(!fMonth||fMonth===+td.slice(5,7)));
+  // 精簡顯示：更早的事件按月份收起來
+  const compact=fType==="all"&&!fMonth, cutoff=iso(addDays(TODAY,-RECENT_DAYS));
+  const isOld=e=>compact&&e.date<cutoff, oldN={}, recentMonths=new Set();
+  list.forEach(e=>{ const mk=e.date.slice(0,7); if(isOld(e)) oldN[mk]=(oldN[mk]||0)+1; else recentMonths.add(mk); });
   let h="", month="", k=0, todayDone=!showToday;
   const todayRow=`<div class="tl-today" id="todayRow"><span class="lbl"><i></i>${t("today")} · ${td.replace(/-/g,".")}</span></div>`;
   for(const e of list){
     const d=D(e.date), future=d>TODAY;
     // 今天的標記：插在過去與未來的交界
     if(!todayDone&&(order==="desc"?!future:future)){ h+=todayRow; todayDone=true; month=""; }
-    const mk=e.date.slice(0,7);
-    if(mk!==month){ month=mk; const [y,m]=mk.split("-");
-      h+=`<div class="tl-month${future?" future":""}"><h2>${tf("monthFmt",{y,m:+m,M:MONTHS_EN[m-1]})}</h2></div>`; }
+    const mk=e.date.slice(0,7), old=isOld(e), gk=mk+(old?"o":"");
+    if(gk!==month){ month=gk; const [y,m]=mk.split("-"), label=tf("monthFmt",{y,m:+m,M:MONTHS_EN[m-1]});
+      h+=old?`<div class="tl-month tl-fold"><h2><button type="button" data-fold="${mk}" aria-expanded="${openMonths.has(mk)}">${label}${recentMonths.has(mk)?` · ${t("earlier")}`:""} <span class="n">${tf("nItems",{n:oldN[mk]})}</span><span class="arr" aria-hidden="true">${openMonths.has(mk)?"▾":"▸"}</span></button></h2></div>`
+        :`<div class="tl-month${future?" future":""}"><h2>${label}</h2></div>`; }
+    if(old){ if(!openMonths.has(mk)) continue;
+      if(!openCards.has(e.id)){ h+=miniHTML(e); continue; } }
     const isL=side==="type"?!RIGHT_TYPES.has(e.type):(k++%2===1);
-    h+=cardHTML(e,isL,future);
+    h+=cardHTML(e,isL,future,old);
   }
   if(!todayDone) h+=todayRow;
   h+=`<div class="tl-end"><span></span></div>`+olderBtn;
@@ -302,13 +321,15 @@ function render(){
 let io=null;
 function reveal(){ const els=document.querySelectorAll(".tl-item");
   if(!("IntersectionObserver" in window)){ els.forEach(x=>x.classList.add("in")); return; }
-  io?.disconnect(); io=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add("in"); io.unobserve(x.target);} }),{rootMargin:"0px 0px -40px 0px"});
-  els.forEach(x=>io.observe(x)); }
+  io?.disconnect(); io=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add("in"); shown.add(x.target.dataset.id); io.unobserve(x.target);} }),{rootMargin:"0px 0px -40px 0px"});
+  els.forEach(x=>{ if(!x.classList.contains("in")) io.observe(x); }); }
 
 const findItem=id=>items.find(e=>e.id===id);
 document.addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.type){ fType=b.dataset.type; return render(); }
+  if(b.dataset.fold){ const m=b.dataset.fold; openMonths.has(m)?openMonths.delete(m):openMonths.add(m); return render(); }
+  if(b.dataset.card){ const id=b.dataset.card; openCards.has(id)?openCards.delete(id):openCards.add(id); return render(); }
   if(b.dataset.period){ period=b.dataset.period; fMonth=null; render(); if(b.closest(".tl-older")) $("yearChips").scrollIntoView({behavior:"smooth",block:"start"}); return; }
   if(b.dataset.month!=null){ fMonth=b.dataset.month?+b.dataset.month:null; return render(); }
   if(b.dataset.side){ side=b.dataset.side; try{localStorage.setItem("mela-tl-side",side)}catch(_){} return render(); }

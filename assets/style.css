@@ -320,6 +320,28 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 
 .tl-end{padding-top:2px}
 .tl-older{margin-top:8px}
+/* 編年史：更早的月份收起來（點了展開）＋精簡列 */
+.tl-fold h2{padding:0}
+.tl-fold h2:hover{border-color:var(--accent)}
+.tl-fold h2 button{border:none;background:transparent;font:inherit;color:inherit;padding:4px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.tl-fold .n{font-family:var(--f-code);font-size:12px;font-weight:400;color:var(--muted)}
+.tl-fold .arr{font-size:11px;color:var(--muted)}
+.tl-item.tl-mini{padding-bottom:4px;grid-template-areas:"date dot card"}
+.tl-mini .tl-dot{width:10px;height:10px;margin-top:11px;box-shadow:0 0 0 3px var(--bg)}
+.tl-mini.anniv .tl-dot{width:14px;height:14px;margin-top:9px}
+.tl-mini .tl-date{padding-top:5px;align-items:flex-end;text-align:right}
+.tl-mini .tl-date b{font-size:14px;color:var(--muted)}
+.tl-mini-row{grid-area:card;margin:0 0 0 16px;justify-self:start;max-width:calc(100% - 16px);display:flex;align-items:center;gap:8px;min-width:0;text-align:left;border:1px solid transparent;background:transparent;border-radius:10px;padding:4px 10px;font-size:14px;color:var(--ink)}
+.tl-mini-row:hover{background:var(--surface);border-color:var(--line)}
+.tl-mini-row .d{display:none;font-family:var(--f-code);font-size:13px;font-weight:600;color:var(--muted)}
+.tl-mini-row .tl-badge{flex:none}
+.tl-mini-row .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+@media (max-width:720px){
+  .tl-item.tl-mini{grid-template-areas:"dot card"}
+  .tl-mini .tl-date{display:none}
+  .tl-mini-row{margin-left:8px;max-width:calc(100% - 8px)}
+  .tl-mini-row .d{display:inline}
+}
 .tl-end span{grid-column:2;justify-self:center;width:10px;height:10px;border-radius:50%;background:var(--tl-line)}
 
 /* 捲動時淡入 */
