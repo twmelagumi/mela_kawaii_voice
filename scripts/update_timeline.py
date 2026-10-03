@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """從 YouTube 自動抓直播／影片，寫進 timeline_auto.json（編年史頁的自動資料）。
 
-由 GitHub Actions（.github/workflows/update-timeline.yml）每天台灣時間早上 6 點執行一次。
+由 GitHub Actions（.github/workflows/update-timeline.yml）每天台灣時間早上 9 點執行一次。
 需要 YouTube Data API v3 金鑰：環境變數 YT_API_KEY（GitHub Secrets）。本機測試：
     YT_API_KEY=… python scripts/update_timeline.py            # 更新 timeline_auto.json
     YT_API_KEY=… python scripts/update_timeline.py --dry-run  # 只印出結果，不寫檔

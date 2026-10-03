@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031845">
+<link rel="stylesheet" href="assets/style.css?v=202610031928">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -83,7 +83,7 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610031845"></script>
+<script src="assets/common.js?v=202610031928"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -93,7 +93,7 @@
  * debut: true（只要一個）→ 每年的週年標題顯示成「出道 N 週年」
  *
  * 事件有三個來源，後面的會蓋過前面的（同一支影片＝同一個事件）：
- *   ① timeline_auto.json：GitHub Actions 每天早上 6 點（台灣時間）從 YouTube 自動抓的直播／影片（scripts/update_timeline.py）
+ *   ① timeline_auto.json：GitHub Actions 每天早上 9 點（台灣時間）從 YouTube 自動抓的直播／影片（scripts/update_timeline.py）
  *   ② timeline.json：手動維護的固定資料
  *   ③ Google 試算表「編年史」分頁（TIMELINE_CSV_URL）：日常新增、修改自動抓到的標題／說明、隱藏不要的
  * 另外會自動讀 songs.json：同一支影片的歌會掛在那個事件底下；

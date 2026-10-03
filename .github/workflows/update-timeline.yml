@@ -1,10 +1,10 @@
-# 編年史：每天台灣時間早上 6 點從 YouTube 抓新的直播／影片，寫進 timeline_auto.json 並 commit。
+# 編年史：每天台灣時間早上 9 點從 YouTube 抓新的直播／影片，寫進 timeline_auto.json 並 commit。
 # 也可以到 GitHub 的 Actions 分頁 → Update timeline → Run workflow 手動執行。
 name: Update timeline
 
 on:
   schedule:
-    - cron: "0 22 * * *"   # UTC 22:00＝台灣時間每天 06:00（GitHub 排程有時會晚幾分鐘到半小時）
+    - cron: "0 1 * * *"   # UTC 01:00＝台灣時間每天 09:00（GitHub 排程有時會晚幾分鐘到半小時）
   workflow_dispatch:
 
 permissions:
