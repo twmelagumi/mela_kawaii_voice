@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-03 11:30";
+const LAST_UPDATED = "2026-10-03 14:58";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -23,7 +23,7 @@ if(GOATCOUNTER_URL&&/^https?:$/.test(location.protocol)){ // 本機預覽（file
 /* ===== 共用翻譯 ===== */
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
-   tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",pMinimize:"縮小播放器",
+   tabVoices:"聲音",tabSongs:"歌曲",tabTimeline:"編年史",artist:"原唱",pMinimize:"縮小播放器",
    playerNote:"ⓘ 本頁使用 YouTube 嵌入式播放，可能不會列入你的 YouTube 觀看紀錄。",pExpand:"展開播放器",pPause:"暫停",pPlay:"播放",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
    officialLinks:"官方相關連結",unofficialLinks:"非官方連結",holoOfficial:"hololive 官方介紹",
@@ -32,7 +32,7 @@ const I18N={
    updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
    rights:"本站為志工維護的非官方粉絲網站。影片由 hololive production 與熱千めら製作，影片的權利歸原創作者所有。"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
-   tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",pMinimize:"プレーヤーを小さくする",
+   tabVoices:"ボイス",tabSongs:"歌",tabTimeline:"年表",artist:"原曲",pMinimize:"プレーヤーを小さくする",
    playerNote:"ⓘ このページは YouTube の埋め込みプレーヤーで再生するため、ご自身の視聴履歴に残らない場合があります。",pExpand:"プレーヤーを開く",pPause:"一時停止",pPlay:"再生",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
    officialLinks:"公式リンク",unofficialLinks:"非公式リンク",holoOfficial:"ホロライブ公式",
@@ -41,7 +41,7 @@ const I18N={
    updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
    rights:"当サイトは有志が運営する非公式ファンサイトです。動画はホロライブプロダクションおよび熱千めらが制作したもので、動画の権利は各制作者に帰属します。"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
-   tabVoices:"Voices",tabSongs:"Songs",artist:"Original",pMinimize:"Minimize player",
+   tabVoices:"Voices",tabSongs:"Songs",tabTimeline:"Timeline",artist:"Original",pMinimize:"Minimize player",
    playerNote:"ⓘ Videos play in YouTube's embedded player, so they may not show up in your YouTube watch history.",pExpand:"Expand player",pPause:"Pause",pPlay:"Play",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
    officialLinks:"Official links",unofficialLinks:"Unofficial links",holoOfficial:"hololive official page",
@@ -98,6 +98,17 @@ function parseClipUrl(u){ try{ const url=new URL(String(u).trim()); const host=u
       return {src:"youtube",vid:id,url:`https://www.youtube.com/watch?v=${id}`,t}; }
     if(["x.com","twitter.com","mobile.twitter.com"].includes(host)&&/\/status\/\d+/.test(url.pathname)) return {src:"x",url:url.origin+url.pathname};
   }catch(e){} return null; }
+// Google 試算表發佈的 CSV → 二維陣列（聲音頁、編年史頁共用）
+function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){ const ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; }
+    else if(ch==='"') q=true; else if(ch===","){ row.push(f); f=""; }
+    else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&text[i+1]==="\n") i++; row.push(f); rows.push(row); row=[]; f=""; }
+    else f+=ch; }
+  if(f!==""||row.length){ row.push(f); rows.push(row); } return rows.filter(r=>r.some(c=>c.trim()!==""));
+}
+// 試算表的勾選欄：打勾（TRUE）或填 v、1、是、○ 都算
+const isYes=v=>/^(true|v|y|yes|1|是|○|◯|✓|✔|x)$/i.test(String(v||"").trim());
 // 日期 → YYYY-MM-DD。可吃 2026/9/30、9/30/2026、試算表序號 46295
 function normDate(v){ v=String(v||"").trim(); const p2=n=>String(n).padStart(2,"0");
   if(/^\d{5}(\.\d+)?$/.test(v)){ const d=new Date(Date.UTC(1899,11,30)+Math.floor(+v)*864e5); return `${d.getUTCFullYear()}-${p2(d.getUTCMonth()+1)}-${p2(d.getUTCDate())}`; }

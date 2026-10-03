@@ -1,0 +1,43 @@
+[
+  {
+    "date": "2026-09-24",
+    "type": "anniv",
+    "title": "出道日",
+    "note": "アソビ★まわり隊！ 熱千めら 初登場",
+    "yearly": true,
+    "debut": true
+  },
+  {
+    "date": "2027-04-16",
+    "type": "anniv",
+    "title": "熱千めら 生日",
+    "yearly": true
+  },
+  {
+    "date": "2026-09-24",
+    "type": "stream",
+    "title": "【初配信】",
+    "url": "https://www.youtube.com/watch?v=CEo1T9NzynY",
+    "note": "あらあらー？めらめらー？\\熱千めらー！/\nホロライブ アソビ★まわり隊！ご利益担当の火消し屋サラマンダー、熱千めらなのじゃ！"
+  },
+  {
+    "date": "2026-09-25",
+    "type": "release",
+    "title": "騒げ★ぐるぐるTIME！",
+    "url": "https://www.youtube.com/watch?v=09PC6CQbHeQ",
+    "note": "アソビ★まわり隊！ 原創曲"
+  },
+  {
+    "date": "2026-09-26",
+    "type": "release",
+    "title": "私は、わたしの事が好き。（Cover）",
+    "url": "https://www.youtube.com/watch?v=IJUJV-5Im_M"
+  },
+  {
+    "date": "2026-10-01",
+    "type": "stream",
+    "title": "はじめての歌枠",
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "note": "第一次歌枠"
+  }
+]

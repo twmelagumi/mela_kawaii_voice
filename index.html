@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031130">
+<link rel="stylesheet" href="assets/style.css?v=202610031458">
 <script>if(location.hash==="#songs") location.replace("songs.html");</script>
 </head>
 <body data-title-key="title">
@@ -34,6 +34,7 @@
   <nav class="views">
     <a href="./" aria-current="page" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabTimeline"></a>
   </nav>
 
   <section class="view">
@@ -106,7 +107,7 @@
   </div>
 </div>
 
-<script src="assets/common.js?v=202610031130"></script>
+<script src="assets/common.js?v=202610031458"></script>
 <script>
 /* ===== 聲音頁設定 ===== */
 // ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
@@ -188,19 +189,10 @@ $("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*
 if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
 
 /* ===== 讀資料：clips.json + Google 試算表（發佈的 CSV） ===== */
-function parseCSV(text){ const rows=[]; let row=[],f="",q=false;
-  for(let i=0;i<text.length;i++){ const ch=text[i];
-    if(q){ if(ch==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=ch; }
-    else if(ch==='"') q=true; else if(ch===","){ row.push(f); f=""; }
-    else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&text[i+1]==="\n") i++; row.push(f); rows.push(row); row=[]; f=""; }
-    else f+=ch; }
-  if(f!==""||row.length){ row.push(f); rows.push(row); } return rows.filter(r=>r.some(c=>c.trim()!==""));
-}
 // 依標題文字找欄位，表單題目順序不同也沒關係
 const COLS={ts:["時間戳記","タイムスタンプ","timestamp"],url:["網址","url","link","連結"],start:["開始","开始","start"],end:["結束","结束","終了","end"],title:["標題","タイトル","title"],
   quote:["台詞","セリフ","quote"],tags:["標籤","タグ","tag"],note:["備註","メモ","note"],date:["日期","配信日","date"],pick:["推薦","おすすめ","pick","recommend"]};
-// 「推薦」欄：打勾（TRUE）或填 v、1、是、○ 都算推薦
-const isYes=v=>/^(true|v|y|yes|1|是|○|◯|✓|✔|x)$/i.test(String(v||"").trim());
+// 「推薦」欄：打勾（TRUE）或填 v、1、是、○ 都算推薦（isYes 在 common.js）
 function sheetToClips(text){
   const rows=parseCSV(text); if(rows.length<2) return [];
   const head=rows[0].map(h=>h.trim().toLowerCase()); const idx={};

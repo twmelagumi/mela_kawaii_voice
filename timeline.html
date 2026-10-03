@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>熱千めら 編年史</title>
+<meta name="description" content="熱千めら 直播與紀念日編年史（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<link rel="stylesheet" href="assets/style.css?v=202610031458">
+</head>
+<body data-title-key="titleTimeline">
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleTimeline"></span></h1>
+      <p class="sub" data-i18n="subTimeline"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count"><b id="count">0</b> <span data-i18n="events"></span></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" aria-current="page" data-i18n="tabTimeline"></a>
+  </nav>
+
+  <section class="view">
+    <div class="tl-tools">
+      <div class="tags" id="typeChips"></div>
+      <span class="sp"></span>
+      <div class="tags" role="group" aria-labelledby="sideLabel">
+        <span class="chips-label" id="sideLabel" data-i18n="sideLabel"></span>
+        <button type="button" class="chip" data-side="alt" data-i18n="sideAlt"></button>
+        <button type="button" class="chip" data-side="type" data-i18n="sideType"></button>
+      </div>
+      <select id="tlOrder">
+        <option value="desc" data-i18n="newFirst"></option>
+        <option value="asc" data-i18n="oldFirst"></option>
+      </select>
+      <button type="button" id="toToday" data-i18n="toToday"></button>
+    </div>
+    <div class="tags period" id="yearChips"></div>
+    <div class="tags period" id="monthChips" hidden></div>
+    <div class="tl anim" id="tl"></div>
+  </section>
+
+  <footer>
+    <p class="official-label" data-i18n="officialLinks"></p>
+    <nav class="official" aria-label="Official links">
+      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
+      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
+      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
+      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
+    </nav>
+    <p data-i18n="footer"></p>
+    <p class="official-label" data-i18n="unofficialLinks"></p>
+    <div class="dc">
+      <span class="dc-tag" data-i18n="dcPromo"></span>
+      <span class="dc-label" data-i18n="dcLabel"></span>
+      <ul>
+        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
+        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
+      </ul>
+      <span class="dc-join" data-i18n="dcJoin"></span>
+    </div>
+    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
+    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
+    <p class="rights" data-i18n="rights"></p>
+  </footer>
+</div>
+
+<div class="player" id="player" hidden>
+  <button type="button" class="pmin" id="pMin" data-i18n-title="pMinimize"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-7 9z"/></svg></button>
+  <div class="player-in">
+    <div id="stage"></div>
+    <div class="pinfo">
+      <h3 id="pTitle"></h3>
+      <div class="meta" id="pMeta"></div>
+      <div class="pbtns">
+        <button type="button" class="primary" id="pReplay" data-i18n="replay"></button>
+        <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
+        <button type="button" id="pClose" data-i18n="close"></button>
+      </div>
+      <p class="pnote" data-i18n="playerNote"></p>
+      <div class="pmini">
+        <button type="button" class="pm" id="mToggle"></button>
+        <button type="button" class="pm" id="mMax" data-i18n-title="pExpand">▴</button>
+        <button type="button" class="pm" id="mClose" data-i18n-title="close">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/common.js?v=202610031458"></script>
+<script>
+/* ===== 編年史頁 =====
+ * 事件資料放在 timeline.json，每個事件：
+ *   { "date": "2026-10-01", "type": "stream", "title": "はじめての歌枠", "url": YouTube 網址, "note": 備註 }
+ * type（種類）：stream 直播 / collab 合作 / release 發布（原創曲、Cover、MV…）/ anniv 紀念日
+ * yearly: true → 每年同一天自動出現「N 週年」
+ * debut: true（只要一個）→ 每年的週年標題顯示成「出道 N 週年」
+ *
+ * 事件有三個來源，後面的會蓋過前面的（同一支影片＝同一個事件）：
+ *   ① timeline_auto.json：GitHub Actions 每天早上 6 點（台灣時間）從 YouTube 自動抓的直播／影片（scripts/update_timeline.py）
+ *   ② timeline.json：手動維護的固定資料
+ *   ③ Google 試算表「編年史」分頁（TIMELINE_CSV_URL）：日常新增、修改自動抓到的標題／說明、隱藏不要的
+ * 另外會自動讀 songs.json：同一支影片的歌會掛在那個事件底下；
+ * 沒有對應事件的，會用「收錄」自動在那天長出一個點。（clips.json 的聲音不放進編年史）
+ */
+// Google 試算表「編年史」分頁發佈成 CSV 的網址（…/pub?gid=…&single=true&output=csv）。留空就只讀 json。
+const TIMELINE_CSV_URL = "";
+const TL_SHEET_TTL = 5*60*1000; // 試算表在訪客瀏覽器快取 5 分鐘
+
+addStrings({
+ zh:{titleTimeline:"編年史",subTimeline:"めらちゃん的直播、發布和紀念日，沿著時間線一路往下看。",events:"個事件",
+   ty_all:"全部",ty_stream:"直播",ty_collab:"合作",ty_release:"發布",ty_anniv:"紀念日",ty_auto:"收錄",
+   sideLabel:"排法",sideAlt:"左右交錯",sideType:"依種類分邊",newFirst:"新 → 舊",oldFirst:"舊 → 新",toToday:"跳到今天",today:"今天",
+   periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",daysAgo:"{n} 天前",
+   msYear:"出道 {n} 週年",yearly:"{t} {n} 週年",
+   autoTitle:"這天唱的歌",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
+   empty:"還沒有事件",emptyHint:"更新 timeline.json 後就會出現在這裡。",k_song:"歌"},
+ ja:{titleTimeline:"年表",subTimeline:"めらちゃんの配信・リリース・記念日を、時間の流れにそってたどれます。",events:"件",
+   ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"リリース",ty_anniv:"記念日",ty_auto:"収録",
+   sideLabel:"並べ方",sideAlt:"左右交互",sideType:"種類で左右",newFirst:"新しい順",oldFirst:"古い順",toToday:"今日へ",today:"今日",
+   periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",daysAgo:"{n} 日前",
+   msYear:"デビュー {n} 周年",yearly:"{t} {n} 周年",
+   autoTitle:"この日の歌",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
+   empty:"まだイベントがありません",emptyHint:"timeline.json を更新するとここに表示されます。",k_song:"歌"},
+ en:{titleTimeline:"Timeline",subTimeline:"Mela's streams, releases and anniversaries, one dot at a time.",events:"events",
+   ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Release",ty_anniv:"Anniversary",ty_auto:"Clips",
+   sideLabel:"Layout",sideAlt:"Alternate",sideType:"By type",newFirst:"Newest first",oldFirst:"Oldest first",toToday:"Jump to today",today:"Today",
+   periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",daysAgo:"{n} days ago",
+   msYear:"Debut anniversary #{n}",yearly:"{t} — year {n}",
+   autoTitle:"Songs from this day",songsN:"{n} songs",moreN:"{n} more ▾",less:"Show less ▴",
+   empty:"No events yet",emptyHint:"Add some to timeline.json and they'll show up here.",k_song:"Song"}
+});
+const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const MONTHS_EN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const TYPES=["stream","collab","release","anniv","auto"];
+const RIGHT_TYPES=new Set(["stream","collab","auto"]); // 「依種類分邊」時放右邊的種類
+
+// ---- 日期工具（全部用 UTC 計算，避免時區造成差一天）----
+const D=s=>{ const [y,m,d]=s.split("-").map(Number); return new Date(Date.UTC(y,m-1,d)); };
+const iso=d=>d.toISOString().slice(0,10);
+const addDays=(d,n)=>new Date(d.getTime()+n*864e5);
+const addMonths=(d,n)=>{ const r=new Date(d); r.setUTCMonth(r.getUTCMonth()+n); if(r.getUTCDate()!==d.getUTCDate()) r.setUTCDate(0); return r; };
+const diffDays=(a,b)=>Math.round((a-b)/864e5);
+const TODAY=(()=>{ const n=new Date(); return D(`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`); })();
+const vidOf=u=>{ const p=parseClipUrl(u||""); return p&&p.src==="youtube"?p.vid:null; };
+
+let raw=[], songs=[], items=[];
+let fType="all", order="desc", side="alt";
+let period="recent", fMonth=null; // period：recent＝最近一年（預設）／all／"2026" 這樣的年份；fMonth：選了年份後的月份
+try{ order=localStorage.getItem("mela-tl-order")||order; side=localStorage.getItem("mela-tl-side")||side; }catch(e){}
+
+async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-cache"}); return r.ok?await r.json():[]; }catch(e){ return []; } }
+
+// ---- Google 試算表（CSV；parseCSV、isYes 在 common.js）----
+// 依標題文字找欄位（順序不拘）
+const TL_COLS={date:["日期","日付","date"],type:["種類","類型","種別","type"],title:["標題","タイトル","title"],url:["網址","url","link","連結"],
+  note:["說明","説明","備註","メモ","note"],yearly:["每年","毎年","yearly"],hide:["隱藏","非表示","hide"]};
+// 「種類」欄可以填中文／日文／英文
+const TYPE_WORDS={anniv:["紀念","記念","anniv","生日","誕生","birthday"],collab:["合作","コラボ","collab"],
+  release:["發布","发布","リリース","release","mv","cover","歌ってみた","原創","オリジナル","original"],stream:["直播","配信","stream","live"]};
+const typeOf=v=>{ v=String(v||"").trim().toLowerCase(); if(!v) return ""; for(const k in TYPE_WORDS) if(TYPE_WORDS[k].some(w=>v.includes(w))) return k; return TYPES.includes(v)?v:""; };
+function sheetToEvents(text){
+  const rows=parseCSV(text||""); if(rows.length<2) return [];
+  const head=rows[0].map(h=>h.trim().toLowerCase()), idx={};
+  for(const k in TL_COLS) idx[k]=head.findIndex(h=>TL_COLS[k].some(w=>h.includes(w.toLowerCase())));
+  const get=(r,k)=>idx[k]>=0?(r[idx[k]]||"").trim():"";
+  return rows.slice(1).map(r=>({date:normDate(get(r,"date"))||"",type:typeOf(get(r,"type")),title:get(r,"title"),url:get(r,"url"),
+    note:get(r,"note"),yearly:isYes(get(r,"yearly")),hide:isYes(get(r,"hide"))})).filter(e=>e.url||(e.date&&e.title));
+}
+const TL_SHEET_KEY="mela-tl-sheet:"+hash(TIMELINE_CSV_URL);
+function readTlCache(){ try{ const c=JSON.parse(localStorage.getItem(TL_SHEET_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
+async function fetchTlSheet(){ const r=await fetch(TIMELINE_CSV_URL+(TIMELINE_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
+  const text=await r.text(); try{ localStorage.setItem(TL_SHEET_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} return text; }
+
+// ---- 合併三個來源：自動 < timeline.json < 試算表 ----
+// 同一支影片（或沒有網址時：同日期＋同標題）視為同一個事件，後面的來源只覆蓋有填的欄位。
+// 試算表「隱藏」打勾 → 把那個事件拿掉（例如自動抓到、但不想放進編年史的影片）。
+function mergeSources(autoList,jsonList,sheetList){
+  const out=[], byKey=new Map();
+  const keyOf=e=>{ const v=vidOf(e.url); return v?"v:"+v:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
+  for(const src of [autoList,jsonList,sheetList]) for(const e of src||[]){ if(!e) continue;
+    const k=keyOf(e), cur=byKey.get(k);
+    if(e.hide){ if(cur) cur._hide=true; else byKey.set(k,{_hide:true}); continue; }
+    if(cur){ if(cur._hide&&!("date" in cur)) continue; for(const f in e) if(e[f]!==""&&e[f]!=null&&e[f]!==false) cur[f]=e[f]; }
+    else { const c={...e}; for(const f in c) if(c[f]===""||c[f]===false) delete c[f]; byKey.set(k,c); out.push(c); } }
+  return out.filter(e=>!e._hide);
+}
+
+// 把 timeline.json ＋ songs.json 整理成一串事件
+function build(){
+  const ev=raw.filter(e=>e&&e.date&&e.title).map((e,i)=>({...e,series:e.yearly?"y:"+normDate(e.date)+e.title:undefined,date:normDate(e.date),type:TYPES.includes(e.type)?e.type:"stream",id:"e"+i,vid:vidOf(e.url),subs:[]}));
+  // 歌：同一支影片 → 掛在那個事件底下；否則按日期自動長出「收錄」
+  const autos={};
+  const attach=(s,kind)=>{ const vid=vidOf(s.url)||s.vid; const date=normDate(s.streamDate)||null;
+    const sub={kind,title:s.title,artist:s.artist,vid,start:s.start!=null?parseTime(s.start):null,end:s.end!=null?parseTime(s.end):null,url:s.url};
+    let host=vid&&ev.find(e=>e.vid===vid);
+    if(!host&&date){ host=autos[date]||(autos[date]={date,type:"auto",auto:true,id:"a"+date,subs:[],vids:new Set()}); }
+    if(!host) return; host.subs.push(sub); if(host.vids&&vid) host.vids.add(vid); };
+  songs.forEach(s=>attach(s,"song"));
+  for(const a of Object.values(autos)){ if(a.vids.size===1){ a.vid=[...a.vids][0]; a.url=`https://www.youtube.com/watch?v=${a.vid}`; } ev.push(a); }
+  for(const e of ev) e.subs.sort((a,b)=>(a.start??0)-(b.start??0));
+  // 紀念日：每年自動出現（出道 N 週年、生日…）
+  const horizon=addDays(TODAY,400);
+  for(const e of raw){ if(!e||!e.date) continue; const base=D(normDate(e.date));
+    const push=(d,title,key)=>{ if(d<=horizon) ev.push({date:iso(d),type:"anniv",title,gen:key,id:"g"+iso(d)+key.k+(key.n||"")+hash(e.title||""),subs:[],ref:e,note:key.plain?e.note:undefined,series:key.series}); };
+    // 生日這類每年同一天、不需要算「第 N 年」的：count:false，或標題含 生日／誕生／birthday
+    const plain=e.count===false||/生日|誕生|birthday/i.test(e.title||"");
+    if(e.yearly){ for(let n=1;n<=60;n++){ const d=addMonths(base,12*n); if(d>horizon) break;
+      push(d,null,plain?{k:"plain",t:e.title,plain:true,series:"y:"+e.date+e.title}:e.debut?{k:"msYear",n,series:"y:"+e.date+e.title}:{k:"yearly",n,t:e.title,series:"y:"+e.date+e.title}); } }
+  }
+  items=ev;
+}
+const titleOf=e=>e.gen?(e.gen.plain?e.gen.t:tf(e.gen.k,{n:e.gen.n,t:e.gen.t})):e.auto?t("autoTitle"):e.title;
+
+function dateHTML(e){ const d=D(e.date), w=d.getUTCDay(), wd=lang==="en"?t("wd").split(" ")[w]:t("wd")[w];
+  const dd=diffDays(d,TODAY); let cd="";
+  if(dd>0) cd=`<span class="cd">${tf("inDays",{n:dd})}</span>`; else if(dd===0) cd=`<span class="cd">${t("today")}</span>`;
+  return `<div class="tl-date"><b>${String(d.getUTCMonth()+1).padStart(2,"0")}.${String(d.getUTCDate()).padStart(2,"0")}</b><span>${d.getUTCFullYear()} ${tf("wdFmt",{w:wd})}</span>${cd}</div>`; }
+
+const ytLink=(vid,start)=>`https://www.youtube.com/watch?v=${encodeURIComponent(vid)}${start?`&t=${start}s`:""}`;
+const SUB_SHOW=3;
+function subsHTML(e){ if(!e.subs.length) return "";
+  if(e.subs.length===1&&e.subs[0].start==null&&!e.auto) return ""; // 只有一首整支影片（例如 Cover MV）就不用再列一次
+  const li=(s,i)=>`<li${i>=SUB_SHOW?' class="x" hidden':""}><span class="k">${s.start!=null?fmt(s.start):t("k_"+s.kind)}</span>${s.vid?`<a href="${ytLink(s.vid,s.start)}" target="_blank" rel="noopener">${esc(s.title)}</a>`:s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`:`<span>${esc(s.title)}</span>`}${s.artist?`<span class="a">${esc(s.artist)}</span>`:""}</li>`;
+  const more=e.subs.length>SUB_SHOW?`<li class="more"><button type="button" data-more="${e.id}">${tf("moreN",{n:e.subs.length-SUB_SHOW})}</button></li>`:"";
+  return `<ul class="tl-sub">${e.subs.map(li).join("")}${more}</ul>`; }
+
+function cardHTML(e,isL,future){
+  const counts=e.subs.length?tf("songsN",{n:e.subs.length}):"";
+  const acts=e.vid&&!future?`<div class="tl-acts"><a class="btn" href="${esc(e.url)}" target="_blank" rel="noopener">YouTube ↗</a></div>`:"";
+  return `<article class="tl-item tl-type-${e.type} ${e.type}${isL?" l":""}${future?" future":""}" data-id="${e.id}">
+    ${dateHTML(e)}<span class="tl-dot" aria-hidden="true"></span>
+    <div class="tl-card"><span class="tl-badge">${t("ty_"+e.type)}${counts?` · ${counts}`:""}</span>
+      ${e.vid&&!future?`<a class="thumb tl-thumb" href="${ytLink(e.vid)}" target="_blank" rel="noopener" aria-label="YouTube: ${esc(titleOf(e))}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(e.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.parentNode.hidden=true"><span class="tplay">${playSvg}</span></a>`:""}
+      <h3>${esc(titleOf(e))}</h3>${e.note?`<p class="note">${esc(e.note)}</p>`:""}${subsHTML(e)}${acts}</div></article>`; }
+
+function render(){
+  // 未來的紀念日只顯示最近的幾個（篩選「紀念日」時全部顯示）
+  // 另外，每個「每年」的紀念日（生日、週年）一定顯示下一次
+  const fut=items.filter(e=>D(e.date)>TODAY).sort((a,b)=>a.date<b.date?-1:1), seenSeries=new Set();
+  const FUTURE_MAX=3, nextKeys=new Set(fut.slice(0,FUTURE_MAX).map(e=>e.id));
+  for(const e of fut) if(e.series&&!seenSeries.has(e.series)){ seenSeries.add(e.series); nextKeys.add(e.id); }
+  const visible=e=>fType==="anniv"||D(e.date)<=TODAY||nextKeys.has(e.id);
+  const ofType=e=>fType==="all"||e.type===fType;
+  // 期間：最近一年（含即將到來的）／全部／某年（某月）
+  const yearAgo=iso(addDays(TODAY,-365));
+  const inPeriod=e=>period==="all"?true:period==="recent"?e.date>yearAgo:(e.date.slice(0,4)===period&&(!fMonth||+e.date.slice(5,7)===fMonth));
+  const base=items.filter(visible);
+
+  // 種類 chips（數字＝目前期間內的件數）
+  const cnt={all:0}; base.filter(inPeriod).forEach(e=>{ cnt.all++; cnt[e.type]=(cnt[e.type]||0)+1; });
+  $("typeChips").innerHTML=["all",...TYPES].filter(k=>cnt[k]||k===fType).map(k=>`<button type="button" class="chip${k!=="all"?` tl-type-${k}`:""}" data-type="${k}" aria-pressed="${fType===k}">${k!=="all"?'<i class="sw"></i>':""}${t("ty_"+k)} <span class="n">${cnt[k]||0}</span></button>`).join("");
+  document.querySelectorAll("[data-side]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.side===side));
+  $("tlOrder").value=order;
+
+  // 期間 chips（數字＝目前種類的件數）
+  const typed=base.filter(ofType), ym={};
+  typed.forEach(e=>{ const y=e.date.slice(0,4), m=+e.date.slice(5,7); (ym[y]=ym[y]||{})[m]=(ym[y][m]||0)+1; });
+  const years=Object.keys(ym).sort().reverse(), ycount=y=>Object.values(ym[y]).reduce((a,b)=>a+b,0);
+  if(/^\d{4}$/.test(period)&&!ym[period]){ period="recent"; fMonth=null; }
+  const chip=(attr,val,on,label,n)=>`<button type="button" class="chip" ${attr}="${val}" aria-pressed="${on}">${label}${n!=null?` <span class="n">${n}</span>`:""}</button>`;
+  $("yearChips").innerHTML=`<span class="chips-label">${t("periodLabel")}</span>`+chip("data-period","recent",period==="recent",t("recentYear"),typed.filter(e=>e.date>yearAgo).length)
+    +chip("data-period","all",period==="all",t("allPeriod"),typed.length)+years.map(y=>chip("data-period",y,period===y,tf("yearFmt",{y}),ycount(y))).join("");
+  const isYear=/^\d{4}$/.test(period), months=isYear?Object.keys(ym[period]).map(Number).sort((a,b)=>b-a):[];
+  $("monthChips").hidden=!isYear;
+  $("monthChips").innerHTML=isYear?`<span class="chips-label">${tf("yearFmt",{y:period})}</span>`+chip("data-month","",!fMonth,t("wholeYear"))
+    +months.map(m=>chip("data-month",m,fMonth===m,tf("monthChip",{m,M:MONTHS_EN[m-1]}),ym[period][m])).join(""):"";
+
+  const list=typed.filter(inPeriod)
+    .sort((a,b)=>(a.date===b.date?(a.type==="anniv"?0:1)-(b.type==="anniv"?0:1):(a.date<b.date?-1:1))*(order==="asc"?1:-1)); // 同一天：紀念日算在當天最前面（新→舊時排在當天最下面）
+  $("count").textContent=list.length;
+  const older=period==="recent"?typed.filter(e=>e.date<=yearAgo).length:0;
+  const olderBtn=older?`<div class="more tl-older"><button type="button" data-period="all">${tf("olderN",{n:older})}</button></div>`:"";
+  if(!list.length){ $("tl").innerHTML=(items.length?`<div class="empty"><h2>${t("emptyPeriod")}</h2></div>`:`<div class="empty"><h2>${t("empty")}</h2><p>${t("emptyHint")}</p></div>`)+olderBtn; return; }
+  // 「今天」標記只在期間包含今天時顯示
+  const td=iso(TODAY), showToday=period==="all"||period==="recent"||(period===td.slice(0,4)&&(!fMonth||fMonth===+td.slice(5,7)));
+  let h="", month="", k=0, todayDone=!showToday;
+  const todayRow=`<div class="tl-today" id="todayRow"><span class="lbl"><i></i>${t("today")} · ${td.replace(/-/g,".")}</span></div>`;
+  for(const e of list){
+    const d=D(e.date), future=d>TODAY;
+    // 今天的標記：插在過去與未來的交界
+    if(!todayDone&&(order==="desc"?!future:future)){ h+=todayRow; todayDone=true; month=""; }
+    const mk=e.date.slice(0,7);
+    if(mk!==month){ month=mk; const [y,m]=mk.split("-");
+      h+=`<div class="tl-month${future?" future":""}"><h2>${tf("monthFmt",{y,m:+m,M:MONTHS_EN[m-1]})}</h2></div>`; }
+    const isL=side==="type"?!RIGHT_TYPES.has(e.type):(k++%2===1);
+    h+=cardHTML(e,isL,future);
+  }
+  if(!todayDone) h+=todayRow;
+  h+=`<div class="tl-end"><span></span></div>`+olderBtn;
+  $("tl").innerHTML=h; reveal();
+}
+
+// 捲動到畫面裡才淡入
+let io=null;
+function reveal(){ const els=document.querySelectorAll(".tl-item");
+  if(!("IntersectionObserver" in window)){ els.forEach(x=>x.classList.add("in")); return; }
+  io?.disconnect(); io=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add("in"); io.unobserve(x.target);} }),{rootMargin:"0px 0px -40px 0px"});
+  els.forEach(x=>io.observe(x)); }
+
+const findItem=id=>items.find(e=>e.id===id);
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.type){ fType=b.dataset.type; return render(); }
+  if(b.dataset.period){ period=b.dataset.period; fMonth=null; render(); if(b.closest(".tl-older")) $("yearChips").scrollIntoView({behavior:"smooth",block:"start"}); return; }
+  if(b.dataset.month!=null){ fMonth=b.dataset.month?+b.dataset.month:null; return render(); }
+  if(b.dataset.side){ side=b.dataset.side; try{localStorage.setItem("mela-tl-side",side)}catch(_){} return render(); }
+  if(b.dataset.more){ const ul=b.closest(".tl-sub"), open=b.dataset.open!=="1"; ul.querySelectorAll("li.x").forEach(li=>li.hidden=!open);
+    b.dataset.open=open?"1":"0"; b.textContent=open?t("less"):tf("moreN",{n:ul.querySelectorAll("li.x").length}); }
+});
+$("tlOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-tl-order",order)}catch(_){} render(); };
+$("toToday").onclick=()=>{ if(!$("todayRow")){ period="recent"; fMonth=null; render(); } $("todayRow")?.scrollIntoView({behavior:"smooth",block:"center"}); };
+window.onLangChange=render;
+
+(async()=>{
+  const arr=d=>Array.isArray(d)?d:[];
+  const cached=TIMELINE_CSV_URL?readTlCache():null;
+  const sheetP=cached?Promise.resolve(cached.text):TIMELINE_CSV_URL?fetchTlSheet().catch(e=>{ console.warn("timeline sheet failed",e); return ""; }):Promise.resolve("");
+  let [autoL,jsonL,songL,sheetText]=await Promise.all([getJSON("timeline_auto.json"),getJSON("timeline.json"),getJSON("songs.json"),sheetP]);
+  autoL=arr(autoL); jsonL=arr(jsonL); songs=arr(songL);
+  const apply=text=>{ raw=mergeSources(autoL,jsonL,sheetToEvents(text)); build(); };
+  apply(sheetText); setLang(pickLang());
+  // 快取過期：背景更新，有變才重畫
+  if(cached&&Date.now()-cached.at>=TL_SHEET_TTL) fetchTlSheet().then(t=>{ if(t!==cached.text){ apply(t); render(); } }).catch(e=>console.warn("timeline sheet refresh failed",e));
+})();
+</script>
+</body>
+</html>

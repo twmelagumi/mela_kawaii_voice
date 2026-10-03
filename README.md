@@ -6,10 +6,15 @@
 |---|---|
 | `index.html` | 聲音頁（投稿的聲音片段、搜尋、標籤） |
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
-| `assets/style.css` | 兩頁共用的外觀（顏色、字體、版面） |
-| `assets/common.js` | 兩頁共用的程式（語言切換、共用文字、頁內播放器） |
+| `timeline.html` | 編年史頁（直播、發布、紀念日的時間線） |
+| `assets/style.css` | 各頁共用的外觀（顏色、字體、版面） |
+| `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |
 | `songs.json` | 「歌曲」分頁的歌單，由管理者自己編輯後上傳 |
+| `timeline.json` | 編年史的固定事件（出道日、生日、重要直播…） |
+| `timeline_auto.json` | 編年史自動抓到的 YouTube 直播／影片（GitHub Actions 自動更新，不用手動改） |
+| `scripts/update_timeline.py` | 自動抓 YouTube 的程式 |
+| `.github/workflows/update-timeline.yml` | 每天早上 6 點（台灣時間）執行上面的程式 |
 
 網站片段有兩個來源，會自動合併、去掉重複：
 
@@ -175,3 +180,48 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 3. 想推薦的片段打勾，取消就拿掉。約 5～10 分鐘後網站更新。
 4. `clips.json` 裡的片段也可以加 `"pick": true`。
 5. 訪客在搜尋或篩選標籤時，推薦區塊會暫時收起來。
+
+## 「編年史」分頁（timeline.html）
+
+一條時間線，顯示直播、發布、紀念日。預設只顯示最近一年（含即將到來的紀念日），可以切換年份、月份、種類。
+
+### 資料來源（後面的會蓋過前面的）
+
+1. **`timeline_auto.json`**：GitHub Actions 每天台灣時間早上 6 點，從 めら 頻道的 RSS 抓最近 15 支影片（アソビ★まわり隊！ 團體頻道的影片手動新增）。
+   - 直播要播完才加入；Shorts 不收；首播的 MV 算「發布」；日期用日本時間。
+   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，不會被最近 15 支覆蓋。想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
+   - 要加／拿掉頻道：改 `scripts/update_timeline.py` 最上面的 `CHANNELS`。
+2. **`timeline.json`**：手動維護的固定資料。
+3. **Google 試算表「編年史」分頁**：日常新增、修改自動抓到的內容（設定見下面）。
+
+同一支影片（同網址）算同一個事件，後面的來源只覆蓋有填的欄位。`songs.json` 裡同一支影片的歌會自動列在那個事件底下；沒有對應事件的歌會依 `streamDate` 自動長出一個「這天唱的歌」。
+
+### timeline.json 格式
+
+```json
+{ "date": "2026-10-01", "type": "stream", "title": "はじめての歌枠", "url": "https://www.youtube.com/watch?v=…", "note": "說明（可以換行）" }
+```
+
+| 欄位 | 說明 |
+|---|---|
+| `date` | 日期 `"2026-10-01"` |
+| `type` | `stream` 直播／`collab` 合作／`release` 發布／`anniv` 紀念日 |
+| `title` | 標題 |
+| `url` | YouTube 網址（有網址就會顯示縮圖，點了開 YouTube） |
+| `note` | 說明 |
+| `yearly` | `true` → 每年同一天自動出現。標題含「生日／誕生／birthday」或加 `"count": false` 時只顯示原標題，否則顯示「N 週年」 |
+| `debut` | `true`（只要一個）→ 週年顯示成「出道 N 週年」 |
+
+### Google 試算表「編年史」分頁設定
+
+1. 在投稿用的試算表新增分頁「編年史」，第一列填標題（順序不拘）：`日期`、`種類`、`標題`、`網址`、`說明`、`每年`、`隱藏`
+2. **種類**填 直播／合作／發布／紀念日（日文 配信／コラボ／リリース／記念日 也可以）。
+3. **改自動抓到的內容**：填同一個網址＋想改的欄位（例如標題改短、加說明）。
+4. **隱藏**打勾（或填 v、1）→ 那個網址的事件不顯示。
+5. **每年**打勾 → 每年自動出現（生日、週年）。
+6. 「檔案 → 共用 → 發佈到網路」→ 選「編年史」分頁、格式選 CSV → 複製網址，填進 `timeline.html` 的 `TIMELINE_CSV_URL`。
+7. 改完約 5 分鐘網站更新。
+
+### 注意
+
+- GitHub Actions 會自己 commit `timeline_auto.json`，本機 push 前要先 `git pull --rebase`。
