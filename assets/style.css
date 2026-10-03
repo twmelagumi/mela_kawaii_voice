@@ -320,6 +320,11 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 
 .tl-end{padding-top:2px}
 .tl-older{margin-top:8px}
+/* 編年史：展開的 X 推文（官方嵌入；載入前／被擋時顯示連結） */
+.tl-post{margin:4px 0 0;max-width:550px;min-width:0}
+.tl-post .twitter-tweet{margin:0!important}
+.tl-post blockquote.twitter-tweet{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted)}
+.tl-post blockquote.twitter-tweet a{color:var(--accent-text);font-weight:700}
 /* 編年史：更早的月份收起來（點了展開）＋精簡列 */
 .tl-fold h2{padding:0}
 .tl-fold h2:hover{border-color:var(--accent)}
