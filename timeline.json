@@ -39,5 +39,51 @@
     "title": "はじめての歌枠",
     "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
     "note": "第一次歌枠"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=z_ZP9E7qJc4",
+    "note": "初めてGeoGuessrをプレイした"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=6dLFYgSqSl0",
+    "note": "初めての“のじゃEnglish”配信"
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=KNZDbpsAnB8",
+    "note": "初めてホラーゲームをプレイした"
+  },
+  {
+    "date": "2026-09-19",
+    "type": "release",
+    "title": "熱千めら タレントPV",
+    "url": "https://www.youtube.com/watch?v=4wP881xm5g0"
+  },
+  {
+    "date": "2026-09-18",
+    "type": "release",
+    "title": "アソビ★まわり隊！ デビューPV",
+    "url": "https://www.youtube.com/watch?v=PKXd2ooPaQg"
+  },
+  {
+    "date": "2026-09-30",
+    "type": "stream",
+    "title": "【ホロライブ新人ユニット】デビュー振り返り隊！！ #ホロライブ #アソビまわり隊",
+    "url": "https://www.youtube.com/watch?v=2TWNxNTHPxU",
+    "with": [
+      "キョーコ",
+      "そぴあ",
+      "つづり"
+    ]
+  },
+  {
+    "date": "2026-09-25",
+    "type": "stream",
+    "title": "全 員 集 合 ★パーティー開幕！",
+    "url": "https://www.youtube.com/watch?v=m6FdZU1SW5w",
+    "with": [
+      "キョーコ",
+      "そぴあ",
+      "つづり"
+    ]
   }
 ]
