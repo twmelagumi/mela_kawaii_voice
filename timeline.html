@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031605">
+<link rel="stylesheet" href="assets/style.css?v=202610031653">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -81,7 +81,7 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610031605"></script>
+<script src="assets/common.js?v=202610031653"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -98,28 +98,28 @@
  * 沒有對應事件的，會用「收錄」自動在那天長出一個點。（clips.json 的聲音不放進編年史）
  */
 // Google 試算表「編年史」分頁發佈成 CSV 的網址（…/pub?gid=…&single=true&output=csv）。留空就只讀 json。
-const TIMELINE_CSV_URL = "";
+const TIMELINE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1439353672&single=true&output=csv";
 // YouTube Shorts 要不要顯示在編年史（false＝隱藏；資料還是會自動收集）
 const SHOW_SHORTS = true;
 const TL_SHEET_TTL = 5*60*1000; // 試算表在訪客瀏覽器快取 5 分鐘
 
 addStrings({
  zh:{titleTimeline:"編年史",subTimeline:"めらちゃん的直播、發布和紀念日，沿著時間線一路往下看。",events:"個事件",
-   ty_all:"全部",ty_stream:"直播",ty_collab:"聯動",ty_release:"發布",ty_short:"Shorts",ty_anniv:"紀念日",ty_auto:"收錄",withLabel:"聯動對象",upcoming:"預定",startAt:"{t} 開始",
+   ty_all:"全部",ty_stream:"直播",ty_collab:"聯動",ty_release:"發布",ty_short:"Shorts",ty_event:"事件",ty_anniv:"紀念日",ty_auto:"收錄",withLabel:"聯動對象",openLink:"開啟連結",upcoming:"預定",startAt:"{t} 開始",
    sideLabel:"排法",sideAlt:"左右交錯",sideType:"依種類分邊",newFirst:"新 → 舊",oldFirst:"舊 → 新",toToday:"跳到今天",today:"今天",
    periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",daysAgo:"{n} 天前",
    msYear:"出道 {n} 週年",yearly:"{t} {n} 週年",
    autoTitle:"這天唱的歌",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
    empty:"還沒有事件",emptyHint:"更新 timeline.json 後就會出現在這裡。",k_song:"歌"},
  ja:{titleTimeline:"年表",subTimeline:"めらちゃんの配信・リリース・記念日を、時間の流れにそってたどれます。",events:"件",
-   ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"リリース",ty_short:"ショート",ty_anniv:"記念日",ty_auto:"収録",withLabel:"コラボ相手",upcoming:"予定",startAt:"{t} 開始",
+   ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"リリース",ty_short:"ショート",ty_event:"イベント",ty_anniv:"記念日",ty_auto:"収録",withLabel:"コラボ相手",openLink:"リンクを開く",upcoming:"予定",startAt:"{t} 開始",
    sideLabel:"並べ方",sideAlt:"左右交互",sideType:"種類で左右",newFirst:"新しい順",oldFirst:"古い順",toToday:"今日へ",today:"今日",
    periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",daysAgo:"{n} 日前",
    msYear:"デビュー {n} 周年",yearly:"{t} {n} 周年",
    autoTitle:"この日の歌",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
    empty:"まだイベントがありません",emptyHint:"timeline.json を更新するとここに表示されます。",k_song:"歌"},
  en:{titleTimeline:"Timeline",subTimeline:"Mela's streams, releases and anniversaries, one dot at a time.",events:"events",
-   ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Release",ty_short:"Shorts",ty_anniv:"Anniversary",ty_auto:"Clips",withLabel:"With",upcoming:"Upcoming",startAt:"starts {t}",
+   ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Release",ty_short:"Shorts",ty_event:"Event",ty_anniv:"Anniversary",ty_auto:"Clips",withLabel:"With",openLink:"Open link",upcoming:"Upcoming",startAt:"starts {t}",
    sideLabel:"Layout",sideAlt:"Alternate",sideType:"By type",newFirst:"Newest first",oldFirst:"Oldest first",toToday:"Jump to today",today:"Today",
    periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",daysAgo:"{n} days ago",
    msYear:"Debut anniversary #{n}",yearly:"{t} — year {n}",
@@ -128,7 +128,7 @@ addStrings({
 });
 const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
 const MONTHS_EN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const TYPES=["stream","collab","release","short","anniv","auto"];
+const TYPES=["stream","collab","release","short","event","anniv","auto"];
 const RIGHT_TYPES=new Set(["stream","collab","auto"]); // 「依種類分邊」時放右邊的種類
 
 // ---- 日期工具（全部用 UTC 計算，避免時區造成差一天）----
@@ -138,6 +138,9 @@ const addDays=(d,n)=>new Date(d.getTime()+n*864e5);
 const addMonths=(d,n)=>{ const r=new Date(d); r.setUTCMonth(r.getUTCMonth()+n); if(r.getUTCDate()!==d.getUTCDate()) r.setUTCDate(0); return r; };
 const diffDays=(a,b)=>Math.round((a-b)/864e5);
 const TODAY=(()=>{ const n=new Date(); return D(`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`); })();
+// 不是 YouTube 的網址（X 推文等）→ {href, x}；不是 http(s) 網址就 null
+const linkOf=u=>{ try{ const url=new URL(String(u||"").trim()); if(!/^https?:$/.test(url.protocol)) return null;
+  const host=url.hostname.replace(/^(www|mobile)\./,""); return {href:url.href,x:host==="x.com"||host==="twitter.com"}; }catch(e){ return null; } };
 const vidOf=u=>{ const p=parseClipUrl(u||""); return p&&p.src==="youtube"?p.vid:null; };
 
 let raw=[], songs=[], items=[];
@@ -152,7 +155,7 @@ async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-cache"}); retur
 const TL_COLS={date:["日期","日付","date"],type:["種類","類型","種別","type"],title:["標題","タイトル","title"],url:["網址","url","link","連結"],
   note:["說明","説明","備註","メモ","note"],with:["聯動對象","联动对象","コラボ相手","合作對象","with"],yearly:["每年","毎年","yearly"],hide:["隱藏","非表示","hide"]};
 // 「種類」欄可以填中文／日文／英文
-const TYPE_WORDS={anniv:["紀念","記念","anniv","生日","誕生","birthday"],collab:["聯動","联动","合作","コラボ","collab"],short:["short","ショート"],
+const TYPE_WORDS={anniv:["紀念","記念","anniv","生日","誕生","birthday"],collab:["聯動","联动","合作","コラボ","collab"],short:["short","ショート"],event:["事件","イベント","event"],
   release:["發布","发布","リリース","release","mv","cover","歌ってみた","原創","オリジナル","original"],stream:["直播","配信","stream","live"]};
 const typeOf=v=>{ v=String(v||"").trim().toLowerCase(); if(!v) return ""; for(const k in TYPE_WORDS) if(TYPE_WORDS[k].some(w=>v.includes(w))) return k; return TYPES.includes(v)?v:""; };
 function sheetToEvents(text){
@@ -173,7 +176,7 @@ async function fetchTlSheet(){ const r=await fetch(TIMELINE_CSV_URL+(TIMELINE_CS
 // 試算表「隱藏」打勾 → 把那個事件拿掉（例如自動抓到、但不想放進編年史的影片）。
 function mergeSources(autoList,jsonList,sheetList){
   const out=[], byKey=new Map();
-  const keyOf=e=>{ const v=vidOf(e.url); return v?"v:"+v:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
+  const keyOf=e=>{ const v=vidOf(e.url); if(v) return "v:"+v; const u=linkOf(e.url); return u?"u:"+u.href:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
   for(const src of [autoList,jsonList,sheetList]) for(const e of src||[]){ if(!e) continue;
     const k=keyOf(e), cur=byKey.get(k);
     if(e.hide){ if(cur) cur._hide=true; else byKey.set(k,{_hide:true}); continue; }
@@ -229,7 +232,9 @@ function subsHTML(e){ if(!e.subs.length) return "";
 
 function cardHTML(e,isL,future){
   const counts=e.subs.length?tf("songsN",{n:e.subs.length}):"";
-  const acts=e.vid?`<div class="tl-acts"><a class="btn" href="${esc(e.url)}" target="_blank" rel="noopener">YouTube ↗</a></div>`:"";
+  const link=e.vid?null:linkOf(e.url);
+  const acts=e.vid?`<div class="tl-acts"><a class="btn" href="${esc(e.url)}" target="_blank" rel="noopener">YouTube ↗</a></div>`
+    :link?`<div class="tl-acts"><a class="btn" href="${esc(link.href)}" target="_blank" rel="noopener">${link.x?t("openX"):t("openLink")} ↗</a></div>`:"";
   return `<article class="tl-item tl-type-${e.type} ${e.type}${isL?" l":""}${future?" future":""}" data-id="${e.id}">
     ${dateHTML(e)}<span class="tl-dot" aria-hidden="true"></span>
     <div class="tl-card"><span class="tl-badge">${t("ty_"+e.type)}${e.upcoming?` · ${t("upcoming")}`:""}${counts?` · ${counts}`:""}</span>

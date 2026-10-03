@@ -209,10 +209,10 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 | 欄位 | 說明 |
 |---|---|
 | `date` | 日期 `"2026-10-01"` |
-| `type` | `stream` 直播／`collab` 聯動／`release` 發布／`short` Shorts／`anniv` 紀念日 |
+| `type` | `stream` 直播／`collab` 聯動／`release` 發布／`short` Shorts／`event` 事件／`anniv` 紀念日 |
 | `with` | 聯動對象，例如 `["宙科そぴあ", "鈴鳴つづり"]`（有填的直播會顯示成「聯動」） |
 | `title` | 標題 |
-| `url` | YouTube 網址（有網址就會顯示縮圖，點了開 YouTube） |
+| `url` | YouTube 網址（顯示縮圖，點了開 YouTube）；也可以放 X 推文或其他網址（顯示「在 X 開啟」／「開啟連結」按鈕） |
 | `note` | 說明 |
 | `yearly` | `true` → 每年同一天自動出現。標題含「生日／誕生／birthday」或加 `"count": false` 時只顯示原標題，否則顯示「N 週年」 |
 | `debut` | `true`（只要一個）→ 週年顯示成「出道 N 週年」 |
@@ -220,11 +220,11 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 ### Google 試算表「編年史」分頁設定
 
 1. 在投稿用的試算表新增分頁「編年史」，第一列填標題（順序不拘）：`日期`、`種類`、`標題`、`網址`、`說明`、`聯動對象`、`每年`、`隱藏`
-2. **種類**填 直播／聯動／發布／Shorts／紀念日（日文 配信／コラボ／リリース／ショート／記念日 也可以）。**聯動對象**多人用「、」分隔。
+2. **種類**填 直播／聯動／發布／Shorts／事件／紀念日（日文 配信／コラボ／リリース／ショート／イベント／記念日 也可以）。**聯動對象**多人用「、」分隔。
 3. **改自動抓到的內容**：填同一個網址＋想改的欄位（例如標題改短、加說明）。
 4. **隱藏**打勾（或填 v、1）→ 那個網址的事件不顯示。
 5. **每年**打勾 → 每年自動出現（生日、週年）。
-6. 「檔案 → 共用 → 發佈到網路」→ 選「編年史」分頁、格式選 CSV → 複製網址，填進 `timeline.html` 的 `TIMELINE_CSV_URL`。
+6. 「檔案 → 共用 → 發佈到網路」→ 選「編年史」分頁、格式選 CSV → 複製網址，填進 `timeline.html` 的 `TIMELINE_CSV_URL`（已設定好）。
 7. 改完約 5 分鐘網站更新。
 
 ### YouTube API 金鑰（必要）
@@ -234,7 +234,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 3. 「API 和服務」→「憑證」→「建立憑證」→「API 金鑰」→ 複製金鑰。
 4. （建議）在金鑰設定頁「API 限制」選「限制金鑰」→ 只勾 YouTube Data API v3 → 儲存。
 5. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**：Name 填 `YT_API_KEY`，Secret 貼上金鑰 → Add secret。
-6. Actions → Update timeline → Run workflow，紀錄第一行顯示「模式：YouTube Data API」就成功了。
+6. Actions → Update timeline → Run workflow，紀錄出現「@AchichiMela: RSS 15 支，要查 N 支」就成功了（金鑰沒設好會顯示「沒有 YT_API_KEY」）。
 
 每天只用到幾個配額單位（免費額度每天 10,000），不需要綁信用卡。
 
