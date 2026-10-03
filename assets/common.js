@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-03 15:52";
+const LAST_UPDATED = "2026-10-03 16:05";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -164,7 +164,7 @@ function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; 
 /* ===== 共用事件 ===== */
 document.addEventListener("click",e=>{ const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&current) closePlayer(); });
-document.addEventListener("DOMContentLoaded",()=>{ $("pReplay").onclick=replay; $("pClose").onclick=closePlayer;
+document.addEventListener("DOMContentLoaded",()=>{ if($("pReplay")){ $("pReplay").onclick=replay; $("pClose").onclick=closePlayer; } // 編年史頁沒有播放器
   if($("pMin")){ $("pMin").onclick=()=>setMini(true); $("mMax").onclick=()=>setMini(false); $("mClose").onclick=closePlayer; $("mToggle").onclick=togglePlay;
     let m=false; try{ m=localStorage.getItem("mela-mini")==="1"; }catch(e){} setMini(m); updateToggle(); }
   const r=document.querySelector(".report"); if(r&&REPORT_URL){ $("reportLink").href=REPORT_URL; r.hidden=false; } });

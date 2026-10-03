@@ -281,7 +281,6 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 .tl-item.future .tl-card{border-style:dashed;background:transparent}
 .tl-item.future .tl-card::before{background:none;border-top:2px dashed var(--c);height:0}
 .tl-item.anniv:not(.future) .tl-card{background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,var(--surface)),var(--surface) 70%)}
-.tl-item.playing .tl-card{box-shadow:0 0 0 2px var(--accent-soft);border-color:var(--accent)}
 
 .tl-badge{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;padding:1px 9px;border-radius:6px;color:var(--ci);background:color-mix(in srgb,var(--c) 16%,transparent)}
 .tl-card h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.4;overflow-wrap:anywhere}

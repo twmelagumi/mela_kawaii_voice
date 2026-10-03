@@ -188,10 +188,10 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 ### 資料來源（後面的會蓋過前面的）
 
 1. **`timeline_auto.json`**：GitHub Actions 每天台灣時間早上 6 點自動抓 めら 頻道的影片（アソビ★まわり隊！ 團體頻道的影片手動新增）。
-   - 每次讀頻道 RSS 最近 15 支，只查沒看過的（新的、還在預定中的）。有設定 YouTube API 金鑰（見下面）→ 用官方 API 查，直播／首播／預定／開播時間都準確；沒有金鑰 → 用標題猜是不是直播。
+   - 每次讀頻道 RSS 最近 15 支，只把沒看過的（新的、還在預定中的）交給 YouTube API 查（需要 API 金鑰，見下面）。
    - 直播 → 直播；標題有「コラボ」→ 聯動；首播的 MV、一般影片 → 發布；Shorts → Shorts。
    - **預定中的直播**也會顯示（標「預定」和開播時間）；常駐待機室（フリーチャット）不收；預定被取消就自動拿掉。
-   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`。看過的影片不再查；之前沒用 API 確認過的，設好金鑰後會再確認一次。
+   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，看過的影片不再查。不收的影片（待機室等）會記成 `"hide": true`，之後也不再查。
    - 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這類固定標籤會自動拿掉。
    - 想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
    - 要加／拿掉頻道：改 `scripts/update_timeline.py` 最上面的 `CHANNELS`。
@@ -227,7 +227,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 6. 「檔案 → 共用 → 發佈到網路」→ 選「編年史」分頁、格式選 CSV → 複製網址，填進 `timeline.html` 的 `TIMELINE_CSV_URL`。
 7. 改完約 5 分鐘網站更新。
 
-### YouTube API 金鑰（建議設定）
+### YouTube API 金鑰（必要）
 
 1. 到 https://console.cloud.google.com/ 登入 → 上方專案選單 →「新增專案」（名稱隨意，例如 mela-timeline）。
 2. 左上選單 →「API 和服務」→「程式庫」→ 搜尋 **YouTube Data API v3** →「啟用」。

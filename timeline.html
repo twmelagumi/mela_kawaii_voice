@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031552">
+<link rel="stylesheet" href="assets/style.css?v=202610031605">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -81,29 +81,7 @@
   </footer>
 </div>
 
-<div class="player" id="player" hidden>
-  <button type="button" class="pmin" id="pMin" data-i18n-title="pMinimize"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-7 9z"/></svg></button>
-  <div class="player-in">
-    <div id="stage"></div>
-    <div class="pinfo">
-      <h3 id="pTitle"></h3>
-      <div class="meta" id="pMeta"></div>
-      <div class="pbtns">
-        <button type="button" class="primary" id="pReplay" data-i18n="replay"></button>
-        <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
-        <button type="button" id="pClose" data-i18n="close"></button>
-      </div>
-      <p class="pnote" data-i18n="playerNote"></p>
-      <div class="pmini">
-        <button type="button" class="pm" id="mToggle"></button>
-        <button type="button" class="pm" id="mMax" data-i18n-title="pExpand">▴</button>
-        <button type="button" class="pm" id="mClose" data-i18n-title="close">✕</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="assets/common.js?v=202610031552"></script>
+<script src="assets/common.js?v=202610031605"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
