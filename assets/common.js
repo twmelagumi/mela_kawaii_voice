@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-02 23:51";
+const LAST_UPDATED = "2026-10-03 10:57";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -26,7 +26,7 @@ const I18N={
    tabVoices:"聲音",tabSongs:"歌曲",artist:"原唱",pMinimize:"縮小播放器",
    playerNote:"ⓘ 本頁使用 YouTube 嵌入式播放，可能不會列入你的 YouTube 觀看紀錄。",pExpand:"展開播放器",pPause:"暫停",pPlay:"播放",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
-   holoOfficial:"hololive 官方介紹",
+   officialLinks:"官方相關連結",unofficialLinks:"非官方連結",holoOfficial:"hololive 官方介紹",
    dcPromo:"友宣",dcLabel:"非官方粉絲 めら組 Discord 頻道",dcJoin:"歡迎加入一起討論",
    reportLabel:"網站有錯誤或問題？",reportLink:"問題回報 →",
    updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
@@ -35,7 +35,7 @@ const I18N={
    tabVoices:"ボイス",tabSongs:"歌",artist:"原曲",pMinimize:"プレーヤーを小さくする",
    playerNote:"ⓘ このページは YouTube の埋め込みプレーヤーで再生するため、ご自身の視聴履歴に残らない場合があります。",pExpand:"プレーヤーを開く",pPause:"一時停止",pPlay:"再生",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
-   holoOfficial:"ホロライブ公式",
+   officialLinks:"公式リンク",unofficialLinks:"非公式リンク",holoOfficial:"ホロライブ公式",
    dcPromo:"相互宣伝",dcLabel:"非公式ファン めら組 Discord サーバー",dcJoin:"お気軽にご参加ください。一緒に語りましょう！",
    reportLabel:"不具合や間違いを見つけたら",reportLink:"問題を報告 →",
    updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
@@ -44,7 +44,7 @@ const I18N={
    tabVoices:"Voices",tabSongs:"Songs",artist:"Original",pMinimize:"Minimize player",
    playerNote:"ⓘ Videos play in YouTube's embedded player, so they may not show up in your YouTube watch history.",pExpand:"Expand player",pPause:"Pause",pPlay:"Play",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
-   holoOfficial:"hololive official page",
+   officialLinks:"Official links",unofficialLinks:"Unofficial links",holoOfficial:"hololive official page",
    dcPromo:"Cross-promotion",dcLabel:"Mela Gumi's unofficial fan Discord servers",dcJoin:"Come join us and chat!",
    reportLabel:"Found a bug or a mistake?",reportLink:"Report it →",
    updatedLabel:"Last updated:",madeWith:"Built with help from Claude",
