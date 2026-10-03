@@ -103,6 +103,16 @@ body.has-player.player-mini .wrap{padding-bottom:300px}
 @media (max-width:420px){.player.mini{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}}
 /* ===== 待播清單（歌單頁） ===== */
 .slist .song{grid-template-columns:auto minmax(0,1fr) auto auto}
+/* 手機：日期／時間移到歌名下面，讓歌名有足夠寬度 */
+@media (max-width:520px){
+  .slist .song{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"thumb info add" "thumb side add";gap:2px 10px;padding:10px 12px}
+  .slist .song>.thumb{grid-area:thumb}
+  .slist .song>.sinfo{grid-area:info}
+  .slist .song>.sside{grid-area:side;flex-direction:row;flex-wrap:wrap;gap:0 10px;align-items:center}
+  .slist .song>.sside:empty{display:none}
+  .slist .song>.qadd{grid-area:add}
+  section.picks{padding:12px 10px}
+}
 .singers{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin-top:2px}
 .singers i{font-style:normal;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-right:2px}
 .singers button{border:none;background:transparent;padding:0;font-size:13px;color:var(--accent-text);border-radius:4px}
