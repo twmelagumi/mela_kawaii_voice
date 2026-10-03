@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-03 10:57";
+const LAST_UPDATED = "2026-10-03 11:27";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -107,19 +107,22 @@ function normDate(v){ v=String(v||"").trim(); const p2=n=>String(n).padStart(2,"
 /* ===== 播放器（頁面下方） ===== */
 function loadYT(){ if(ytReady) return ytReady; ytReady=new Promise(res=>{ window.onYouTubeIframeAPIReady=res; const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); }); return ytReady; }
 function fillInfo(c){ $("pTitle").textContent=c.title; $("pMeta").innerHTML=metaHTML(c); $("pOpen").href=origUrl(c); $("pOpen").textContent=c.src==="youtube"?t("openOriginal"):t("openX"); $("pReplay").hidden=c.src!=="youtube"; }
+// 手動播放模式：只把影片載入播放器，要使用者自己按影片上的播放鍵（YouTube 只把按原生播放鍵的播放算進觀看次數）
+// 歌單頁會依使用者的選擇設定；開啟時待播清單的自動連播也只會載入下一首，不自動播放
+let manualPlay=false;
 async function play(c){
   if(!c) return;
-  current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c); isPlaying=true; updateToggle();
+  current=c; $("player").hidden=false; document.body.classList.add("has-player"); fillInfo(c); isPlaying=!manualPlay; updateToggle();
   document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));
   document.querySelectorAll(`[data-id="${CSS.escape(c.id)}"]`).forEach(el=>el.classList.add("playing"));
   const stage=$("stage");
   if(c.src==="youtube"){
     const opts={videoId:c.vid,startSeconds:c.start||0}; if(c.end&&c.end>(c.start||0)) opts.endSeconds=c.end;
-    if(ytPlayer&&stage.querySelector(".frame")){ ytPlayer.loadVideoById(opts); return; }
+    if(ytPlayer&&stage.querySelector(".frame")){ manualPlay?ytPlayer.cueVideoById(opts):ytPlayer.loadVideoById(opts); return; }
     stage.innerHTML='<div class="frame"><div id="yt"></div></div>';
     await loadYT();
-    ytPlayer=new YT.Player("yt",{videoId:c.vid,playerVars:{autoplay:1,playsinline:1,rel:0,start:c.start||0,...(opts.endSeconds?{end:opts.endSeconds}:{}),origin:location.origin},
-      events:{onReady:e=>e.target.playVideo(),
+    ytPlayer=new YT.Player("yt",{videoId:c.vid,playerVars:{autoplay:manualPlay?0:1,playsinline:1,rel:0,start:c.start||0,...(opts.endSeconds?{end:opts.endSeconds}:{}),origin:location.origin},
+      events:{onReady:e=>{ if(!manualPlay) e.target.playVideo(); },
         // 播完（含播到 end 時間）時通知頁面，歌單頁用來接下一首
         onStateChange:e=>{ isPlaying=e.data===1||e.data===3; updateToggle();
           if(e.data===0&&typeof window.onPlayerEnded==="function") window.onPlayerEnded(current,e.target); }}});
@@ -130,14 +133,15 @@ async function play(c){
     else{ const s=document.createElement("script"); s.src="https://platform.twitter.com/widgets.js"; s.async=true; document.head.appendChild(s); }
   }
 }
-function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; ytPlayer.loadVideoById(o);} }
+function replay(){ if(current&&current.src==="youtube"&&ytPlayer){ const o={videoId:current.vid,startSeconds:current.start||0}; if(current.end&&current.end>(current.start||0)) o.endSeconds=current.end; manualPlay?ytPlayer.cueVideoById(o):ytPlayer.loadVideoById(o);} }
 /* ===== 縮小播放器：影片縮成畫面下方的小條，繼續播放，可以繼續看頁面 ===== */
 let isPlaying=false;
 const PAUSE_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
 function setMini(on){ const p=$("player"); if(!p) return; p.classList.toggle("mini",on); document.body.classList.toggle("player-mini",on);
   try{ localStorage.setItem("mela-mini",on?"1":"0"); }catch(e){} }
 function updateToggle(){ const b=$("mToggle"); if(!b) return; b.innerHTML=isPlaying?PAUSE_SVG:playSvg; b.title=t(isPlaying?"pPause":"pPlay"); b.setAttribute("aria-label",b.title);
-  b.disabled=!(current&&current.src==="youtube"); }
+  b.disabled=!(current&&current.src==="youtube");
+  b.hidden=manualPlay; } // 手動播放模式不顯示（用網站按鈕開始播放不會算觀看次數）
 function togglePlay(){ if(!ytPlayer||!ytPlayer.getPlayerState) return; if(ytPlayer.getPlayerState()===1) ytPlayer.pauseVideo(); else ytPlayer.playVideo(); }
 
 function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHTML=""; $("player").hidden=true; document.body.classList.remove("has-player"); current=null; document.querySelectorAll(".playing").forEach(p=>p.classList.remove("playing"));

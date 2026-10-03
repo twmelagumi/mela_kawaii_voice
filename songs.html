@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610031057">
+<link rel="stylesheet" href="assets/style.css?v=202610031127">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -52,6 +52,14 @@
     <div class="tags singer-chips" id="singerChips" hidden></div>
     <div class="tags period" id="yearChips" hidden></div>
     <div class="tags period" id="monthChips" hidden></div>
+    <div class="playmode">
+      <div class="tags" role="group" aria-labelledby="pmLabel">
+        <span class="chips-label" id="pmLabel" data-i18n="pmLabel"></span>
+        <button type="button" class="chip" data-pm="auto" data-i18n="pmAuto"></button>
+        <button type="button" class="chip" data-pm="manual" data-i18n="pmManual"></button>
+      </div>
+      <p class="pm-note"><span data-i18n="pmSrc"></span><a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank" rel="noopener" data-i18n="pmSrcLink"></a><span data-i18n="pmNote"></span></p>
+    </div>
     <section class="picks" id="songPicks" hidden>
       <h2 class="picks-title"><span aria-hidden="true">★</span> <span data-i18n="songPick"></span><button type="button" class="gplay" id="pickPlay" data-i18n="playAll"></button></h2>
       <div class="slist" id="songPickList"></div>
@@ -124,7 +132,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610031057"></script>
+<script src="assets/common.js?v=202610031127"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -137,19 +145,19 @@ addStrings({
  zh:{titleSongs:"歌單",subSongs:"めらちゃん在直播裡唱過的歌，按一下就在這裡播放。",songs:"首歌",songSearch:"搜尋歌名、原唱…",
    sortDate:"配信日期",sortTitle:"歌名",sortArtist:"原唱歌手",randomSong:"隨機播一首",unknownDate:"日期未知",
    catAll:"全部",cat_original:"Original",cat_cover:"Cover",cat_clip:"歌回",cat_other:"Other",
-   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",singersLabel:"演唱",withLabel:"合唱對象",periodLabel:"期間",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthFmt:"{m} 月",expand:"展開",collapse:"收合",
+   noSongs:"還沒有收錄歌曲",noSongsHint:"更新 songs.json 後就會出現在這裡。",noSongMatch:"找不到符合的歌曲",noSongMatchHint:"換個關鍵字試試。",singersLabel:"演唱",withLabel:"合唱對象",pmSrc:"根據 ",pmSrcLink:"YouTube IFrame API 官方文件",pmLabel:"播放方式",pmAuto:"自動播放",pmManual:"手動播放",pmNote:"，嵌入式播放器自動播放的影片，可能不會計入原影片的觀看次數。選擇「手動播放」後，請按影片畫面上的播放鍵開始播放；待播清單也只會先載入下一首，按下播放鍵才會開始。",periodLabel:"期間",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthFmt:"{m} 月",expand:"展開",collapse:"收合",
    addQueue:"加入待播清單",inQueue:"已在待播清單",added:"已加入待播清單",songPick:"推薦",playAll:"▶ 全部播放",playList:"▶ 播放目前列表",queue:"待播清單",prev:"⏮ 上一首",next:"下一首 ⏭",
    shuffleQ:"打亂順序",repeat:"循環",clearQ:"清空",queueEmpty:"清單是空的。按歌曲右邊的 ＋ 加入。",resumeQ:"▶ 待播清單",moveUp:"上移",moveDown:"下移",remove:"移除"},
  ja:{titleSongs:"歌リスト",subSongs:"めらちゃんが配信で歌った曲のまとめ。押すとこのページで再生します。",songs:"曲",songSearch:"曲名・原曲アーティストで検索…",
    sortDate:"配信日順",sortTitle:"曲名順",sortArtist:"アーティスト順",randomSong:"ランダム再生",unknownDate:"日付不明",
    catAll:"すべて",cat_original:"オリジナル",cat_cover:"カバー",cat_clip:"歌枠",cat_other:"その他",
-   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",singersLabel:"歌唱",withLabel:"コラボ相手",periodLabel:"期間",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthFmt:"{m}月",expand:"開く",collapse:"閉じる",
+   noSongs:"まだ曲がありません",noSongsHint:"songs.json を更新するとここに表示されます。",noSongMatch:"該当する曲がありません",noSongMatchHint:"キーワードを変えてみてください。",singersLabel:"歌唱",withLabel:"コラボ相手",pmSrc:"",pmSrcLink:"YouTube IFrame API 公式ドキュメント",pmLabel:"再生方法",pmAuto:"自動再生",pmManual:"手動再生",pmNote:"によると、埋め込みプレーヤーで自動再生された動画は、元動画の再生回数にカウントされない場合があります。「手動再生」では、動画の再生ボタンを押して再生してください。連続再生も次の曲を読み込むだけなので、再生ボタンを押すと始まります。",periodLabel:"期間",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthFmt:"{m}月",expand:"開く",collapse:"閉じる",
    addQueue:"再生キューに追加",inQueue:"キューに追加済み",added:"再生キューに追加しました",songPick:"おすすめ",playAll:"▶ すべて再生",playList:"▶ 表示中の曲を再生",queue:"再生キュー",prev:"⏮ 前へ",next:"次へ ⏭",
    shuffleQ:"シャッフル",repeat:"リピート",clearQ:"クリア",queueEmpty:"キューは空です。曲の右の ＋ で追加できます。",resumeQ:"▶ 再生キュー",moveUp:"上へ",moveDown:"下へ",remove:"削除"},
  en:{titleSongs:"Song List",subSongs:"Songs Mela has sung on stream. Press play to listen right here.",songs:"songs",songSearch:"Search title or original artist…",
    sortDate:"Stream date",sortTitle:"Title",sortArtist:"Original artist",randomSong:"Play a random song",unknownDate:"Unknown date",
    catAll:"All",cat_original:"Original",cat_cover:"Cover",cat_clip:"Karaoke",cat_other:"Other",
-   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",singersLabel:"Vocals",withLabel:"Sung with",periodLabel:"Period",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthFmt:"",expand:"Expand",collapse:"Collapse",
+   noSongs:"No songs yet",noSongsHint:"Songs show up here once songs.json is updated.",noSongMatch:"No matching songs",noSongMatchHint:"Try another keyword.",singersLabel:"Vocals",withLabel:"Sung with",pmSrc:"According to the ",pmSrcLink:"YouTube IFrame API reference",pmLabel:"Playback",pmAuto:"Autoplay",pmManual:"Manual",pmNote:", autoplayed embedded videos may not count toward the original video\'s views. In Manual mode, press the play button on the video to start. The queue only loads the next song, so press play again to hear it.",periodLabel:"Period",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthFmt:"",expand:"Expand",collapse:"Collapse",
    addQueue:"Add to queue",inQueue:"Already in queue",added:"Added to queue",songPick:"Recommended",playAll:"▶ Play all",playList:"▶ Play this list",queue:"Queue",prev:"⏮ Prev",next:"Next ⏭",
    shuffleQ:"Shuffle",repeat:"Repeat",clearQ:"Clear",queueEmpty:"The queue is empty. Use ＋ next to a song to add it.",resumeQ:"▶ Queue",moveUp:"Move up",moveDown:"Move down",remove:"Remove"}
 });
@@ -328,6 +336,12 @@ async function loadSongs(){
       title:String(x.title),artist:x.artist?String(x.artist):"",category:normCat(x.category),singers:parseSingers(x.singers),pick:x.pick===true||/^(true|v|y|yes|1|是)$/i.test(String(x.pick??"").trim()),streamDate:x.streamDate?normDate(x.streamDate):null,note:x.note||"",order:i}; }).filter(Boolean);
   songsLoaded=true; loadQueue(); renderSongs(); renderQueue();
 }
+
+/* ===== 播放方式（自動／手動），記在瀏覽器裡 ===== */
+function setPlayMode(m){ manualPlay=m==="manual"; try{ localStorage.setItem("mela-playmode",manualPlay?"manual":"auto"); }catch(e){}
+  document.querySelectorAll("button[data-pm]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.pm===(manualPlay?"manual":"auto"))); updateToggle(); }
+document.addEventListener("click",e=>{ const b=e.target.closest("button[data-pm]"); if(b) setPlayMode(b.dataset.pm); });
+{ let m=null; try{ m=localStorage.getItem("mela-playmode"); }catch(e){} setPlayMode(m==="manual"?"manual":"auto"); }
 
 setLang(pickLang());
 loadSongs();

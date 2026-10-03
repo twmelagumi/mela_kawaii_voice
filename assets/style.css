@@ -84,22 +84,23 @@ body.has-player .wrap{padding-bottom:calc(64px + 46vh)}
 .player:not(.mini) .pinfo h3{padding-right:44px}
 .player.mini .pmin{display:none}
 @media (max-width:700px){.player:not(.mini){padding-top:50px}.player:not(.mini) .pinfo h3{padding-right:0}}
-/* 縮小模式 */
-.pmini{display:none;gap:6px;align-items:center}
-.pmini .pm{width:38px;height:38px;padding:0;justify-content:center;font-size:15px}
+/* 縮小模式：右下角懸浮小視窗。YouTube 規定嵌入播放器至少 200×200px，所以影片高度不低於 200px */
+.pmini{display:none;gap:6px;align-items:center;flex:none}
+.pmini .pm{width:34px;height:34px;padding:0;justify-content:center;font-size:14px}
 .pmini .pm svg{width:16px;height:16px;fill:currentColor}
 .pmini #mToggle{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.player.mini{padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));overflow:hidden}
-.player.mini .player-in{grid-template-columns:128px minmax(0,1fr);gap:12px;align-items:center}
-.player.mini .frame{border-radius:6px}
-.player.mini .xframe{max-height:72px;overflow:hidden}
-.player.mini .pinfo{flex-direction:row;align-items:center;gap:10px}
-.player.mini .pinfo h3{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pnote{margin:0;font-size:12px;line-height:1.5;color:var(--muted);max-width:68ch}
+.player.mini{left:auto;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 24px));max-height:none;padding:10px;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px rgba(0,0,0,.38);overflow:hidden}
+.player.mini .player-in{grid-template-columns:1fr;gap:8px}
+.player.mini .frame{border-radius:8px;max-height:none}
+@media (max-width:419px){.player.mini .frame{aspect-ratio:auto;height:200px}} /* 螢幕太窄、16:9 會矮於 200px 時固定 200px 高 */
+.player.mini .xframe{max-height:220px;overflow:auto}
+.player.mini .pinfo{flex-direction:row;align-items:center;gap:8px}
+.player.mini .pinfo h3{flex:1;min-width:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player.mini .meta,.player.mini .pbtns,.player.mini .queue,.player.mini .pnote{display:none}
 .player.mini .pmini{display:flex}
-body.has-player.player-mini .wrap{padding-bottom:120px}
-@media (max-width:700px){.player.mini .player-in{grid-template-columns:96px minmax(0,1fr)}.player.mini .pinfo{flex-direction:column;align-items:stretch;gap:4px}.player.mini .pinfo h3{font-size:14px}.pmini .pm{width:34px;height:34px}}
+body.has-player.player-mini .wrap{padding-bottom:300px}
+@media (max-width:420px){.player.mini{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}}
 /* ===== 待播清單（歌單頁） ===== */
 .slist .song{grid-template-columns:auto minmax(0,1fr) auto auto}
 .singers{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin-top:2px}
@@ -119,6 +120,9 @@ body.has-player.player-mini .wrap{padding-bottom:120px}
 .sgroup h2 .gtoggle:hover{color:var(--ink)}
 .garrow{display:inline-block;width:1em;text-align:center}
 .sgroup.closed h2{opacity:.85}
+.playmode{display:flex;flex-direction:column;gap:6px}
+.pm-note{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.pm-note a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 .chips-label{font-size:12px;font-weight:700;color:var(--muted);align-self:center;margin-right:2px}
 .qadd{width:34px;height:34px;padding:0;justify-content:center;font-size:20px;line-height:1;flex:none}
 .qadd.inq{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent-soft)}
