@@ -189,7 +189,8 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 1. **`timeline_auto.json`**：GitHub Actions 每天台灣時間早上 6 點，從 めら 頻道的 RSS 抓最近 15 支影片（アソビ★まわり隊！ 團體頻道的影片手動新增）。
    - 直播要播完才加入；Shorts 不收；首播的 MV 算「發布」；日期用日本時間。
-   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，不會被最近 15 支覆蓋。想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
+   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，不會被最近 15 支覆蓋。最近 15 支每次會重新確認，種類／日期／標題有變就更新。
+   - 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這類固定標籤會自動拿掉。想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
    - 要加／拿掉頻道：改 `scripts/update_timeline.py` 最上面的 `CHANNELS`。
 2. **`timeline.json`**：手動維護的固定資料。
 3. **Google 試算表「編年史」分頁**：日常新增、修改自動抓到的內容（設定見下面）。

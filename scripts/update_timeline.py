@@ -9,7 +9,8 @@
   1. 讀頻道的 RSS（https://www.youtube.com/feeds/videos.xml?channel_id=…）→ 最近 15 支影片
   2. 新的影片再開一次影片頁，從頁面資料判斷是不是直播、實際開播時間
   3. 直播：要已經播完才加入（預定中／直播中的下次再抓）；Shorts 不加入
-  4. 已經在 timeline_auto.json 的影片不會重抓、不會被刪掉。
+  4. RSS 裡的影片每次都重新確認：新的加入；已經有的若種類／日期／標題有變就更新。
+     RSS 以外（比較舊）的資料不會動、不會被刪掉。
      想改標題、說明、種類，或隱藏某支影片 → 在 Google 試算表「編年史」分頁填同一個網址即可（試算表優先）。
 """
 import argparse
@@ -88,35 +89,79 @@ def parse_iso(s):
     return dt.datetime.fromisoformat(s)
 
 
+def _has(h, *needles):
+    return any(n in h for n in needles)
+
+
 def video_info(watch_html):
-    """影片頁 → {live, start, end, upcoming, publish, title}（找不到的欄位是 None）
-    live＝真的直播（isLiveContent）；首播（Premiere）的 MV 也有開播時間，但 live=False → 算 release"""
-    if '"videoDetails"' not in watch_html:
-        raise RuntimeError("影片頁沒有 videoDetails（可能被要求登入／驗證）")
-    info = {"live": '"isLiveContent":true' in watch_html, "start": None, "end": None, "upcoming": False, "publish": None, "title": None}
-    m = re.search(r'"liveBroadcastDetails":\{([^{}]*)\}', watch_html)
+    """影片頁 → {live, start, end, upcoming, publish, title, why}
+    判斷是不是直播用好幾種線索（YouTube 頁面格式會變）：
+      - "isLiveContent":true／false（播放器資料）
+      - "liveBroadcastDetails"（播放器資料，有開播／結束時間）
+      - <meta itemprop="isLiveBroadcast" content="True">、startDate／endDate（頁面 microdata）
+    首播（Premiere）的 MV 也有開播時間，但 isLiveContent=false → 算 release。"""
+    h = watch_html.replace('\\"', '"')  # 有些資料是放在 JS 字串裡（\"isLiveContent\":true），先還原
+    if '"videoDetails"' not in h and 'itemprop="videoId"' not in h:
+        raise RuntimeError("影片頁沒有影片資料（可能被要求登入／驗證）")
+    info = {"live": False, "start": None, "end": None, "upcoming": False, "publish": None, "title": None, "why": []}
+    live_true = re.search(r'"isLiveContent"\s*:\s*true', h) is not None
+    live_false = re.search(r'"isLiveContent"\s*:\s*false', h) is not None
+    broadcast = re.search(r'itemprop="isLiveBroadcast"\s+content="True"', h, re.I) is not None
+    m = re.search(r'"liveBroadcastDetails"\s*:\s*\{([^{}]*)\}', h)
     if m:
         d = m.group(1)
-        s = re.search(r'"startTimestamp":"([^"]+)"', d)
-        e = re.search(r'"endTimestamp":"([^"]+)"', d)
+        s = re.search(r'"startTimestamp"\s*:\s*"([^"]+)"', d)
+        e = re.search(r'"endTimestamp"\s*:\s*"([^"]+)"', d)
         info["start"] = parse_iso(s.group(1)) if s else None
         info["end"] = parse_iso(e.group(1)) if e else None
-        info["upcoming"] = '"isLiveNow":true' in d or info["end"] is None
-    if '"isUpcoming":true' in watch_html:
+        info["upcoming"] = re.search(r'"isLiveNow"\s*:\s*true', d) is not None or info["end"] is None
+    if not info["start"]:
+        s = re.search(r'itemprop="startDate"\s+content="([^"]+)"', h)
+        info["start"] = parse_iso(s.group(1)) if s else None
+    if not info["end"]:
+        e = re.search(r'itemprop="endDate"\s+content="([^"]+)"', h)
+        info["end"] = parse_iso(e.group(1)) if e else None
+        if broadcast and not m:
+            info["upcoming"] = info["end"] is None
+    if re.search(r'"isUpcoming"\s*:\s*true', h):
         info["upcoming"] = True
-    p = re.search(r'"publishDate":"([^"]+)"', watch_html) or re.search(r'"uploadDate":"([^"]+)"', watch_html) \
-        or re.search(r'<meta itemprop="(?:datePublished|uploadDate)" content="([^"]+)"', watch_html)
+    # 直播：isLiveContent=true；或有直播資料、而且沒有明確寫 isLiveContent=false（＝不是首播）
+    info["live"] = live_true or ((bool(m) or broadcast) and not live_false)
+    info["why"] = [k for k, v in (("isLiveContent=true", live_true), ("isLiveContent=false", live_false),
+                                   ("liveBroadcastDetails", bool(m)), ("isLiveBroadcast", broadcast)) if v]
+    p = re.search(r'"publishDate"\s*:\s*"([^"]+)"', h) or re.search(r'"uploadDate"\s*:\s*"([^"]+)"', h) \
+        or re.search(r'itemprop="(?:datePublished|uploadDate)"\s+content="([^"]+)"', h)
     if p:
         info["publish"] = parse_iso(p.group(1))
-    t = re.search(r'<meta name="title" content="([^"]*)"', watch_html)
+    t = re.search(r'<meta name="title" content="([^"]*)"', h)
     if t:
         info["title"] = html.unescape(t.group(1))
     return info
 
 
+# 完全找不到直播線索時，用標題猜：像 MV／歌ってみた 的算 release，其他算直播（めら頻道大多是直播）
+RELEASE_WORDS = ("MV", "Music Video", "歌ってみた", "cover", "Cover", "COVER", "Official", "オリジナル曲", "ショート")
+
+
+# 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這種固定標籤拿掉，時間線上比較好讀
+TAG_WORDS = ("ホロライブ", "hololive", "熱千めら", "アソビ★まわり隊")
+
+
+def clean_title(title):
+    t = title.strip()
+    while True:
+        m = re.search(r'\s*【([^【】]*)】\s*$', t)
+        if not m or not any(w in m.group(1) for w in TAG_WORDS) or m.start() == 0:
+            return t
+        t = t[:m.start()].rstrip()
+
+
 def make_entry(item, info, note=""):
     when = info["start"] or info["publish"] or parse_iso(item["published"])
-    title = item["title"] or info["title"] or ""
+    title = clean_title(item["title"] or info["title"] or "")
+    if not info["why"]:  # 沒有任何直播線索 → 用標題猜
+        info["live"] = not any(w in title for w in RELEASE_WORDS)
+        info["why"] = ["標題推測"]
     if info["live"]:
         typ = "collab" if any(w in title for w in COLLAB_WORDS) else "stream"
     else:
@@ -128,15 +173,19 @@ def make_entry(item, info, note=""):
     return e
 
 
+def vid_of(url):
+    m = re.search(r"v=([\w-]+)", url or "")
+    return m.group(1) if m else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     data = json.loads(OUT.read_text("utf-8")) if OUT.exists() else []
-    known = {re.search(r"v=([\w-]+)", e.get("url", "")).group(1) for e in data if re.search(r"v=([\w-]+)", e.get("url", ""))}
-    added = []
-    failed = 0
+    by_vid = {vid_of(e.get("url")): e for e in data if vid_of(e.get("url"))}
+    added, updated, failed = [], [], 0
     for ch in CHANNELS:
         try:
             cid = ch["channel_id"] or resolve_channel_id(ch["handle"])
@@ -148,8 +197,11 @@ def main():
             failed += 1
             continue
         print(f"{ch['handle']}: RSS {len(feed)} 支")
+        # RSS 裡的影片每次都重新確認（新的就加入；已經有的，種類／日期／標題有變就更新）
+        # RSS 以外的舊資料不會動
         for item in feed:
-            if item["vid"] in known or (SKIP_SHORTS and item["shorts"]):
+            if SKIP_SHORTS and item["shorts"]:
+                print(f"  - {item['vid']} Shorts，略過")
                 continue
             try:
                 info = video_info(fetch(f"https://www.youtube.com/watch?v={item['vid']}&hl=ja"))
@@ -160,23 +212,32 @@ def main():
                 print(f"  … {item['vid']} 預定／直播中，下次再抓：{item['title']}")
                 continue
             entry = make_entry(item, info, ch.get("note", ""))
-            print(f"  + {entry['date']} [{entry['type']}] {entry['title']}")
-            data.append(entry)
-            known.add(item["vid"])
-            added.append(entry)
+            why = ",".join(info["why"]) or "沒有直播資料"
+            old = by_vid.get(item["vid"])
+            if old is None:
+                print(f"  + {entry['date']} [{entry['type']}] {entry['title']}  ({why})")
+                data.append(entry)
+                by_vid[item["vid"]] = entry
+                added.append(entry)
+            elif any(old.get(k) != entry.get(k) for k in ("date", "type", "title")):
+                print(f"  ~ {entry['date']} [{old.get('type')}→{entry['type']}] {entry['title']}  ({why})")
+                old.update({k: entry[k] for k in ("date", "type", "title")})
+                updated.append(entry)
+            else:
+                print(f"  = {entry['date']} [{entry['type']}] {entry['title']}  ({why})")
             time.sleep(1)
 
     if failed == len(CHANNELS):
         sys.exit("所有頻道都讀取失敗")
-    if not added:
-        print("沒有新的影片")
+    if not added and not updated:
+        print("沒有變動")
         return
     data.sort(key=lambda e: (e["date"], e["url"]), reverse=True)
     if args.dry_run:
-        print(f"(dry-run) 會新增 {len(added)} 筆")
+        print(f"(dry-run) 新增 {len(added)} 筆、更新 {len(updated)} 筆")
         return
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", "utf-8")
-    print(f"已新增 {len(added)} 筆 → {OUT.name}")
+    print(f"新增 {len(added)} 筆、更新 {len(updated)} 筆 → {OUT.name}")
 
 
 if __name__ == "__main__":
