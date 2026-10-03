@@ -24,13 +24,15 @@ body.scrolled .topbar{gap:6px;padding-top:8px;box-shadow:0 8px 18px -10px rgba(0
 body.scrolled header{align-items:center;gap:6px 12px}
 body.scrolled .hrow:not(:has(.btn:not([hidden]))){display:none}
 body.scrolled h1{font-size:20px}
-body.scrolled .sub,body.scrolled .count{display:none}
+body.scrolled .sub,body.scrolled .count,body.scrolled .unofficial{display:none}
 body.scrolled .right{gap:10px;flex-direction:row;align-items:center}
 body.scrolled .views a{padding:6px 14px;font-size:14px}
 @media (max-width:600px){body.scrolled .right{width:auto;margin-left:auto}}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
 h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
 h1 .jp{color:var(--accent-text)}
+/* 標題上方的「非官方粉絲網站」標籤（避免被誤認為官方網站） */
+.unofficial{display:inline-block;margin-bottom:6px;font-size:11px;font-weight:700;letter-spacing:.06em;padding:2px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
 h1 .jp,h1 [data-i18n]{display:inline-block} /* 「熱千めら」和頁面名稱都不要從中間斷行：放不下就整個換到下一行 */
 .sub{color:var(--muted);margin:6px 0 0;font-size:13px}
 .right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
