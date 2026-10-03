@@ -26,6 +26,9 @@ jobs:
           python-version: "3.12"
 
       - name: Fetch YouTube feed
+        env:
+          # YouTube Data API 金鑰：repo Settings → Secrets and variables → Actions → YT_API_KEY（沒設也能跑，改用 RSS）
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
         run: python scripts/update_timeline.py
 
       - name: Commit if changed

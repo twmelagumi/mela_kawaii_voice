@@ -187,10 +187,13 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 ### 資料來源（後面的會蓋過前面的）
 
-1. **`timeline_auto.json`**：GitHub Actions 每天台灣時間早上 6 點，從 めら 頻道的 RSS 抓最近 15 支影片（アソビ★まわり隊！ 團體頻道的影片手動新增）。
-   - 直播要播完才加入；Shorts 不收；首播的 MV 算「發布」；日期用日本時間。
-   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，不會被最近 15 支覆蓋。最近 15 支每次會重新確認，種類／日期／標題有變就更新。
-   - 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這類固定標籤會自動拿掉。想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
+1. **`timeline_auto.json`**：GitHub Actions 每天台灣時間早上 6 點自動抓 めら 頻道的影片（アソビ★まわり隊！ 團體頻道的影片手動新增）。
+   - 每次讀頻道 RSS 最近 15 支，只查沒看過的（新的、還在預定中的）。有設定 YouTube API 金鑰（見下面）→ 用官方 API 查，直播／首播／預定／開播時間都準確；沒有金鑰 → 用標題猜是不是直播。
+   - 直播 → 直播；標題有「コラボ」→ 聯動；首播的 MV、一般影片 → 發布；Shorts → Shorts。
+   - **預定中的直播**也會顯示（標「預定」和開播時間）；常駐待機室（フリーチャット）不收；預定被取消就自動拿掉。
+   - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`。看過的影片不再查；之前沒用 API 確認過的，設好金鑰後會再確認一次。
+   - 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這類固定標籤會自動拿掉。
+   - 想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
    - 要加／拿掉頻道：改 `scripts/update_timeline.py` 最上面的 `CHANNELS`。
 2. **`timeline.json`**：手動維護的固定資料。
 3. **Google 試算表「編年史」分頁**：日常新增、修改自動抓到的內容（設定見下面）。
@@ -206,7 +209,8 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 | 欄位 | 說明 |
 |---|---|
 | `date` | 日期 `"2026-10-01"` |
-| `type` | `stream` 直播／`collab` 合作／`release` 發布／`anniv` 紀念日 |
+| `type` | `stream` 直播／`collab` 聯動／`release` 發布／`short` Shorts／`anniv` 紀念日 |
+| `with` | 聯動對象，例如 `["宙科そぴあ", "鈴鳴つづり"]`（有填的直播會顯示成「聯動」） |
 | `title` | 標題 |
 | `url` | YouTube 網址（有網址就會顯示縮圖，點了開 YouTube） |
 | `note` | 說明 |
@@ -215,13 +219,28 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 ### Google 試算表「編年史」分頁設定
 
-1. 在投稿用的試算表新增分頁「編年史」，第一列填標題（順序不拘）：`日期`、`種類`、`標題`、`網址`、`說明`、`每年`、`隱藏`
-2. **種類**填 直播／合作／發布／紀念日（日文 配信／コラボ／リリース／記念日 也可以）。
+1. 在投稿用的試算表新增分頁「編年史」，第一列填標題（順序不拘）：`日期`、`種類`、`標題`、`網址`、`說明`、`聯動對象`、`每年`、`隱藏`
+2. **種類**填 直播／聯動／發布／Shorts／紀念日（日文 配信／コラボ／リリース／ショート／記念日 也可以）。**聯動對象**多人用「、」分隔。
 3. **改自動抓到的內容**：填同一個網址＋想改的欄位（例如標題改短、加說明）。
 4. **隱藏**打勾（或填 v、1）→ 那個網址的事件不顯示。
 5. **每年**打勾 → 每年自動出現（生日、週年）。
 6. 「檔案 → 共用 → 發佈到網路」→ 選「編年史」分頁、格式選 CSV → 複製網址，填進 `timeline.html` 的 `TIMELINE_CSV_URL`。
 7. 改完約 5 分鐘網站更新。
+
+### YouTube API 金鑰（建議設定）
+
+1. 到 https://console.cloud.google.com/ 登入 → 上方專案選單 →「新增專案」（名稱隨意，例如 mela-timeline）。
+2. 左上選單 →「API 和服務」→「程式庫」→ 搜尋 **YouTube Data API v3** →「啟用」。
+3. 「API 和服務」→「憑證」→「建立憑證」→「API 金鑰」→ 複製金鑰。
+4. （建議）在金鑰設定頁「API 限制」選「限制金鑰」→ 只勾 YouTube Data API v3 → 儲存。
+5. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**：Name 填 `YT_API_KEY`，Secret 貼上金鑰 → Add secret。
+6. Actions → Update timeline → Run workflow，紀錄第一行顯示「模式：YouTube Data API」就成功了。
+
+每天只用到幾個配額單位（免費額度每天 10,000），不需要綁信用卡。
+
+### Shorts 顯示
+
+`timeline.html` 最上面的 `SHOW_SHORTS` 改成 `false` 就不顯示 Shorts（資料還是會繼續收集，改回 `true` 就會出現）。
 
 ### 注意
 
