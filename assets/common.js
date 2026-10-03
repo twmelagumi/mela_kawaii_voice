@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-03 16:53";
+const LAST_UPDATED = "2026-10-03 17:50";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -160,6 +160,11 @@ function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHT
 
 /* ===== 頁尾：最後更新時間 ===== */
 function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; el.textContent=LAST_UPDATED; $("updated").hidden=false; }
+
+/* ===== 往下捲時把上方標題列縮小（往下捲超過 120px 縮小，捲回最頂端才恢復，避免來回跳動） ===== */
+(function(){ let on=false; const f=()=>{ const y=window.scrollY;
+  if(!on&&y>120){ on=true; document.body.classList.add("scrolled"); } else if(on&&y<=0){ on=false; document.body.classList.remove("scrolled"); } };
+  window.addEventListener("scroll",f,{passive:true}); document.addEventListener("DOMContentLoaded",f); })();
 
 /* ===== 共用事件 ===== */
 document.addEventListener("click",e=>{ const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang); });
