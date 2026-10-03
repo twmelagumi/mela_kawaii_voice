@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610032144">
+<link rel="stylesheet" href="assets/style.css?v=202610040023">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -137,7 +137,7 @@
 <button type="button" class="btn primary qfab" id="qFab" hidden></button>
 <div class="toast" id="toast" hidden></div>
 
-<script src="assets/common.js?v=202610032144"></script>
+<script src="assets/common.js?v=202610040023"></script>
 <script>
 /* ===== 歌單頁 =====
  * 歌曲資料放在 songs.json，格式見 README.md。
@@ -226,7 +226,7 @@ function renderSongs(){
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
       <button type="button" class="thumb" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(s.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>
       <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span>${isDuet(s)?`<span class="singers"><i>${t("singersLabel")}</i>${s.singers.map(n=>`<button type="button" data-singer="${esc(n)}">${esc(n)}</button>`).join('<span class="sl">/</span>')}</span>`:""}</div>
-      <div class="sside">${showDate&&s.streamDate?`<span>${esc(s.streamDate)}</span>`:""}${s.start!=null?`<span>${fmt(s.start)}</span>`:""}${viewsOf(s)!=null?`<span class="vcount" title="${t("viewsTitle")}">▶ ${fmtViews(viewsOf(s))}</span>`:""}</div>
+      <div class="sside">${viewsOf(s)!=null?`<span class="vcount" title="${t("viewsTitle")}">▶ ${fmtViews(viewsOf(s))}</span>`:""}</div>
       ${addBtn(s)}
     </div>`;
   // 推薦：songs.json 裡 "pick": true 的歌，照 songs.json 的順序。有篩選或搜尋時先收起來。
