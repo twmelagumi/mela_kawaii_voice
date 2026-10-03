@@ -31,7 +31,8 @@
     "date": "2026-09-26",
     "type": "release",
     "title": "私は、わたしの事が好き。（Cover）",
-    "url": "https://www.youtube.com/watch?v=IJUJV-5Im_M"
+    "url": "https://www.youtube.com/watch?v=IJUJV-5Im_M",
+    "note": "はじめての歌ってみたなのじゃ！"
   },
   {
     "date": "2026-10-01",
@@ -85,5 +86,19 @@
       "そぴあ",
       "つづり"
     ]
+  },
+  {
+    "date": "2026-09-24",
+    "type": "release",
+    "title": "【自作アニメ】episode 0【ホロライブ/熱千めら】",
+    "url": "https://www.youtube.com/watch?v=AOYniXn3zZM",
+    "note": "むかしむかし、のお話なのじゃ。"
+  },
+  {
+    "date": "2026-09-18",
+    "type": "release",
+    "title": "#熱千めら デビューPV",
+    "url": "https://www.youtube.com/watch?v=HUdqaVqqv7Y",
+    "note": "ホロライブ アソビ★まわり隊！より「熱千めら」デビュー！"
   }
 ]
