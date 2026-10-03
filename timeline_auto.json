@@ -1,50 +1,106 @@
 [
   {
+    "date": "2026-10-07",
+    "type": "stream",
+    "title": "【#のじゃEnglish】DuolingoでStudy Englishですのじゃー！",
+    "url": "https://www.youtube.com/watch?v=Nz2BKo9T7SY",
+    "upcoming": true,
+    "start": "2026-10-06T22:00:00Z",
+    "api": true
+  },
+  {
+    "date": "2026-10-04",
+    "type": "stream",
+    "title": "【#アソビまわり隊歌枠リレー】トップバッターなのじゃ！",
+    "url": "https://www.youtube.com/watch?v=fvBAsGLCq1c",
+    "upcoming": true,
+    "start": "2026-10-04T11:00:00Z",
+    "api": true
+  },
+  {
+    "date": "2026-10-04",
+    "type": "collab",
+    "title": "【#アソビまわり隊歌枠リレー】4人コラボで歌うのじゃ！！！",
+    "url": "https://www.youtube.com/watch?v=WBgYlpUP0zc",
+    "upcoming": true,
+    "start": "2026-10-04T12:20:00Z",
+    "api": true
+  },
+  {
     "date": "2026-10-02",
     "type": "stream",
     "title": "【8番出口】怖いの苦手なのじゃ…",
-    "url": "https://www.youtube.com/watch?v=KNZDbpsAnB8"
+    "url": "https://www.youtube.com/watch?v=KNZDbpsAnB8",
+    "api": true
   },
   {
     "date": "2026-10-01",
     "type": "stream",
     "title": "【歌枠】はじめての歌枠なのじゃ！！！",
-    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k"
+    "url": "https://www.youtube.com/watch?v=_RP6UbtnO3k",
+    "api": true
+  },
+  {
+    "date": "2026-10-01",
+    "type": "short",
+    "title": "1分でわかるホロライブ新人の初配信 #熱千めら",
+    "url": "https://www.youtube.com/watch?v=OFpxR71XqJc",
+    "api": true
   },
   {
     "date": "2026-09-30",
     "type": "stream",
     "title": "【#のじゃEnglish】Duolingoで英語を勉強しますのじゃ！",
-    "url": "https://www.youtube.com/watch?v=6dLFYgSqSl0"
+    "url": "https://www.youtube.com/watch?v=6dLFYgSqSl0",
+    "api": true
   },
   {
     "date": "2026-09-29",
     "type": "stream",
     "title": "【インターネット防災訓練】炎上から学ぶのじゃ。",
-    "url": "https://www.youtube.com/watch?v=enA66OJbYmU"
+    "url": "https://www.youtube.com/watch?v=enA66OJbYmU",
+    "api": true
   },
   {
     "date": "2026-09-28",
     "type": "stream",
     "title": "【空気読み。】人外が人間社会で生きるということ。",
-    "url": "https://www.youtube.com/watch?v=jo0r-Jq12a0"
+    "url": "https://www.youtube.com/watch?v=jo0r-Jq12a0",
+    "api": true
+  },
+  {
+    "date": "2026-09-28",
+    "type": "short",
+    "title": "今日の運試しなのじゃ！",
+    "url": "https://www.youtube.com/watch?v=-Zu68-CtX5I",
+    "api": true
   },
   {
     "date": "2026-09-27",
     "type": "stream",
     "title": "【GeoGuessr】なぜか場所特定が得意なのじゃ…",
-    "url": "https://www.youtube.com/watch?v=z_ZP9E7qJc4"
+    "url": "https://www.youtube.com/watch?v=z_ZP9E7qJc4",
+    "api": true
   },
   {
     "date": "2026-09-27",
     "type": "stream",
     "title": "アソビ★まわり隊！メンバーを紹介するのじゃ！",
-    "url": "https://www.youtube.com/watch?v=oidlBKgCeW8"
+    "url": "https://www.youtube.com/watch?v=oidlBKgCeW8",
+    "api": true
+  },
+  {
+    "date": "2026-09-26",
+    "type": "short",
+    "title": "超かぐや姫！の「私は、わたしの事が好き。」歌ってみたのじゃ！#ホロライブ #熱千めら",
+    "url": "https://www.youtube.com/watch?v=zlGG79dj_qY",
+    "api": true
   },
   {
     "date": "2026-09-26",
     "type": "stream",
     "title": "【初配信振り返り】ホロライブの新人だけど質問ある？",
-    "url": "https://www.youtube.com/watch?v=mvLjwGCje64"
+    "url": "https://www.youtube.com/watch?v=mvLjwGCje64",
+    "api": true
   }
 ]
