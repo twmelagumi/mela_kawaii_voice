@@ -1,4 +1,4 @@
-/* 熱千めら 聲音圖鑑 — shared styles for index.html (voices) and songs.html (songs).
+/* 熱千めら めらめら出勤紀錄 — shared styles for index.html (voices), songs.html (songs) and timeline.html.
    Layout: header + page tabs, then each page's own content; playing opens a player sheet at the bottom. */
 :root{
   --bg:#f1f5fa; --surface:#ffffff; --ink:#1d2836; --muted:#5f6d7e; --line:#d8e2ee;
@@ -31,6 +31,7 @@ body.scrolled .views a{padding:6px 14px;font-size:14px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
 h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
 h1 .jp{color:var(--accent-text)}
+h1 .jp,h1 [data-i18n]{display:inline-block} /* 「熱千めら」和頁面名稱都不要從中間斷行：放不下就整個換到下一行 */
 .sub{color:var(--muted);margin:6px 0 0;font-size:13px}
 .right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
 @media (max-width:600px){.right{flex-direction:row;align-items:center;justify-content:space-between;width:100%}}

@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>熱千めら 編年史</title>
+<title>熱千めら めらめら出勤紀錄</title>
 <meta name="description" content="熱千めら 直播與紀念日編年史（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610032042">
+<link rel="stylesheet" href="assets/style.css?v=202610032123">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -83,7 +83,7 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610032042"></script>
+<script src="assets/common.js?v=202610032123"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -106,21 +106,21 @@ const SHOW_SHORTS = true;
 const TL_SHEET_TTL = 5*60*1000; // 試算表在訪客瀏覽器快取 5 分鐘
 
 addStrings({
- zh:{titleTimeline:"編年史",subTimeline:"めらちゃん的直播、影片和紀念日，沿著時間線一路往下看。",events:"個事件",
+ zh:{titleTimeline:"めらめら出勤紀錄",subTimeline:"めらちゃん的直播、影片和紀念日，沿著時間線一路往下看。",events:"個事件",
    ty_all:"全部",ty_stream:"直播",ty_collab:"聯動",ty_release:"影片",ty_short:"Shorts",ty_event:"事件",ty_offline:"現地活動",ty_live:"LIVE",ty_anniv:"紀念日",ty_auto:"收錄",withLabel:"聯動對象",openLink:"開啟連結",upcoming:"預定",startAt:"{t} 開始",
    sideLabel:"排法",sideAlt:"左右交錯",sideType:"依種類分邊",newFirst:"新 → 舊",oldFirst:"舊 → 新",toToday:"跳到今天",today:"今天",
    periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",daysAgo:"{n} 天前",
    msYear:"出道 {n} 週年",yearly:"{t} {n} 週年",
    autoTitle:"這天唱的歌",showPost:"顯示推文",hidePost:"收起推文",earlier:"更早",nItems:"{n} 件",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
    empty:"還沒有事件",emptyHint:"更新 timeline.json 後就會出現在這裡。",k_song:"歌"},
- ja:{titleTimeline:"年表",subTimeline:"めらちゃんの配信・動画・記念日を、時間の流れにそってたどれます。",events:"件",
+ ja:{titleTimeline:"めらめら出勤記録",subTimeline:"めらちゃんの配信・動画・記念日を、時間の流れにそってたどれます。",events:"件",
    ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"動画",ty_short:"ショート",ty_event:"イベント",ty_offline:"公式イベント",ty_live:"LIVE",ty_anniv:"記念日",ty_auto:"収録",withLabel:"コラボ相手",openLink:"リンクを開く",upcoming:"予定",startAt:"{t} 開始",
    sideLabel:"並べ方",sideAlt:"左右交互",sideType:"種類で左右",newFirst:"新しい順",oldFirst:"古い順",toToday:"今日へ",today:"今日",
    periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",daysAgo:"{n} 日前",
    msYear:"デビュー {n} 周年",yearly:"{t} {n} 周年",
    autoTitle:"この日の歌",showPost:"ポストを表示",hidePost:"ポストを閉じる",earlier:"それ以前",nItems:"{n} 件",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
    empty:"まだイベントがありません",emptyHint:"timeline.json を更新するとここに表示されます。",k_song:"歌"},
- en:{titleTimeline:"Timeline",subTimeline:"Mela's streams, videos and anniversaries, one dot at a time.",events:"events",
+ en:{titleTimeline:"Mela Mela Shift Log",subTimeline:"Mela's streams, videos and anniversaries, one dot at a time.",events:"events",
    ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Video",ty_short:"Shorts",ty_event:"Event",ty_offline:"Offline Event",ty_live:"LIVE",ty_anniv:"Anniversary",ty_auto:"Clips",withLabel:"With",openLink:"Open link",upcoming:"Upcoming",startAt:"starts {t}",
    sideLabel:"Layout",sideAlt:"Alternate",sideType:"By type",newFirst:"Newest first",oldFirst:"Oldest first",toToday:"Jump to today",today:"Today",
    periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",daysAgo:"{n} days ago",

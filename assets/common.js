@@ -1,4 +1,4 @@
-/* 熱千めら 聲音圖鑑 — shared code for index.html (voices) and songs.html (songs)
+/* 熱千めら めらめら出勤紀錄 — shared code for index.html (voices), songs.html (songs) and timeline.html
  * 這個檔案放兩個頁面共用的東西：語言切換、共用文字、時間/網址工具、頁面下方的播放器。
  * 頁面自己的內容（聲音卡片、歌單）寫在各自的 html 檔裡。
  *
@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-03 20:42";
+const LAST_UPDATED = "2026-10-03 21:23";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -23,7 +23,7 @@ if(GOATCOUNTER_URL&&/^https?:$/.test(location.protocol)){ // 本機預覽（file
 /* ===== 共用翻譯 ===== */
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
-   tabVoices:"聲音",tabSongs:"歌曲",tabTimeline:"編年史",artist:"原唱",pMinimize:"縮小播放器",
+   siteName:"めらめら出勤紀錄",tabVoices:"回音",tabSongs:"歌單",tabTimeline:"出勤紀錄",artist:"原唱",pMinimize:"縮小播放器",
    playerNote:"ⓘ 本頁使用 YouTube 嵌入式播放，可能不會列入你的 YouTube 觀看紀錄。",pExpand:"展開播放器",pPause:"暫停",pPlay:"播放",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
    officialLinks:"官方相關連結",unofficialLinks:"非官方連結",holoOfficial:"hololive 官方介紹",
@@ -32,7 +32,7 @@ const I18N={
    updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
    rights:"本站為志工維護的非官方粉絲網站。影片由 hololive production 與熱千めら製作，影片的權利歸原創作者所有。"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
-   tabVoices:"ボイス",tabSongs:"歌",tabTimeline:"年表",artist:"原曲",pMinimize:"プレーヤーを小さくする",
+   siteName:"めらめら出勤記録",tabVoices:"こだま",tabSongs:"歌リスト",tabTimeline:"出勤記録",artist:"原曲",pMinimize:"プレーヤーを小さくする",
    playerNote:"ⓘ このページは YouTube の埋め込みプレーヤーで再生するため、ご自身の視聴履歴に残らない場合があります。",pExpand:"プレーヤーを開く",pPause:"一時停止",pPlay:"再生",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
    officialLinks:"公式リンク",unofficialLinks:"非公式リンク",holoOfficial:"ホロライブ公式",
@@ -41,7 +41,7 @@ const I18N={
    updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
    rights:"当サイトは有志が運営する非公式ファンサイトです。動画はホロライブプロダクションおよび熱千めらが制作したもので、動画の権利は各制作者に帰属します。"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
-   tabVoices:"Voices",tabSongs:"Songs",tabTimeline:"Timeline",artist:"Original",pMinimize:"Minimize player",
+   siteName:"Mela Mela Shift Log",tabVoices:"Echoes",tabSongs:"Songs",tabTimeline:"Shift Log",artist:"Original",pMinimize:"Minimize player",
    playerNote:"ⓘ Videos play in YouTube's embedded player, so they may not show up in your YouTube watch history.",pExpand:"Expand player",pPause:"Pause",pPlay:"Play",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
    officialLinks:"Official links",unofficialLinks:"Unofficial links",holoOfficial:"hololive official page",
@@ -60,7 +60,9 @@ function pickLang(){ let l=null; try{l=localStorage.getItem("mela-lang")}catch(e
 const t=k=>I18N[lang][k]??k;
 function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
   document.documentElement.lang={zh:"zh-Hant",ja:"ja",en:"en"}[l];
-  const tk=document.body.dataset.titleKey; if(tk) document.title=`熱千めら ${t(tk)}`;
+  // 瀏覽器分頁標題：首頁（data-site-home）和標題跟網站名稱一樣的頁面只顯示網站名稱，其他是「頁面名｜網站名稱」
+  const tk=document.body.dataset.titleKey, site=`熱千めら ${t("siteName")}`;
+  if(tk) document.title=document.body.hasAttribute("data-site-home")||t(tk)===t("siteName")?site:`${t(tk)}｜${site}`;
   document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
   document.querySelectorAll("[data-i18n-title]").forEach(el=>{ el.title=t(el.dataset.i18nTitle); el.setAttribute("aria-label",el.title); });
