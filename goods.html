@@ -15,6 +15,14 @@
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
 .g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+/* 已入手的說明＋備份（匯出／匯入） */
+.g-backup{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.6}
+.g-backup p{margin:0;flex:1 1 320px}
+.g-backup .g-bk-btns{display:flex;flex-wrap:wrap;gap:8px}
+.g-backup button{font-size:12px;padding:5px 12px}
+.g-backup .g-bk-msg{flex:1 1 100%;margin:0;font-size:12px}
+.g-bk-msg.ok{color:var(--accent-text)}
+.g-bk-msg.err{color:#d93d42}
 .g-list{display:flex;flex-direction:column;gap:30px}
 .g-list{gap:16px!important}
 .g-series{display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
@@ -110,6 +118,15 @@
       </select>
     </div>
     <p class="g-notice" data-i18n="goodsNotice"></p>
+    <div class="g-backup">
+      <p data-i18n="haveNotice"></p>
+      <div class="g-bk-btns">
+        <button type="button" id="bkExport" data-i18n="bkExport"></button>
+        <button type="button" id="bkImport" data-i18n="bkImport"></button>
+        <input type="file" id="bkFile" accept=".json,application/json" hidden>
+      </div>
+      <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
+    </div>
     <div class="g-list" id="gList"></div>
   </section>
 
@@ -153,6 +170,7 @@
  * - goods picture 可留空：顯示預設圖示。官方商店（shop.hololivepro.com/cdn/）的圖片會自動加 width=600 讀小張的
  * - 「已入手」用「企劃代號|品名」辨識：改了代號或品名，大家勾過的紀錄就會不見
  * 「已入手」只存在瀏覽者自己的瀏覽器（localStorage），換瀏覽器或清除資料就會不見。
+ *   頁面上有「匯出備份」（下載 mela-goods-backup-日期.json：{site:"mela-goods",version:1,exported,have:[id…]}）和「匯入備份」（合併，不會取消原本的勾選）。
  */
 // Google 試算表「周邊頁紀錄」分頁發佈成 CSV 的網址
 const GOODS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1311668276&single=true&output=csv";
@@ -161,17 +179,23 @@ addStrings({
  zh:{titleGoods:"めらめら周邊紀錄",tabGoods:"周邊",subGoods:"熱千めら 出過的官方周邊。勾選已入手的，整理自己的收藏。",
    haveLabel:"已入手",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
    shop:"官方商店",post:"宣傳推文",markHave:"標記已入手",isHave:"✓ 已入手",noImage:"沒有圖片",oversea:"海外合作",xPost:"推文",showPost:"顯示宣傳推文",hidePost:"收起推文",
-   goodsNotice:"本站不販售任何商品，購買請到官方商店。商品圖片版權歸 COVER 株式会社所有。「已入手」只記在你自己的瀏覽器裡。",
+   goodsNotice:"本站不販售任何商品，購買請到官方商店。商品圖片版權歸 COVER 株式会社所有。",
+   haveNotice:"「已入手」只存在這台裝置的這個瀏覽器裡：換瀏覽器、換手機或電腦、使用無痕模式，或清除瀏覽紀錄／網站資料（Cookie）後都會不見。建議不時按「匯出備份」存一份檔案，之後可以用「匯入備份」還原，也能用來搬到其他裝置。",
+   bkExport:"匯出備份",bkImport:"匯入備份",bkExported:"已下載備份檔（{n} 項）。",bkImported:"已匯入：備份裡 {n} 項，新增 {m} 項（原本勾的不會被取消）。",bkBad:"這不是本站的備份檔，或檔案損壞。",bkEmpty:"目前沒有勾選任何已入手，不需要備份。",
    empty:"還沒有周邊資料",emptyHave:"還沒有勾選已入手的周邊",emptyNot:"全部都入手了！"},
  ja:{titleGoods:"めらめらグッズ記録",tabGoods:"グッズ",subGoods:"熱千めらの公式グッズの記録。持っているものにチェックして、コレクションを整理できます。",
    haveLabel:"入手済み",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
    shop:"公式ショップ",post:"告知ポスト",markHave:"入手済みにする",isHave:"✓ 入手済み",noImage:"画像なし",oversea:"海外コラボ",xPost:"ポスト",showPost:"告知ポストを表示",hidePost:"ポストを閉じる",
-   goodsNotice:"当サイトではグッズを販売していません。ご購入は公式ショップへ。商品画像の権利はカバー株式会社に帰属します。「入手済み」はお使いのブラウザにのみ保存されます。",
+   goodsNotice:"当サイトではグッズを販売していません。ご購入は公式ショップへ。商品画像の権利はカバー株式会社に帰属します。",
+   haveNotice:"「入手済み」はこの端末のこのブラウザにだけ保存されます。ブラウザや端末を変えたとき、シークレット（プライベート）モードのとき、閲覧履歴やサイトデータ（Cookie）を消去したときは消えてしまいます。ときどき「バックアップを保存」でファイルに保存しておくと、「バックアップを読み込む」で元に戻したり、別の端末に移したりできます。",
+   bkExport:"バックアップを保存",bkImport:"バックアップを読み込む",bkExported:"バックアップファイルを保存しました（{n} 件）。",bkImported:"読み込みました：バックアップ {n} 件のうち {m} 件を追加（今のチェックは消えません）。",bkBad:"このサイトのバックアップファイルではないか、ファイルが壊れています。",bkEmpty:"入手済みのチェックがまだないので、バックアップは不要です。",
    empty:"まだグッズがありません",emptyHave:"入手済みのグッズはまだありません",emptyNot:"全部そろいました！"},
  en:{titleGoods:"Mela Mela Merch Log",tabGoods:"Merch",subGoods:"Achichi Mela's official merch so far. Tick what you own to keep track of your collection.",
    haveLabel:"Owned",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
    shop:"Official shop",post:"Announcement",markHave:"Mark as owned",isHave:"✓ Owned",noImage:"No image",oversea:"Overseas",xPost:"Post",showPost:"Show announcement",hidePost:"Hide post",
-   goodsNotice:"This site does not sell anything — please buy from the official shop. Product images © COVER Corporation. Your \"owned\" ticks are saved only in your own browser.",
+   goodsNotice:"This site does not sell anything — please buy from the official shop. Product images © COVER Corporation.",
+   haveNotice:"Your \"owned\" ticks are stored only in this browser on this device. They will be lost if you switch browsers or devices, use a private/incognito window, or clear your browsing history or site data (cookies). Use \"Export backup\" now and then to save a file — \"Import backup\" restores it, or moves your list to another device.",
+   bkExport:"Export backup",bkImport:"Import backup",bkExported:"Backup downloaded ({n} items).",bkImported:"Imported: {n} items in the backup, {m} new (your current ticks are kept).",bkBad:"This isn't a backup file from this site, or it's damaged.",bkEmpty:"Nothing is marked as owned yet, so there's nothing to back up.",
    empty:"No merch yet",emptyHave:"Nothing marked as owned yet",emptyNot:"You've got them all!"}
 });
 
@@ -287,8 +311,28 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b
     $("haveN").textContent=series.flatMap(s=>s.items).filter(i=>have.has(i.id)).length;
     const cnt=$("haveChips").querySelectorAll(".n"), a=+$("totalN").textContent, h=+$("haveN").textContent; cnt[1].textContent=h; cnt[2].textContent=a-h; }
 });
+// ---- 已入手的備份：匯出成 .json 檔、再匯入（合併，不會取消原本的勾選） ----
+const tfm=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+function bkMsg(text,cls){ const m=$("bkMsg"); m.textContent=text; m.className="g-bk-msg "+cls; m.hidden=false; }
+$("bkExport").onclick=()=>{
+  if(!have.size) return bkMsg(t("bkEmpty"),"");
+  const d=new Date(), p2=n=>String(n).padStart(2,"0"), day=`${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}`;
+  const data={site:"mela-goods",version:1,exported:d.toISOString(),have:[...have]};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));
+  const a=Object.assign(document.createElement("a"),{href:url,download:`mela-goods-backup-${day}.json`});
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  bkMsg(tfm("bkExported",{n:have.size}),"ok");
+};
+$("bkImport").onclick=()=>{ $("bkFile").value=""; $("bkFile").click(); };
+$("bkFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+  try{ const d=JSON.parse(await f.text());
+    const list=Array.isArray(d)?d:(d&&d.site==="mela-goods"&&Array.isArray(d.have))?d.have:null; // 也接受單純的陣列
+    if(!list||!list.every(x=>typeof x==="string")) throw new Error("bad");
+    let m=0; for(const id of list) if(!have.has(id)){ have.add(id); m++; }
+    saveHave(); render(); bkMsg(tfm("bkImported",{n:list.length,m}),"ok");
+  }catch(err){ bkMsg(t("bkBad"),"err"); } };
 $("gOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
-window.onLangChange=render;
+window.onLangChange=()=>{ $("bkMsg").hidden=true; render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
 
 function readGoodsCache(){ try{ const c=JSON.parse(localStorage.getItem(GOODS_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
 async function fetchGoods(){ const r=await fetch(GOODS_CSV_URL+(GOODS_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
