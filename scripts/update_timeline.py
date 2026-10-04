@@ -7,7 +7,7 @@
     YT_API_KEY=… python scripts/update_timeline.py --dry-run  # 只印出結果，不寫檔
 
 流程（只用 Python 內建模組）：
-  1. 讀頻道 RSS（最近 15 支）
+  1. 讀頻道 RSS（最近 15 支）；RSS 暫時壞掉（404 等）時改用 API 的「上傳的影片」播放清單
   2. 只把「沒看過的」（新的、還在預定中的）一次交給 API 查（videos.list，1 個配額單位；免費額度每天 10,000）
   3. 收錄規則：
      - 直播（播完的）→ stream；標題有 コラボ 等字 → collab；首播的 MV、一般影片 → release；Shorts → short
@@ -149,6 +149,22 @@ def make_entry(v, typ, when, upcoming, note=""):
     return e
 
 
+def recent_videos(cid, key):
+    """頻道最近 15 支影片 → ([{vid, shorts}], 來源)
+    先讀 RSS（不用配額，還能認出 Shorts）；YouTube 的 RSS 偶爾會暫時回 404／500，
+    重試幾次還是失敗就改用 API 的「上傳的影片」播放清單（1 個配額單位，Shorts 改用長度判斷）"""
+    url = f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
+    for i in range(3):
+        try:
+            return parse_feed(fetch(url, tries=1)), "RSS"
+        except Exception as e:  # noqa: BLE001
+            err = str(e).splitlines()[0][:80]
+            print(f"  （RSS 讀取失敗 {i + 1}/3：{err}）")
+            time.sleep(5 * (i + 1))
+    r = api("playlistItems", key, part="contentDetails", playlistId="UU" + cid[2:], maxResults=15)
+    return [{"vid": it["contentDetails"]["videoId"], "shorts": False} for it in r.get("items", [])], "API 播放清單"
+
+
 def collect(ch, key, by_vid):
     """RSS 最近 15 支裡沒看過的（新的、還在預定中的）＋已經不在 RSS 的預定 → 問 API
     → [(vid, entry 或 None, 說明)]"""
@@ -158,12 +174,12 @@ def collect(ch, key, by_vid):
         if not r.get("items"):
             raise RuntimeError(f"API 找不到頻道 {ch['handle']}")
         cid = r["items"][0]["id"]
-    feed = parse_feed(fetch(f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"))
+    feed, src = recent_videos(cid, key)
     in_feed = {x["vid"] for x in feed}
     rss_shorts = {x["vid"] for x in feed if x["shorts"]}
     ids = [x["vid"] for x in feed if x["vid"] not in by_vid or by_vid[x["vid"]].get("upcoming")]
     ids += [v for v, e in by_vid.items() if e.get("upcoming") and v not in in_feed]  # 可能被取消的預定
-    print(f"{ch['handle']}: RSS {len(feed)} 支，要查 {len(ids)} 支（其他已經看過）")
+    print(f"{ch['handle']}: {src} {len(feed)} 支，要查 {len(ids)} 支（其他已經看過）")
     out = []
     for i in range(0, len(ids), 50):
         r = api("videos", key, part="snippet,liveStreamingDetails,contentDetails", id=",".join(ids[i:i + 50]), maxResults=50)
