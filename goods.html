@@ -167,6 +167,7 @@
  * - x link：只有企劃第一列有填 → 企劃的宣傳推文（標題旁「顯示宣傳推文」）；企劃裡其他列也有填 → 每一列是該商品自己的推文（例如各店家特典）
  * - oversea 打勾（或填 v、1、是）：填在企劃第一列＝整個企劃是海外合作；只填在某個商品列＝只有那個商品
  * - 企劃第一列（goods name 空白）的 goods picture＝企劃封面。頁面一開始只顯示企劃（封面＋標題），點封面或標題才展開商品卡片、讀商品圖片
+ * - goods picture 也可以填網站裡的圖片路徑 assets/goods/檔名.webp（自己縮小過的圖，例如新聞稿素材，寬 800px 左右）
  * - goods picture 可留空：顯示預設圖示。官方商店（shop.hololivepro.com/cdn/）的圖片會自動加 width=600 讀小張的
  * - 「已入手」用「企劃代號|品名」辨識：改了代號或品名，大家勾過的紀錄就會不見
  * 「已入手」只存在瀏覽者自己的瀏覽器（localStorage），換瀏覽器或清除資料就會不見。
@@ -206,6 +207,8 @@ const openSeries=new Set(); // 已展開的企劃（展開後才產生商品卡�
 const isXPost=u=>/^https:\/\/(x|twitter)\.com\/[^/]+\/status\/\d+/.test(u||"");
 // X 網址整理成 https://x.com/帳號/status/ID（去掉 /photo/4、?s=20 等）
 const cleanX=u=>{ const m=String(u||"").match(/^https?:\/\/(?:www\.|mobile\.)?(?:x|twitter)\.com\/([^/?#]+)\/status\/(\d+)/); return m?`https://x.com/${m[1]}/status/${m[2]}`:u; };
+// 圖片網址：http(s) 網址，或網站裡的相對路徑（例：assets/goods/xxx.webp，放在 repo 的 assets/goods/ 資料夾）
+const imgUrl=u=>{ u=String(u||"").trim(); return /^(assets\/goods\/)[\w\-.%]+\.(webp|png|jpe?g|gif|avif)$/i.test(u)?u:goodUrl(u); };
 // 官方商店的圖片讀小張一點
 const smallImg=u=>{ try{ const x=new URL(u); if(x.hostname==="shop.hololivepro.com"&&x.pathname.startsWith("/cdn/")&&!x.searchParams.has("width")) x.searchParams.set("width","600"); return x.href; }catch(e){ return u; } };
 try{ have=new Set(JSON.parse(localStorage.getItem(HAVE_KEY)||"[]")); }catch(e){}
@@ -234,8 +237,8 @@ function build(text){
       cur.shop=goodUrl(get(r,"shop"))||cur.shop; cur.note=get(r,"pnote")||cur.note; if(isYes(get(r,"oversea"))) cur.oversea=true; }
     if(!cur) continue;
     const name=get(r,"name"), post=goodUrl(cleanX(get(r,"post")));
-    if(!name){ if(post) cur.post=post; const c=goodUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
-    const img=goodUrl(get(r,"image"));
+    if(!name){ if(post) cur.post=post; const c=imgUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
+    const img=imgUrl(get(r,"image"));
     cur.items.push({id:`${cur.key}|${name}`,name,image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
       oversea:!(code||pname)&&isYes(get(r,"oversea"))});
   }
