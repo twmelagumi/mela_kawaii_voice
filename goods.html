@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 還沒正式上線：不讓搜尋引擎收錄，其他頁的分頁列也沒有連到這裡。上線時拿掉這行，並在三頁的 nav 加連結 -->
+<meta name="robots" content="noindex,nofollow">
+<title>熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=202610041118">
+<style>
+/* ===== 周邊頁（還沒上線，先放在這頁裡；上線時可搬到 style.css） ===== */
+.g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.g-tools .sp{flex:1}
+.g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.g-list{display:flex;flex-direction:column;gap:30px}
+.g-list{gap:16px!important}
+.g-series{display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.g-series.open{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.g-head{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px 18px;align-items:center}
+@media (max-width:600px){.g-head{grid-template-columns:1fr}}
+.g-cover{position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:none;border-radius:10px;overflow:hidden;background:var(--bg);cursor:pointer}
+.g-cover img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .25s}
+.g-cover:hover img{transform:scale(1.03)}
+.g-cover .g-ph{border-radius:10px}
+.g-info{display:flex;flex-direction:column;gap:8px;min-width:0}
+.g-tgl{all:unset;cursor:pointer;display:flex;align-items:flex-start;gap:8px;border-radius:6px}
+.g-tgl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.g-tgl:hover h2{color:var(--accent-text)}
+.g-chev{flex:none;margin-top:6px;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;color:var(--muted);transition:transform .2s}
+.g-series.open .g-chev{transform:rotate(180deg)}
+.g-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.g-series>.g-grid,.g-series>.g-post{padding-top:12px;border-top:1px solid var(--line)}
+.g-head .g-ttl{min-width:0}
+.g-date{font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-head h2{margin:0;font-family:var(--f-display);font-weight:900;font-size:22px;line-height:1.3;overflow-wrap:anywhere}
+.g-head .g-note{margin:4px 0 0;font-size:13px;color:var(--muted);white-space:pre-line}
+.g-links{display:flex;flex-wrap:wrap;gap:8px}
+.g-links a{font-size:12px;padding:5px 12px}
+.g-prog{display:flex;align-items:center;gap:8px;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-prog i{display:block;width:72px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.g-prog i b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.g-prog.full{color:var(--accent-text)}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+@media (max-width:520px){.g-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.g-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;min-width:0;transition:border-color .15s,box-shadow .15s}
+.g-card.have{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.g-img{position:relative;display:block;aspect-ratio:1;background:var(--bg);overflow:hidden}
+.g-img img{width:100%;height:100%;object-fit:contain;display:block}
+.g-ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;color:var(--muted);font-size:12px;
+  background:radial-gradient(circle at 30% 25%,var(--accent-soft),transparent 60%),var(--bg)}
+.g-ph svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;opacity:.7}
+.g-badge{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-weight:900;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.25);transform:scale(0);transition:transform .2s}
+.g-card.have .g-badge{transform:scale(1)}
+.g-body{display:flex;flex-direction:column;gap:6px;padding:10px 12px 12px;flex:1;min-width:0}
+.g-ovs{background:#ffe9d6!important;color:#b5520f!important}
+@media (prefers-color-scheme:dark){.g-ovs{background:#3a2616!important;color:#ffaa70!important}}
+.g-type{align-self:flex-start;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-text)}
+.g-body h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.g-body .g-note{margin:0;font-size:12px;color:var(--muted);white-space:pre-line;overflow-wrap:anywhere}
+.g-body .g-links{margin-top:2px}
+.g-body .g-links a{font-size:11px;padding:3px 10px}
+.g-have{margin-top:auto;justify-content:center;font-size:13px;padding:6px 10px}
+.g-have[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.g-total b{transition:color .2s}
+/* 宣傳推文嵌入 */
+.g-links button{font-size:12px;padding:5px 12px}
+.g-post{max-width:550px;min-height:60px}
+.g-post .twitter-tweet{margin:0!important}
+</style>
+</head>
+<body data-title-key="titleGoods">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleGoods"></span></h1>
+      <p class="sub" data-i18n="subGoods"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count g-total"><span data-i18n="haveLabel"></span> <b id="haveN">0</b> / <span id="totalN">0</span></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabTimeline"></a>
+    <a href="goods.html" aria-current="page" data-i18n="tabGoods"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="g-tools">
+      <div class="tags" id="haveChips"></div>
+      <span class="sp"></span>
+      <select id="gOrder">
+        <option value="desc" data-i18n="newFirst"></option>
+        <option value="asc" data-i18n="oldFirst"></option>
+      </select>
+    </div>
+    <p class="g-notice" data-i18n="goodsNotice"></p>
+    <div class="g-list" id="gList"></div>
+  </section>
+
+  <footer>
+    <p class="official-label" data-i18n="officialLinks"></p>
+    <nav class="official" aria-label="Official links">
+      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
+      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
+      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
+      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
+    </nav>
+    <p data-i18n="footer"></p>
+    <p class="official-label" data-i18n="unofficialLinks"></p>
+    <div class="dc">
+      <span class="dc-tag" data-i18n="dcPromo"></span>
+      <span class="dc-label" data-i18n="dcLabel"></span>
+      <ul>
+        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
+        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
+      </ul>
+      <span class="dc-join" data-i18n="dcJoin"></span>
+    </div>
+    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
+    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
+    <p class="rights" data-i18n="rights"></p>
+  </footer>
+</div>
+
+<script src="assets/common.js?v=202610041118"></script>
+<script>
+/* ===== 周邊頁（還沒上線） =====
+ * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
+ *   goods project code（企劃代號，英文）／goods project name（企劃名稱）／date（日期）／goods official website（官方商店）
+ *   x link（推文）／goods name（品名）／goods picture（圖片網址）／note（商品說明）／project note（企劃說明）／oversea（海外合作）
+ * - 企劃的資料（名稱、日期、官方商店、企劃說明、oversea）只要填在該企劃的第一列；
+ *   下面的商品列 goods project code 可以留空 → 算是上一個企劃的商品（所以試算表不要排序，新企劃加在最下面）
+ * - x link：只有企劃第一列有填 → 企劃的宣傳推文（標題旁「顯示宣傳推文」）；企劃裡其他列也有填 → 每一列是該商品自己的推文（例如各店家特典）
+ * - oversea 打勾（或填 v、1、是）：填在企劃第一列＝整個企劃是海外合作；只填在某個商品列＝只有那個商品
+ * - 企劃第一列（goods name 空白）的 goods picture＝企劃封面。頁面一開始只顯示企劃（封面＋標題），點封面或標題才展開商品卡片、讀商品圖片
+ * - goods picture 可留空：顯示預設圖示。官方商店（shop.hololivepro.com/cdn/）的圖片會自動加 width=600 讀小張的
+ * - 「已入手」用「企劃代號|品名」辨識：改了代號或品名，大家勾過的紀錄就會不見
+ * 「已入手」只存在瀏覽者自己的瀏覽器（localStorage），換瀏覽器或清除資料就會不見。
+ */
+// Google 試算表「周邊頁紀錄」分頁發佈成 CSV 的網址
+const GOODS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1311668276&single=true&output=csv";
+const GOODS_TTL = 5*60*1000, GOODS_KEY = "mela-goods-csv"; // 試算表在訪客瀏覽器快取 5 分鐘
+addStrings({
+ zh:{titleGoods:"めらめら周邊紀錄",tabGoods:"周邊",subGoods:"熱千めら 出過的官方周邊。勾選已入手的，整理自己的收藏。",
+   haveLabel:"已入手",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
+   shop:"官方商店",post:"宣傳推文",markHave:"標記已入手",isHave:"✓ 已入手",noImage:"沒有圖片",oversea:"海外合作",xPost:"推文",showPost:"顯示宣傳推文",hidePost:"收起推文",
+   goodsNotice:"本站不販售任何商品，購買請到官方商店。商品圖片版權歸 COVER 株式会社所有。「已入手」只記在你自己的瀏覽器裡。",
+   empty:"還沒有周邊資料",emptyHave:"還沒有勾選已入手的周邊",emptyNot:"全部都入手了！"},
+ ja:{titleGoods:"めらめらグッズ記録",tabGoods:"グッズ",subGoods:"熱千めらの公式グッズの記録。持っているものにチェックして、コレクションを整理できます。",
+   haveLabel:"入手済み",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
+   shop:"公式ショップ",post:"告知ポスト",markHave:"入手済みにする",isHave:"✓ 入手済み",noImage:"画像なし",oversea:"海外コラボ",xPost:"ポスト",showPost:"告知ポストを表示",hidePost:"ポストを閉じる",
+   goodsNotice:"当サイトではグッズを販売していません。ご購入は公式ショップへ。商品画像の権利はカバー株式会社に帰属します。「入手済み」はお使いのブラウザにのみ保存されます。",
+   empty:"まだグッズがありません",emptyHave:"入手済みのグッズはまだありません",emptyNot:"全部そろいました！"},
+ en:{titleGoods:"Mela Mela Merch Log",tabGoods:"Merch",subGoods:"Achichi Mela's official merch so far. Tick what you own to keep track of your collection.",
+   haveLabel:"Owned",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
+   shop:"Official shop",post:"Announcement",markHave:"Mark as owned",isHave:"✓ Owned",noImage:"No image",oversea:"Overseas",xPost:"Post",showPost:"Show announcement",hidePost:"Hide post",
+   goodsNotice:"This site does not sell anything — please buy from the official shop. Product images © COVER Corporation. Your \"owned\" ticks are saved only in your own browser.",
+   empty:"No merch yet",emptyHave:"Nothing marked as owned yet",emptyNot:"You've got them all!"}
+});
+
+const HAVE_KEY="mela-goods-have";
+let series=[], have=new Set(), filter="all", order="desc";
+const openPosts=new Set(); // 已展開宣傳推文的企劃
+const openSeries=new Set(); // 已展開的企劃（展開後才產生商品卡片、才讀商品圖片）
+const isXPost=u=>/^https:\/\/(x|twitter)\.com\/[^/]+\/status\/\d+/.test(u||"");
+// X 網址整理成 https://x.com/帳號/status/ID（去掉 /photo/4、?s=20 等）
+const cleanX=u=>{ const m=String(u||"").match(/^https?:\/\/(?:www\.|mobile\.)?(?:x|twitter)\.com\/([^/?#]+)\/status\/(\d+)/); return m?`https://x.com/${m[1]}/status/${m[2]}`:u; };
+// 官方商店的圖片讀小張一點
+const smallImg=u=>{ try{ const x=new URL(u); if(x.hostname==="shop.hololivepro.com"&&x.pathname.startsWith("/cdn/")&&!x.searchParams.has("width")) x.searchParams.set("width","600"); return x.href; }catch(e){ return u; } };
+try{ have=new Set(JSON.parse(localStorage.getItem(HAVE_KEY)||"[]")); }catch(e){}
+try{ order=localStorage.getItem("mela-goods-order")||"desc"; }catch(e){}
+const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify([...have])); }catch(e){} };
+const goodUrl=u=>{ try{ const x=new URL(String(u||"").trim()); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
+const fmtDate=d=>d?d.replace(/-/g,"."):"";
+const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+
+// 試算表標題 → 欄位（依序比對，先比對到的優先）
+const GCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["pnote",/project\s*note|企劃說明|企画メモ/i],
+  ["date",/date|日期|日付|発売/i],["shop",/official|website|shop|商店|ショップ/i],["post",/x\s*link|tweet|推文|ポスト|^x$/i],
+  ["name",/goods\s*name|品名|商品名/i],["image",/picture|image|圖片|画像/i],["oversea",/oversea|海外/i],["note",/note|說明|備註|メモ/i]];
+// CSV → 企劃
+function build(text){
+  const rows=parseCSV(text||""); if(!rows.length){ series=[]; return; }
+  const col={}; rows[0].forEach((h,i)=>{ const k=GCOLS.find(([k,re])=>col[k]==null&&re.test(String(h).trim())); if(k) col[k[0]]=i; });
+  const get=(r,k)=>col[k]==null?"":String(r[col[k]]??"").trim();
+  const map=new Map(); let cur=null;
+  for(const r of rows.slice(1)){
+    const code=get(r,"code"), pname=get(r,"pname");
+    if(code||pname){ const key=code||pname;
+      if(!map.has(key)) map.set(key,{key,name:pname||code,cover:"",date:null,shop:"",post:"",note:"",oversea:false,items:[]});
+      cur=map.get(key);
+      if(pname) cur.name=pname; const d=normDate(get(r,"date")); if(d) cur.date=d;
+      cur.shop=goodUrl(get(r,"shop"))||cur.shop; cur.note=get(r,"pnote")||cur.note; if(isYes(get(r,"oversea"))) cur.oversea=true; }
+    if(!cur) continue;
+    const name=get(r,"name"), post=goodUrl(cleanX(get(r,"post")));
+    if(!name){ if(post) cur.post=post; const c=goodUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
+    const img=goodUrl(get(r,"image"));
+    cur.items.push({id:`${cur.key}|${name}`,name,image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
+      oversea:!(code||pname)&&isYes(get(r,"oversea"))});
+  }
+  for(const g of map.values()){ // x link 只有第一個商品有 → 算企劃的宣傳推文
+    const withPost=g.items.filter(i=>i.post);
+    if(!g.post&&withPost.length===1&&withPost[0]===g.items[0]){ g.post=g.items[0].post; g.items[0].post=""; } }
+  series=[...map.values()].filter(g=>g.items.length);
+}
+
+function linksHTML(o){ return (o.shop||o.post)?`<div class="g-links">${o.shop?`<a class="btn" href="${esc(o.shop)}" target="_blank" rel="noopener">${t("shop")} ↗</a>`:""}${o.post?`<a class="btn" href="${esc(o.post)}" target="_blank" rel="noopener">${isXPost(o.post)?"X "+t("xPost"):t("post")} ↗</a>`:""}</div>`:""; }
+
+function cardHTML(it,g){ const on=have.has(it.id), link=it.shop||g.shop||it.post||g.post;
+  const img=it.image?`<img src="${esc(it.image)}" alt="${esc(it.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'g-ph',innerHTML:bagSvg+t('noImage')}))">`
+                    :`<span class="g-ph">${bagSvg}${t("noImage")}</span>`;
+  const own={shop:it.shop&&it.shop!==g.shop?it.shop:"",post:it.post&&it.post!==g.post?it.post:""}; // 跟企劃一樣的連結就不重複顯示
+  return `<article class="g-card${on?" have":""}" data-id="${esc(it.id)}">
+    ${link?`<a class="g-img" href="${esc(link)}" target="_blank" rel="noopener" tabindex="-1">`:`<span class="g-img">`}${img}<span class="g-badge" aria-hidden="true">✓</span>${link?"</a>":"</span>"}
+    <div class="g-body">
+      ${it.oversea&&!g.oversea?`<span class="g-type g-ovs">${t("oversea")}</span>`:""}
+      <h3>${esc(it.name)}</h3>
+      ${it.note?`<p class="g-note">${esc(it.note)}</p>`:""}
+      ${linksHTML(own)}
+      <button type="button" class="g-have" data-have="${esc(it.id)}" aria-pressed="${on}">${on?t("isHave"):t("markHave")}</button>
+    </div></article>`; }
+
+function render(){
+  const all=series.flatMap(g=>g.items), n=all.filter(i=>have.has(i.id)).length;
+  $("haveN").textContent=n; $("totalN").textContent=all.length;
+  const cnt={all:all.length,have:n,not:all.length-n};
+  $("haveChips").innerHTML=[["all","fAll"],["have","fHave"],["not","fNot"]].map(([k,l])=>`<button type="button" class="chip" data-filter="${k}" aria-pressed="${filter===k}">${t(l)} <span class="n">${cnt[k]}</span></button>`).join("");
+  $("gOrder").value=order;
+  const keep=i=>filter==="all"||(filter==="have")===have.has(i.id);
+  const list=[...series].sort((a,b)=>(a.date||"").localeCompare(b.date||"")*(order==="asc"?1:-1));
+  const html=list.map(g=>{ const items=g.items.filter(keep); if(!items.length) return "";
+    const gn=g.items.filter(i=>have.has(i.id)).length, pct=Math.round(gn/g.items.length*100);
+    const open=openSeries.has(g.key)||filter!=="all"; // 篩選已入手／未入手時全部展開
+    return `<section class="g-series${open?" open":""}">
+      <div class="g-head">
+        <button type="button" class="g-cover" data-series="${esc(g.key)}" aria-expanded="${open}" aria-label="${esc(g.name)}">${g.cover?`<img src="${esc(g.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'g-ph',innerHTML:bagSvg}))">`:`<span class="g-ph">${bagSvg}</span>`}</button>
+        <div class="g-info">
+          <div class="g-ttl">${g.date?`<time class="g-date" datetime="${g.date}">${fmtDate(g.date)}</time>`:""}${g.oversea?` <span class="g-type g-ovs">${t("oversea")}</span>`:""}
+            <button type="button" class="g-tgl" data-series="${esc(g.key)}" aria-expanded="${open}"><h2>${esc(g.name)}</h2><svg class="g-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+            ${g.note?`<p class="g-note">${esc(g.note)}</p>`:""}</div>
+          <div class="g-row">${seriesLinks(g)}
+          <span class="g-prog${gn===g.items.length?" full":""}" title="${t("haveLabel")}"><i><b style="width:${pct}%"></b></i>${gn} / ${g.items.length}</span></div>
+        </div>
+      </div>
+      ${isXPost(g.post)&&openPosts.has(g.key)?`<div class="g-post"><blockquote class="twitter-tweet" data-dnt="true" data-lang="${{zh:"zh-tw",ja:"ja",en:"en"}[lang]}" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(g.post)}">${t("openX")} ↗</a></blockquote></div>`:""}
+      ${open?`<div class="g-grid">${items.map(i=>cardHTML(i,g)).join("")}</div>`:""}
+    </section>`; }).join("");
+  $("gList").innerHTML=html||`<div class="empty"><h2>${t(!all.length?"empty":filter==="have"?"emptyHave":"emptyNot")}</h2></div>`;
+  if($("gList").querySelector(".g-post")) loadPosts().then(()=>window.twttr?.widgets?.load($("gList")));
+}
+function seriesLinks(g){ const x=isXPost(g.post), open=openPosts.has(g.key);
+  return (g.shop||g.post)?`<div class="g-links">${g.shop?`<a class="btn" href="${esc(g.shop)}" target="_blank" rel="noopener">${t("shop")} ↗</a>`:""}${x?`<button type="button" data-post="${esc(g.key)}" aria-expanded="${open}">${open?t("hidePost"):t("showPost")}</button>`:""}${g.post?`<a class="btn" href="${esc(g.post)}" target="_blank" rel="noopener">${x?"X":t("post")} ↗</a>`:""}</div>`:""; }
+// X 官方嵌入：第一次展開推文時才載入 widgets.js
+let postsP=null;
+function loadPosts(){ if(postsP) return postsP;
+  return postsP=new Promise(res=>{ if(window.twttr?.widgets) return res();
+    const s=document.createElement("script"); s.src="https://platform.twitter.com/widgets.js"; s.async=true; s.charset="utf-8";
+    s.onload=()=>window.twttr?.ready?twttr.ready(()=>res()):res(); s.onerror=()=>res(); document.head.appendChild(s); }); }
+
+document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.filter){ filter=b.dataset.filter; return render(); }
+  if(b.dataset.series!=null){ const k=b.dataset.series; openSeries.has(k)?openSeries.delete(k):openSeries.add(k); return render(); }
+  if(b.dataset.post!=null){ const k=b.dataset.post; openPosts.has(k)?openPosts.delete(k):openPosts.add(k); return render(); }
+  if(b.dataset.have!=null){ const id=b.dataset.have; have.has(id)?have.delete(id):have.add(id); saveHave();
+    if(filter!=="all") return render();
+    // 只更新這張卡和數字，不整頁重畫
+    const on=have.has(id), card=b.closest(".g-card"); card.classList.toggle("have",on); b.setAttribute("aria-pressed",on); b.textContent=on?t("isHave"):t("markHave");
+    const g=series.find(s=>s.items.some(i=>i.id===id)), gn=g.items.filter(i=>have.has(i.id)).length, p=card.closest(".g-series").querySelector(".g-prog");
+    p.classList.toggle("full",gn===g.items.length); p.querySelector("b").style.width=Math.round(gn/g.items.length*100)+"%"; p.lastChild.textContent=`${gn} / ${g.items.length}`;
+    $("haveN").textContent=series.flatMap(s=>s.items).filter(i=>have.has(i.id)).length;
+    const cnt=$("haveChips").querySelectorAll(".n"), a=+$("totalN").textContent, h=+$("haveN").textContent; cnt[1].textContent=h; cnt[2].textContent=a-h; }
+});
+$("gOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
+window.onLangChange=render;
+
+function readGoodsCache(){ try{ const c=JSON.parse(localStorage.getItem(GOODS_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
+async function fetchGoods(){ const r=await fetch(GOODS_CSV_URL+(GOODS_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
+  const text=await r.text(); try{ localStorage.setItem(GOODS_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} return text; }
+(async()=>{
+  const cached=readGoodsCache();
+  const text=cached?cached.text:await fetchGoods().catch(e=>{ console.warn("goods sheet failed",e); return ""; });
+  build(text); setLang(pickLang());
+  // 快取過期：背景更新，有變才重畫
+  if(cached&&Date.now()-cached.at>=GOODS_TTL) fetchGoods().then(t2=>{ if(t2!==cached.text){ build(t2); render(); } }).catch(e=>console.warn("goods sheet refresh failed",e));
+})();
+</script>
+</body>
+</html>
