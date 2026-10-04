@@ -1,5 +1,47 @@
 [
   {
+    "title": "departure!",
+    "artist": "小野正利",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=WBgYlpUP0zc",
+    "start": "00:16:22",
+    "end": "00:20:40",
+    "note": "めら沒有唱，旁邊打Call",
+    "streamDate": "2026-10-04",
+    "singers": [
+      "鈴鳴つづり",
+      "百灯キョーコ"
+    ]
+  },
+  {
+    "title": "うまぴょい伝説",
+    "artist": "スペシャルウィーク/サイレンススズカ/トウカイテイオー",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=WBgYlpUP0zc",
+    "start": "00:22:41",
+    "end": "00:27:10",
+    "streamDate": "2026-10-04",
+    "singers": [
+      "熱千めら",
+      "宙科そぴあ"
+    ]
+  },
+  {
+    "title": "騒げ★ぐるぐるTIME！",
+    "artist": "アソビ★まわり隊！",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=WBgYlpUP0zc",
+    "start": "00:43:52",
+    "end": "00:47:02",
+    "streamDate": "2026-10-04",
+    "singers": [
+      "熱千めら",
+      "宙科そぴあ",
+      "鈴鳴つづり",
+      "百灯キョーコ"
+    ]
+  },
+  {
     "title": "サラマンダー",
     "artist": "DECO*27",
     "category": "clip",
