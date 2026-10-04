@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610040023">
+<link rel="stylesheet" href="assets/style.css?v=202610041118">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -84,7 +84,7 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610040023"></script>
+<script src="assets/common.js?v=202610041118"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -182,13 +182,23 @@ async function fetchTlSheet(){ const r=await fetch(TIMELINE_CSV_URL+(TIMELINE_CS
 // 同一支影片（或沒有網址時：同日期＋同標題）視為同一個事件，後面的來源只覆蓋有填的欄位。
 // 試算表「隱藏」打勾 → 把那個事件拿掉（例如自動抓到、但不想放進編年史的影片）。
 function mergeSources(autoList,jsonList,sheetList){
-  const out=[], byKey=new Map();
-  const keyOf=e=>{ const v=vidOf(e.url); if(v) return "v:"+v; const u=linkOf(e.url); return u?"u:"+u.href:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
+  // 同一個網址（或沒有網址時：同日期＋同標題）＝同一組。組裡：
+  //   沒填日期、或日期相同 → 修改那一筆（只覆蓋有填的欄位）
+  //   填了不同的日期     → 另外一個事件（同一支影片在不同天發生的事）
+  // 「隱藏」：沒填日期 → 整組都隱藏；有填日期 → 只隱藏那一天的
+  const out=[], groups=new Map(), hideAll=new Set();
+  const baseOf=e=>{ const v=vidOf(e.url); if(v) return "v:"+v; const u=linkOf(e.url); return u?"u:"+u.href:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
+  const pick=(g,d)=>d?(g.find(x=>x.date&&normDate(x.date)===d)||g.find(x=>!x.date)):g[0];
   for(const src of [autoList,jsonList,sheetList]) for(const e of src||[]){ if(!e) continue;
-    const k=keyOf(e), cur=byKey.get(k);
-    if(e.hide){ if(cur) cur._hide=true; else byKey.set(k,{_hide:true}); continue; }
-    if(cur){ if(cur._hide&&!("date" in cur)) continue; for(const f in e) if(e[f]!==""&&e[f]!=null&&e[f]!==false) cur[f]=e[f]; }
-    else { const c={...e}; for(const f in c) if(c[f]===""||c[f]===false) delete c[f]; byKey.set(k,c); out.push(c); } }
+    const b=baseOf(e), d=e.date?normDate(e.date):"", g=groups.get(b)||[]; groups.set(b,g);
+    if(e.hide){
+      if(!d){ hideAll.add(b); g.forEach(x=>x._hide=true); }
+      else { const t=pick(g,d); if(t) t._hide=true; else g.push({date:d,_hide:true}); } // 先記下來，之後同一天的也隱藏
+      continue; }
+    const t=pick(g,d);
+    if(t){ for(const f in e) if(e[f]!==""&&e[f]!=null&&e[f]!==false) t[f]=e[f]; }
+    else { const c={...e}; for(const f in c) if(c[f]===""||c[f]===false) delete c[f];
+      if(hideAll.has(b)) c._hide=true; g.push(c); out.push(c); } }
   return out.filter(e=>!e._hide);
 }
 
@@ -204,7 +214,7 @@ function build(){
   const autos={};
   const attach=(s,kind)=>{ const vid=vidOf(s.url)||s.vid; const date=normDate(s.streamDate)||null;
     const sub={kind,title:s.title,artist:s.artist,vid,start:s.start!=null?parseTime(s.start):null,end:s.end!=null?parseTime(s.end):null,url:s.url};
-    let host=vid&&ev.find(e=>e.vid===vid);
+    let host=vid&&(ev.find(e=>e.vid===vid&&e.date===date)||ev.find(e=>e.vid===vid)); // 同一支影片有好幾天的事件時，掛在同一天的那個
     if(!host&&date){ host=autos[date]||(autos[date]={date,type:"auto",auto:true,id:"a"+date,subs:[],vids:new Set()}); }
     if(!host) return; host.subs.push(sub); if(host.vids&&vid) host.vids.add(vid); };
   songs.forEach(s=>attach(s,"song"));
