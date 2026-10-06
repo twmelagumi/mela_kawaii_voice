@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 隱藏分頁：不讓搜尋引擎收錄，其他頁的分頁列也沒有連到這裡 -->
+<meta name="robots" content="noindex,nofollow">
+<title>熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="YouTube 影片＋自己的字幕檔同步播放（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=202610041118">
+<style>
+/* ===== 字幕播放頁（隱藏分頁；樣式先放在這頁裡） ===== */
+.s-load{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.s-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.s-row .search{flex:1 1 320px}
+.s-row .search input{padding-left:16px}
+.s-drop{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;border:2px dashed var(--line);border-radius:12px;color:var(--muted);font-size:13px;cursor:pointer;transition:border-color .15s,background .15s}
+.s-drop:hover,.s-drop.over,body.dragging .s-drop{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.s-drop b{color:var(--ink);font-weight:700;overflow-wrap:anywhere}
+.s-drop .sp{flex:1}
+.s-msg{margin:0;font-size:13px;color:var(--muted)}
+.s-msg.err{color:#d93d42}
+.s-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.s-stage{display:flex;flex-direction:column;gap:12px;width:100%;max-width:880px;margin:0 auto}
+.s-stage .frame{max-height:none}
+/* 桌機：影片寬度跟著視窗高度縮，讓播放器和台詞清單盡量同時看得到 */
+@media (min-width:700px){.s-stage{max-width:max(520px,min(880px,calc((100svh - 430px) * 16 / 9)))}}
+.s-ph{position:absolute;inset:0;display:grid;place-items:center;padding:16px;text-align:center;color:#c9d6e4;font-size:14px;background:radial-gradient(circle at 30% 25%,#1d3550,#0c121a 70%)}
+/* 播放器下方：目前這句台詞（高度固定，換句時不會上下跳） */
+.s-now{display:grid;place-items:center;min-height:calc(2 * 1.5em + 20px);padding:10px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:inset 3px 0 0 var(--accent);text-align:center;font-family:var(--f-display);font-weight:700;font-size:clamp(16px,2.2vw,21px);line-height:1.5}
+.s-now span{white-space:pre-line;overflow-wrap:anywhere}
+.s-now span+span{margin-top:2px}
+.s-now.idle{box-shadow:none}
+.s-err{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px;color:#d93d42}
+.s-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.s-tools .sp{flex:1}
+.s-off{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.s-off button{padding:4px 10px;font-size:12px;font-family:var(--f-code)}
+.s-off output{min-width:4.2em;text-align:center;font-family:var(--f-code);font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums}
+.s-find{flex:1 1 200px;min-width:0;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px}
+.s-wrap{position:relative}
+.s-list{position:relative;height:clamp(260px,42vh,520px);overflow-y:auto;overscroll-behavior:contain;margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.s-list li{margin:0}
+.s-line{all:unset;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline;width:100%;padding:7px 10px;border-radius:10px;cursor:pointer;color:var(--ink);transition:background .15s}
+.s-line:hover{background:var(--bg)}
+.s-line:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.s-line time{font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.s-line span{white-space:pre-line;overflow-wrap:anywhere;line-height:1.55}
+.s-line.on{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.s-line.on time{color:var(--accent-text);font-weight:600}
+.s-line.on span{font-weight:700;color:var(--ink)}
+.s-empty{display:grid;place-items:center;height:100%;padding:16px;text-align:center;color:var(--muted);font-size:14px}
+.s-follow{position:absolute;right:14px;bottom:12px;z-index:1;font-size:12px;padding:6px 14px;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+@media (max-width:600px){.s-list{height:clamp(220px,46vh,460px)}.s-line{gap:8px;padding:7px 8px}}
+</style>
+</head>
+<body data-title-key="titleSubs">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleSubs"></span></h1>
+      <p class="sub" data-i18n="subSubs"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count"><span data-i18n="linesLabel"></span> <b id="lineN">0</b></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabTimeline"></a>
+    <a href="subs.html" aria-current="page" data-i18n="tabSubs"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="s-load">
+      <form class="s-row" id="urlForm">
+        <label class="search"><input type="url" id="urlIn" data-i18n-ph="urlPh" autocomplete="off" spellcheck="false" aria-label="YouTube URL"></label>
+        <button type="submit" class="primary" data-i18n="loadVideo"></button>
+      </form>
+      <label class="s-drop" id="drop">
+        <span id="dropText" data-i18n="dropHint"></span>
+        <b id="fileName" hidden></b>
+        <span class="sp"></span>
+        <span class="btn" data-i18n="pickFile"></span>
+        <input type="file" id="fileIn" accept=".srt,.vtt,.txt,text/vtt,application/x-subrip" hidden>
+      </label>
+      <p class="s-msg" id="msg" role="status" aria-live="polite" hidden></p>
+      <p class="s-notice"><span data-i18n="localNotice"></span> <button type="button" class="chip" id="clearBtn" data-i18n="clearAll"></button></p>
+    </div>
+
+    <div class="s-stage">
+      <div class="frame" id="stage"><div class="s-ph" data-i18n="noVideo"></div></div>
+      <div class="s-now idle" id="nowLine" aria-live="off" hidden></div>
+      <div class="s-err" id="ytErr" hidden><span id="ytErrText"></span> <a class="btn" id="ytErrOpen" href="#" target="_blank" rel="noopener" data-i18n="openOriginal"></a></div>
+      <div class="s-tools">
+        <input type="search" class="s-find" id="findIn" data-i18n-ph="findPh" aria-label="Search">
+        <span class="s-off" title="">
+          <span data-i18n="offsetLabel"></span>
+          <button type="button" data-off="-0.5">−0.5</button>
+          <output id="offV">0.0</output>
+          <button type="button" data-off="0.5">+0.5</button>
+          <button type="button" data-off="0" data-i18n="reset"></button>
+        </span>
+      </div>
+      <div class="s-wrap">
+        <ol class="s-list" id="list"></ol>
+        <button type="button" class="s-follow" id="followBtn" data-i18n="follow" hidden></button>
+      </div>
+      <p class="s-notice" data-i18n="offsetHelp"></p>
+      <p class="s-notice" data-i18n="playerNote"></p>
+    </div>
+  </section>
+
+  <footer>
+    <p class="official-label" data-i18n="officialLinks"></p>
+    <nav class="official" aria-label="Official links">
+      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
+      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
+      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
+      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
+    </nav>
+    <p data-i18n="footer"></p>
+    <p class="official-label" data-i18n="unofficialLinks"></p>
+    <div class="dc">
+      <span class="dc-tag" data-i18n="dcPromo"></span>
+      <span class="dc-label" data-i18n="dcLabel"></span>
+      <ul>
+        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
+        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
+      </ul>
+      <span class="dc-join" data-i18n="dcJoin"></span>
+    </div>
+    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
+    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
+    <p class="rights" data-i18n="rights"></p>
+  </footer>
+</div>
+<script src="assets/common.js?v=202610041118"></script>
+<script>
+/* ===== 字幕播放頁（隱藏分頁） =====
+ * 貼 YouTube 網址 → 內嵌播放器（下方一條顯示目前這句台詞）；把 .srt／.vtt 字幕檔拖進頁面（或按「選擇檔案」）→ 播放器下面列出全部台詞，
+ * 播到哪句就加亮那句、清單自動捲過去；點任何一句就跳到那個時間。
+ * - 字幕檔只在瀏覽器裡讀（FileReader），不會上傳到任何地方。
+ * - 上次的網址、字幕、時間調整存在這個瀏覽器的 localStorage（mela-subs-last），下次開頁自動還原；「清除」會刪掉。
+ * - 「字幕時間調整」：整份字幕往後（＋）或往前（−）挪幾秒，用在字幕和影片對不準時。
+ * - 字幕檔編碼：UTF-8（含 BOM）、UTF-16；都不是就當成 Shift_JIS 讀。
+ * - 雙語字幕（一句兩行）照原本換行顯示。
+ * - 用 file:// 直接開這頁時 YouTube 會擋（錯誤 153），要用 localhost 或正式網站開。
+ */
+addStrings({
+ zh:{titleSubs:"めらめら字幕播放",tabSubs:"字幕",subSubs:"貼上 YouTube 網址、拖進自己的字幕檔，邊看邊對照台詞。",linesLabel:"台詞",
+   urlPh:"貼上 YouTube 影片網址",loadVideo:"載入影片",dropHint:"把 .srt／.vtt 字幕檔拖到這裡",pickFile:"選擇檔案",
+   localNotice:"字幕檔只在你的瀏覽器裡讀取，不會上傳。上次的影片和字幕會留在這個瀏覽器，下次開啟自動還原。",clearAll:"清除",
+   noVideo:"貼上 YouTube 網址後按「載入影片」",findPh:"搜尋台詞",offsetLabel:"字幕時間調整",reset:"歸零",follow:"↓ 回到目前位置",
+   offsetHelp:"字幕比聲音早出現 → 按 ＋（往後挪）；字幕比聲音晚 → 按 −。點任何一句台詞就會跳到那個時間。",
+   noSubs:"還沒有字幕。把 .srt／.vtt 檔拖進來就會列出全部台詞。",noMatch:"找不到符合的台詞",
+   badUrl:"看不懂這個網址，請貼 YouTube 影片網址（watch?v=…、youtu.be/…、/live/…）。",badSubs:"這個檔案裡找不到字幕時間（00:00:01,000 --> 00:00:03,000 這種格式）。",
+   loaded:"已讀取 {n} 句台詞。",fileErr:"讀取檔案失敗。",ytErr:"影片無法在這裡播放（錯誤 {c}）。",fileProto:"用檔案直接開啟時 YouTube 播不了（錯誤 153），請用 localhost 或正式網站開這頁。",cleared:"已清除。"},
+ ja:{titleSubs:"めらめら字幕プレーヤー",tabSubs:"字幕",subSubs:"YouTube の URL を貼って、手元の字幕ファイルをドロップ。セリフを見ながら視聴できます。",linesLabel:"セリフ",
+   urlPh:"YouTube 動画の URL を貼り付け",loadVideo:"動画を読み込む",dropHint:".srt／.vtt 字幕ファイルをここにドロップ",pickFile:"ファイルを選択",
+   localNotice:"字幕ファイルはブラウザ内だけで読み込み、アップロードはしません。前回の動画と字幕はこのブラウザに残り、次回自動で復元されます。",clearAll:"消去",
+   noVideo:"YouTube の URL を貼って「動画を読み込む」",findPh:"セリフを検索",offsetLabel:"字幕のタイミング調整",reset:"リセット",follow:"↓ 現在の位置に戻る",
+   offsetHelp:"字幕が声より早い → ＋（後ろにずらす）、字幕が遅い → −。セリフをクリックするとその時間にジャンプします。",
+   noSubs:"字幕がまだありません。.srt／.vtt をドロップするとセリフが一覧表示されます。",noMatch:"一致するセリフがありません",
+   badUrl:"URL を認識できません。YouTube 動画の URL（watch?v=…、youtu.be/…、/live/…）を貼ってください。",badSubs:"このファイルに字幕のタイムコード（00:00:01,000 --> 00:00:03,000 の形式）が見つかりません。",
+   loaded:"{n} 件のセリフを読み込みました。",fileErr:"ファイルを読み込めませんでした。",ytErr:"この動画はここでは再生できません（エラー {c}）。",fileProto:"ファイルを直接開くと YouTube は再生できません（エラー 153）。localhost か公開サイトで開いてください。",cleared:"消去しました。"},
+ en:{titleSubs:"Mela Mela Subtitle Player",tabSubs:"Subs",subSubs:"Paste a YouTube link, drop in your own subtitle file, and follow the lines as you watch.",linesLabel:"Lines",
+   urlPh:"Paste a YouTube video URL",loadVideo:"Load video",dropHint:"Drop an .srt / .vtt subtitle file here",pickFile:"Choose file",
+   localNotice:"Subtitle files are read in your browser only — nothing is uploaded. Your last video and subtitles stay in this browser and come back next time.",clearAll:"Clear",
+   noVideo:"Paste a YouTube URL and press “Load video”",findPh:"Search lines",offsetLabel:"Subtitle timing",reset:"Reset",follow:"↓ Back to current line",
+   offsetHelp:"Subtitles show up before the voice → press + (shift later); subtitles are late → press −. Click any line to jump to it.",
+   noSubs:"No subtitles yet. Drop an .srt / .vtt file to list every line.",noMatch:"No matching lines",
+   badUrl:"Couldn't read that link. Paste a YouTube video URL (watch?v=…, youtu.be/…, /live/…).",badSubs:"No subtitle timecodes (like 00:00:01,000 --> 00:00:03,000) found in this file.",
+   loaded:"Loaded {n} lines.",fileErr:"Couldn't read the file.",ytErr:"This video can't be played here (error {c}).",fileProto:"YouTube won't play when this page is opened as a local file (error 153). Open it via localhost or the live site.",cleared:"Cleared."}
+});
+const SAVE_KEY="mela-subs-last";
+let sp=null, spVid=null, cues=[], rows=[], offset=0, follow=true, onSet=new Set(), subText="", subName="", videoUrl="", msgState=null;
+
+/* ---------- 字幕檔解析（SRT／WebVTT） ---------- */
+function tc(v){ const [hms,frac=""]=v.replace(",",".").split("."); const s=hms.split(":").reduce((a,x)=>a*60+(+x),0); return s+(frac?+("0."+frac):0); }
+function parseSubs(text){
+  text=String(text).replace(/^﻿/,"").replace(/\r\n?/g,"\n");
+  const re=/((?:\d+:)?\d{1,2}:\d{2}(?:[.,]\d{1,3})?)\s*-->\s*((?:\d+:)?\d{1,2}:\d{2}(?:[.,]\d{1,3})?)/, out=[];
+  for(const b of text.split(/\n[ \t]*\n/)){
+    const lines=b.split("\n"), i=lines.findIndex(l=>re.test(l)); if(i<0) continue;
+    const m=lines[i].match(re);
+    const txt=lines.slice(i+1).join("\n").replace(/<[^>]*>/g,"").replace(/\{\\[^}]*\}/g,"")
+      .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&nbsp;/g," ").trim();
+    if(!txt) continue;
+    const s=tc(m[1]); let e=tc(m[2]); if(!(e>s)) e=s+2;
+    out.push({s,e,text:txt});
+  }
+  return out.sort((a,b)=>a.s-b.s).map((c,i)=>(c.i=i,c));
+}
+function decode(buf){ const u=new Uint8Array(buf);
+  if(u[0]===0xFF&&u[1]===0xFE) return new TextDecoder("utf-16le").decode(buf);
+  if(u[0]===0xFE&&u[1]===0xFF) return new TextDecoder("utf-16be").decode(buf);
+  try{ return new TextDecoder("utf-8",{fatal:true}).decode(buf); }catch(e){ return new TextDecoder("shift_jis").decode(buf); } }
+
+/* ---------- 訊息 ---------- */
+function showMsg(key,vars,err){ msgState=key?{key,vars,err}:null; renderMsg(); }
+function renderMsg(){ const el=$("msg"); if(!msgState){ el.hidden=true; return; }
+  let s=t(msgState.key); for(const k in msgState.vars||{}) s=s.replace(`{${k}}`,msgState.vars[k]);
+  el.textContent=s; el.classList.toggle("err",!!msgState.err); el.hidden=false; }
+
+/* ---------- 存在這個瀏覽器（下次自動還原） ---------- */
+function save(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify({url:videoUrl,name:subName,text:subText.length<3e6?subText:"",offset})); }catch(e){} }
+function restore(){ let d=null; try{ d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null"); }catch(e){}
+  if(!d) return; offset=+d.offset||0;
+  if(d.text) setSubs(d.text,d.name||"",true);
+  if(d.url){ $("urlIn").value=d.url; loadVideo(d.url,true); } }
+
+/* ---------- 台詞清單 ---------- */
+function setSubs(text,name,quiet){
+  const c=parseSubs(text);
+  if(!c.length){ showMsg("badSubs",null,true); return false; }
+  cues=c; subText=text; subName=name||""; onSet=new Set();
+  $("fileName").textContent=subName; $("fileName").hidden=!subName;
+  buildList(); applyFind(); renderNow(); tick(true); save();
+  if(!quiet) showMsg("loaded",{n:cues.length});
+  return true;
+}
+function buildList(){
+  const ol=$("list"); $("lineN").textContent=cues.length;
+  if(!cues.length){ ol.innerHTML=`<li class="s-empty">${esc(t("noSubs"))}</li>`; rows=[]; return; }
+  ol.innerHTML=cues.map(c=>`<li><button type="button" class="s-line" data-i="${c.i}"><time>${fmt(c.s+offset)}</time><span>${esc(c.text)}</span></button></li>`).join("")+`<li class="s-empty" id="noMatch" hidden>${esc(t("noMatch"))}</li>`;
+  rows=[...ol.querySelectorAll(".s-line")];
+  onSet.forEach(i=>rows[i]?.classList.add("on"));
+}
+function renderNow(){ const el=$("nowLine"); el.hidden=!cues.length;
+  el.innerHTML=[...onSet].map(i=>`<span>${esc(cues[i].text)}</span>`).join("")||"<span>&nbsp;</span>";
+  el.classList.toggle("idle",!onSet.size); }
+function relabel(){ rows.forEach((r,i)=>r.firstChild.textContent=fmt(cues[i].s+offset)); }
+function applyFind(){ const q=$("findIn").value.trim().toLowerCase(); let n=0;
+  rows.forEach((r,i)=>{ const hit=!q||cues[i].text.toLowerCase().includes(q); r.parentNode.hidden=!hit; if(hit) n++; });
+  const nm=$("noMatch"); if(nm) nm.hidden=n>0||!rows.length; }
+
+/* ---------- 播放器 ---------- */
+function loadVideo(u,quiet){
+  const p=parseClipUrl(u);
+  if(!p||p.src!=="youtube"){ if(!quiet) showMsg("badUrl",null,true); return; }
+  videoUrl=p.url+(p.t?`&t=${p.t}s`:""); save(); $("ytErr").hidden=true;
+  if(location.protocol==="file:") showMsg("fileProto",null,true); else if(!quiet) showMsg(null);
+  const start=p.t||0;
+  if(sp&&sp.cueVideoById){ sp.cueVideoById({videoId:p.vid,startSeconds:start}); spVid=p.vid; return; }
+  $("stage").innerHTML='<div id="yt"></div>';
+  spVid=p.vid;
+  loadYT().then(()=>{
+    sp=new YT.Player("yt",{videoId:p.vid,playerVars:{playsinline:1,rel:0,start,origin:location.origin},
+      events:{onReady:()=>tick(true),
+        onStateChange:()=>tick(),
+        onError:e=>{ $("ytErrText").textContent=t("ytErr").replace("{c}",e.data); $("ytErrOpen").href=videoUrl; $("ytErr").hidden=false; }}});
+  });
+}
+function now(){ try{ return sp&&sp.getCurrentTime?sp.getCurrentTime()||0:null; }catch(e){ return null; } }
+
+/* 找出目前時間的台詞（可能同時有好幾句） */
+function activeAt(x){ let lo=0,hi=cues.length-1,k=-1;
+  while(lo<=hi){ const m=(lo+hi)>>1; if(cues[m].s<=x){ k=m; lo=m+1; } else hi=m-1; }
+  const on=[]; for(let j=k;j>=0&&j>k-30;j--) if(cues[j].e>x) on.push(j);
+  return {on:on.reverse(),last:k}; }
+let lastScrollTo=-2;
+function tick(force){
+  if(!cues.length) return; const x=now(); if(x==null) return;
+  const {on,last}=activeAt(x-offset);
+  const key=on.join(",");
+  if(force||key!==[...onSet].join(",")){
+    onSet.forEach(i=>rows[i]?.classList.remove("on")); onSet=new Set(on); onSet.forEach(i=>rows[i]?.classList.add("on"));
+    renderNow();
+  }
+  const target=on.length?on[0]:last;
+  if(follow&&(force||target!==lastScrollTo)){ lastScrollTo=target; scrollToRow(target,!force); }
+}
+function scrollToRow(i,smooth){ const ol=$("list"), r=rows[Math.max(0,i)]; if(!r||r.parentNode.hidden) return;
+  const li=r.parentNode, top=li.offsetTop-ol.clientHeight/2+li.offsetHeight/2;
+  ignoreScroll=Date.now()+(smooth?700:150);
+  ol.scrollTo({top:Math.max(0,top),behavior:smooth?"smooth":"auto"}); }
+let ignoreScroll=0;
+function setFollow(on){ follow=on; $("followBtn").hidden=on||!cues.length; if(on){ lastScrollTo=-2; tick(true); } }
+
+/* ---------- 事件 ---------- */
+$("urlForm").addEventListener("submit",e=>{ e.preventDefault(); loadVideo($("urlIn").value); });
+function readFile(f){ if(!f) return; const r=new FileReader();
+  r.onload=()=>setSubs(decode(r.result),f.name); r.onerror=()=>showMsg("fileErr",null,true); r.readAsArrayBuffer(f); }
+$("fileIn").addEventListener("change",e=>{ readFile(e.target.files[0]); e.target.value=""; });
+// 整個頁面都可以拖檔案進來
+let dragDepth=0;
+const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes("Files");
+document.addEventListener("dragenter",e=>{ if(!hasFiles(e)) return; e.preventDefault(); dragDepth++; document.body.classList.add("dragging"); });
+document.addEventListener("dragleave",e=>{ if(!hasFiles(e)) return; if(--dragDepth<=0){ dragDepth=0; document.body.classList.remove("dragging"); } });
+document.addEventListener("dragover",e=>{ if(hasFiles(e)) e.preventDefault(); });
+document.addEventListener("drop",e=>{ if(!hasFiles(e)) return; e.preventDefault(); dragDepth=0; document.body.classList.remove("dragging"); readFile(e.dataTransfer.files[0]); });
+
+$("list").addEventListener("click",e=>{ const b=e.target.closest(".s-line"); if(!b) return;
+  const c=cues[+b.dataset.i]; setFollow(true);
+  if(sp&&sp.seekTo){ sp.seekTo(Math.max(0,c.s+offset),true); sp.playVideo(); setTimeout(()=>tick(true),120); } });
+// 使用者自己捲清單 → 暫停自動捲動，出現「回到目前位置」
+["wheel","touchmove"].forEach(ev=>$("list").addEventListener(ev,()=>{ if(follow&&cues.length) setFollow(false); },{passive:true}));
+$("list").addEventListener("scroll",()=>{ if(Date.now()>ignoreScroll&&follow&&cues.length) setFollow(false); },{passive:true});
+$("followBtn").onclick=()=>setFollow(true);
+$("findIn").addEventListener("input",()=>{ applyFind(); if(follow) tick(true); });
+document.querySelectorAll("[data-off]").forEach(b=>b.onclick=()=>{ const d=+b.dataset.off;
+  offset=d?Math.round((offset+d)*10)/10:0; $("offV").textContent=(offset>0?"+":"")+offset.toFixed(1); relabel(); tick(true); save(); });
+$("clearBtn").onclick=()=>{ try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+  sp?.destroy?.(); sp=null; spVid=null; cues=[]; subText=""; subName=""; videoUrl=""; offset=0; onSet=new Set();
+  $("offV").textContent="0.0"; renderNow(); $("urlIn").value=""; $("findIn").value=""; $("fileName").hidden=true; $("ytErr").hidden=true;
+  $("stage").innerHTML=`<div class="s-ph" data-i18n="noVideo">${esc(t("noVideo"))}</div>`; buildList(); setFollow(true); showMsg("cleared"); };
+setInterval(()=>tick(),150);
+
+window.onLangChange=()=>{ if(!cues.length) buildList(); else { const nm=$("noMatch"); if(nm) nm.textContent=t("noMatch"); } renderMsg(); };
+(function init(){
+  buildList(); restore(); $("offV").textContent=(offset>0?"+":"")+offset.toFixed(1); relabel();
+  if(location.protocol==="file:"&&!msgState) showMsg("fileProto",null,true);
+  setLang(pickLang());
+})();
+</script>
+</body>
+</html>
