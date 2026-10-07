@@ -33,6 +33,16 @@
 .s-now span{white-space:pre-line;overflow-wrap:anywhere}
 .s-now span+span{margin-top:2px}
 .s-now.idle{box-shadow:none}
+/* 讀音（SRT 裡的 <ruby>漢字<rt>かんじ</rt></ruby>） */
+rt{font-size:.55em;font-weight:500;color:var(--muted);letter-spacing:0}
+rp{display:none}
+.s-now rt{color:var(--accent-text)}
+body.has-ruby .s-now{line-height:2.1;min-height:calc(2 * 2.1em + 20px)}
+body.has-ruby .s-line span{line-height:2.2}
+body.has-ruby .s-line time{align-self:center}
+/* 「讀音」關掉：先藏起來（位置保留，版面不跳），滑鼠移到漢字上才顯示 */
+body.no-ruby rt{visibility:hidden}
+body.no-ruby ruby:hover rt{visibility:visible}
 .s-err{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px;color:#d93d42}
 .s-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
 .s-tools .sp{flex:1}
@@ -108,6 +118,7 @@
       <div class="s-err" id="ytErr" hidden><span id="ytErrText"></span> <a class="btn" id="ytErrOpen" href="#" target="_blank" rel="noopener" data-i18n="openOriginal"></a></div>
       <div class="s-tools">
         <input type="search" class="s-find" id="findIn" data-i18n-ph="findPh" aria-label="Search">
+        <button type="button" class="chip" id="rubyBtn" aria-pressed="true" data-i18n="rubyLabel" hidden></button>
         <span class="s-off" title="">
           <span data-i18n="offsetLabel"></span>
           <button type="button" data-off="-0.5">−0.5</button>
@@ -160,13 +171,14 @@
  * - 「字幕時間調整」：整份字幕往後（＋）或往前（−）挪幾秒，用在字幕和影片對不準時。
  * - 字幕檔編碼：UTF-8（含 BOM）、UTF-16；都不是就當成 Shift_JIS 讀。
  * - 雙語字幕（一句兩行）照原本換行顯示。
+ * - 支援讀音：<ruby>漢字<rt>かんじ</rt></ruby>（也可加 <rp>）。其他 HTML 標籤會被拿掉。有讀音時出現「讀音」開關，搜尋也搜得到讀音。
  * - 用 file:// 直接開這頁時 YouTube 會擋（錯誤 153），要用 localhost 或正式網站開。
  */
 addStrings({
  zh:{titleSubs:"めらめら日文學習",tabSubs:"字幕",subSubs:"邊看邊學習日文",linesLabel:"台詞",
    urlPh:"貼上 YouTube 影片網址",loadVideo:"載入影片",dropHint:"把 .srt／.vtt 字幕檔拖到這裡",pickFile:"選擇檔案",
    localNotice:"字幕檔只在你的瀏覽器裡讀取，不會上傳。上次的影片和字幕會留在這個瀏覽器，下次開啟自動還原。",clearAll:"清除",
-   noVideo:"貼上 YouTube 網址後按「載入影片」",findPh:"搜尋台詞",offsetLabel:"字幕時間調整",reset:"歸零",follow:"↓ 回到目前位置",
+   noVideo:"貼上 YouTube 網址後按「載入影片」",findPh:"搜尋台詞",offsetLabel:"字幕時間調整",reset:"歸零",rubyLabel:"讀音",rubyHelp:"顯示／隱藏漢字上的讀音（隱藏時滑鼠移到漢字上會出現）",follow:"↓ 回到目前位置",
    offsetHelp:"字幕比聲音早出現 → 按 ＋（往後挪）；字幕比聲音晚 → 按 −。點任何一句台詞就會跳到那個時間。",
    noSubs:"還沒有字幕。把 .srt／.vtt 檔拖進來就會列出全部台詞。",noMatch:"找不到符合的台詞",
    badUrl:"看不懂這個網址，請貼 YouTube 影片網址（watch?v=…、youtu.be/…、/live/…）。",badSubs:"這個檔案裡找不到字幕時間（00:00:01,000 --> 00:00:03,000 這種格式）。",
@@ -174,7 +186,7 @@ addStrings({
  ja:{titleSubs:"めらめら日本語学習",tabSubs:"字幕",subSubs:"見ながら日本語を学ぼう",linesLabel:"セリフ",
    urlPh:"YouTube 動画の URL を貼り付け",loadVideo:"動画を読み込む",dropHint:".srt／.vtt 字幕ファイルをここにドロップ",pickFile:"ファイルを選択",
    localNotice:"字幕ファイルはブラウザ内だけで読み込み、アップロードはしません。前回の動画と字幕はこのブラウザに残り、次回自動で復元されます。",clearAll:"消去",
-   noVideo:"YouTube の URL を貼って「動画を読み込む」",findPh:"セリフを検索",offsetLabel:"字幕のタイミング調整",reset:"リセット",follow:"↓ 現在の位置に戻る",
+   noVideo:"YouTube の URL を貼って「動画を読み込む」",findPh:"セリフを検索",offsetLabel:"字幕のタイミング調整",reset:"リセット",rubyLabel:"ふりがな",rubyHelp:"漢字のふりがなを表示／非表示（非表示のときは漢字にマウスを乗せると出ます）",follow:"↓ 現在の位置に戻る",
    offsetHelp:"字幕が声より早い → ＋（後ろにずらす）、字幕が遅い → −。セリフをクリックするとその時間にジャンプします。",
    noSubs:"字幕がまだありません。.srt／.vtt をドロップするとセリフが一覧表示されます。",noMatch:"一致するセリフがありません",
    badUrl:"URL を認識できません。YouTube 動画の URL（watch?v=…、youtu.be/…、/live/…）を貼ってください。",badSubs:"このファイルに字幕のタイムコード（00:00:01,000 --> 00:00:03,000 の形式）が見つかりません。",
@@ -182,7 +194,7 @@ addStrings({
  en:{titleSubs:"Mela Mela Japanese Study",tabSubs:"Subs",subSubs:"Learn Japanese as you watch",linesLabel:"Lines",
    urlPh:"Paste a YouTube video URL",loadVideo:"Load video",dropHint:"Drop an .srt / .vtt subtitle file here",pickFile:"Choose file",
    localNotice:"Subtitle files are read in your browser only — nothing is uploaded. Your last video and subtitles stay in this browser and come back next time.",clearAll:"Clear",
-   noVideo:"Paste a YouTube URL and press “Load video”",findPh:"Search lines",offsetLabel:"Subtitle timing",reset:"Reset",follow:"↓ Back to current line",
+   noVideo:"Paste a YouTube URL and press “Load video”",findPh:"Search lines",offsetLabel:"Subtitle timing",reset:"Reset",rubyLabel:"Furigana",rubyHelp:"Show / hide readings above kanji (when hidden, hover a kanji to see it)",follow:"↓ Back to current line",
    offsetHelp:"Subtitles show up before the voice → press + (shift later); subtitles are late → press −. Click any line to jump to it.",
    noSubs:"No subtitles yet. Drop an .srt / .vtt file to list every line.",noMatch:"No matching lines",
    badUrl:"Couldn't read that link. Paste a YouTube video URL (watch?v=…, youtu.be/…, /live/…).",badSubs:"No subtitle timecodes (like 00:00:01,000 --> 00:00:03,000) found in this file.",
@@ -199,14 +211,22 @@ function parseSubs(text){
   for(const b of text.split(/\n[ \t]*\n/)){
     const lines=b.split("\n"), i=lines.findIndex(l=>re.test(l)); if(i<0) continue;
     const m=lines[i].match(re);
-    const txt=lines.slice(i+1).join("\n").replace(/<[^>]*>/g,"").replace(/\{\\[^}]*\}/g,"")
-      .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&nbsp;/g," ").trim();
+    const raw=lines.slice(i+1).join("\n").replace(/\{\\[^}]*\}/g,"").trim();
+    const txt=plain(raw.replace(/<rt>[\s\S]*?<\/rt>|<rp>[\s\S]*?<\/rp>/gi,""));
     if(!txt) continue;
     const s=tc(m[1]); let e=tc(m[2]); if(!(e>s)) e=s+2;
-    out.push({s,e,text:txt});
+    const ruby=/<ruby>/i.test(raw);
+    // key：搜尋用（漢字原文＋讀音都搜得到）
+    out.push({s,e,text:txt,html:ruby?rubyHTML(raw):esc(txt),ruby,key:(txt+"\n"+plain(raw)).toLowerCase()});
   }
   return out.sort((a,b)=>a.s-b.s).map((c,i)=>(c.i=i,c));
 }
+const unent=x=>x.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&nbsp;/g," ").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,"&");
+const plain=x=>unent(String(x).replace(/<[^>]*>/g,"")).trim();
+// 只留下 ruby／rt／rp 標籤，其他標籤拿掉、文字全部跳脫（避免字幕檔裡夾帶 HTML）
+function rubyHTML(raw){ return raw.split(/(<[^>]*>)/).map(p=>{
+  if(p.startsWith("<")){ const m=p.match(/^<(\/?)(ruby|rt|rp)\s*>$/i); return m?`<${m[1]}${m[2].toLowerCase()}>`:""; }
+  return esc(unent(p)); }).join("").trim(); }
 function decode(buf){ const u=new Uint8Array(buf);
   if(u[0]===0xFF&&u[1]===0xFE) return new TextDecoder("utf-16le").decode(buf);
   if(u[0]===0xFE&&u[1]===0xFF) return new TextDecoder("utf-16be").decode(buf);
@@ -231,23 +251,29 @@ function setSubs(text,name,quiet){
   if(!c.length){ showMsg("badSubs",null,true); return false; }
   cues=c; subText=text; subName=name||""; onSet=new Set();
   $("fileName").textContent=subName; $("fileName").hidden=!subName;
-  buildList(); applyFind(); renderNow(); tick(true); save();
+  buildList(); applyFind(); renderNow(); updateRuby(); tick(true); save();
   if(!quiet) showMsg("loaded",{n:cues.length});
   return true;
 }
 function buildList(){
   const ol=$("list"); $("lineN").textContent=cues.length;
   if(!cues.length){ ol.innerHTML=`<li class="s-empty">${esc(t("noSubs"))}</li>`; rows=[]; return; }
-  ol.innerHTML=cues.map(c=>`<li><button type="button" class="s-line" data-i="${c.i}"><time>${fmt(c.s+offset)}</time><span>${esc(c.text)}</span></button></li>`).join("")+`<li class="s-empty" id="noMatch" hidden>${esc(t("noMatch"))}</li>`;
+  ol.innerHTML=cues.map(c=>`<li><button type="button" class="s-line" data-i="${c.i}"><time>${fmt(c.s+offset)}</time><span>${c.html}</span></button></li>`).join("")+`<li class="s-empty" id="noMatch" hidden>${esc(t("noMatch"))}</li>`;
   rows=[...ol.querySelectorAll(".s-line")];
   onSet.forEach(i=>rows[i]?.classList.add("on"));
 }
+/* 讀音開關（字幕裡有 <ruby> 才出現；開關存在這個瀏覽器） */
+const RUBY_KEY="mela-subs-ruby";
+let showRuby=true; try{ showRuby=localStorage.getItem(RUBY_KEY)!=="0"; }catch(e){}
+function updateRuby(){ const has=cues.some(c=>c.ruby), b=$("rubyBtn");
+  document.body.classList.toggle("has-ruby",has); document.body.classList.toggle("no-ruby",has&&!showRuby);
+  b.hidden=!has; b.setAttribute("aria-pressed",showRuby); b.title=t("rubyHelp"); }
 function renderNow(){ const el=$("nowLine"); el.hidden=!cues.length;
-  el.innerHTML=[...onSet].map(i=>`<span>${esc(cues[i].text)}</span>`).join("")||"<span>&nbsp;</span>";
+  el.innerHTML=[...onSet].map(i=>`<span>${cues[i].html}</span>`).join("")||"<span>&nbsp;</span>";
   el.classList.toggle("idle",!onSet.size); }
 function relabel(){ rows.forEach((r,i)=>r.firstChild.textContent=fmt(cues[i].s+offset)); }
 function applyFind(){ const q=$("findIn").value.trim().toLowerCase(); let n=0;
-  rows.forEach((r,i)=>{ const hit=!q||cues[i].text.toLowerCase().includes(q); r.parentNode.hidden=!hit; if(hit) n++; });
+  rows.forEach((r,i)=>{ const hit=!q||cues[i].key.includes(q); r.parentNode.hidden=!hit; if(hit) n++; });
   const nm=$("noMatch"); if(nm) nm.hidden=n>0||!rows.length; }
 
 /* ---------- 播放器 ---------- */
@@ -313,16 +339,17 @@ $("list").addEventListener("click",e=>{ const b=e.target.closest(".s-line"); if(
 ["wheel","touchmove"].forEach(ev=>$("list").addEventListener(ev,()=>{ if(follow&&cues.length) setFollow(false); },{passive:true}));
 $("list").addEventListener("scroll",()=>{ if(Date.now()>ignoreScroll&&follow&&cues.length) setFollow(false); },{passive:true});
 $("followBtn").onclick=()=>setFollow(true);
+$("rubyBtn").onclick=()=>{ showRuby=!showRuby; try{ localStorage.setItem(RUBY_KEY,showRuby?"1":"0"); }catch(e){} updateRuby(); };
 $("findIn").addEventListener("input",()=>{ applyFind(); if(follow) tick(true); });
 document.querySelectorAll("[data-off]").forEach(b=>b.onclick=()=>{ const d=+b.dataset.off;
   offset=d?Math.round((offset+d)*10)/10:0; $("offV").textContent=(offset>0?"+":"")+offset.toFixed(1); relabel(); tick(true); save(); });
 $("clearBtn").onclick=()=>{ try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
   sp?.destroy?.(); sp=null; spVid=null; cues=[]; subText=""; subName=""; videoUrl=""; offset=0; onSet=new Set();
-  $("offV").textContent="0.0"; renderNow(); $("urlIn").value=""; $("findIn").value=""; $("fileName").hidden=true; $("ytErr").hidden=true;
+  $("offV").textContent="0.0"; renderNow(); updateRuby(); $("urlIn").value=""; $("findIn").value=""; $("fileName").hidden=true; $("ytErr").hidden=true;
   $("stage").innerHTML=`<div class="s-ph" data-i18n="noVideo">${esc(t("noVideo"))}</div>`; buildList(); setFollow(true); showMsg("cleared"); };
 setInterval(()=>tick(),150);
 
-window.onLangChange=()=>{ if(!cues.length) buildList(); else { const nm=$("noMatch"); if(nm) nm.textContent=t("noMatch"); } renderMsg(); };
+window.onLangChange=()=>{ $("rubyBtn").title=t("rubyHelp"); if(!cues.length) buildList(); else { const nm=$("noMatch"); if(nm) nm.textContent=t("noMatch"); } renderMsg(); };
 (function init(){
   buildList(); restore(); $("offV").textContent=(offset>0?"+":"")+offset.toFixed(1); relabel();
   if(location.protocol==="file:"&&!msgState) showMsg("fileProto",null,true);
