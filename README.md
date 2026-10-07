@@ -7,6 +7,8 @@
 | `index.html` | 聲音頁（投稿的聲音片段、搜尋、標籤） |
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
 | `timeline.html` | 編年史頁（直播、影片、紀念日的時間線） |
+| `calendar.html` | 出勤 Calendar（月曆，顯示有 YouTube 網址的直播／聯動／影片封面；資料跟編年史共用） |
+| `assets/timeline-data.js` | 編年史和月曆共用的資料讀取／合併程式 |
 | `assets/style.css` | 各頁共用的外觀（顏色、字體、版面） |
 | `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |

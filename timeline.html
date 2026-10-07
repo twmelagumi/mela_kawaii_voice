@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610041118">
+<link rel="stylesheet" href="assets/style.css?v=202610071943">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -35,6 +35,7 @@
     <a href="./" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
     <a href="timeline.html" aria-current="page" data-i18n="tabTimeline"></a>
+    <a href="calendar.html" data-i18n="tabCalendar"></a>
   </nav>
   </div>
 
@@ -84,7 +85,8 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610041118"></script>
+<script src="assets/common.js?v=202610071943"></script>
+<script src="assets/timeline-data.js?v=202610071943"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -93,18 +95,15 @@
  * yearly: true → 每年同一天自動出現「N 週年」
  * debut: true（只要一個）→ 每年的週年標題顯示成「出道 N 週年」
  *
- * 事件有三個來源，後面的會蓋過前面的（同一支影片＝同一個事件）：
+ * 讀資料、合併三個來源的程式在 assets/timeline-data.js（月曆頁也共用）。事件有三個來源，後面的會蓋過前面的（同一支影片＝同一個事件）：
  *   ① timeline_auto.json：GitHub Actions 每天早上 9 點（台灣時間）從 YouTube 自動抓的直播／影片（scripts/update_timeline.py）
  *   ② timeline.json：手動維護的固定資料
  *   ③ Google 試算表「編年史」分頁（TIMELINE_CSV_URL）：日常新增、修改自動抓到的標題／說明、隱藏不要的
  * 另外會自動讀 songs.json：同一支影片的歌會掛在那個事件底下；
  * 沒有對應事件的，會用「收錄」自動在那天長出一個點。（clips.json 的聲音不放進編年史）
  */
-// Google 試算表「編年史」分頁發佈成 CSV 的網址（…/pub?gid=…&single=true&output=csv）。留空就只讀 json。
-const TIMELINE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1439353672&single=true&output=csv";
 // YouTube Shorts 要不要顯示在編年史（false＝隱藏；資料還是會自動收集）
 const SHOW_SHORTS = true;
-const TL_SHEET_TTL = 5*60*1000; // 試算表在訪客瀏覽器快取 5 分鐘
 
 addStrings({
  zh:{titleTimeline:"めらめら出勤紀錄",subTimeline:"めらちゃん的直播、影片和紀念日，沿著時間線一路往下看。",events:"個事件",
@@ -131,7 +130,6 @@ addStrings({
 });
 const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
 const MONTHS_EN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const TYPES=["stream","collab","release","short","event","offline","live","anniv","auto"];
 const RIGHT_TYPES=new Set(["stream","collab","auto"]); // 「依種類分邊」時放右邊的種類
 
 // ---- 日期工具（全部用 UTC 計算，避免時區造成差一天）----
@@ -141,10 +139,6 @@ const addDays=(d,n)=>new Date(d.getTime()+n*864e5);
 const addMonths=(d,n)=>{ const r=new Date(d); r.setUTCMonth(r.getUTCMonth()+n); if(r.getUTCDate()!==d.getUTCDate()) r.setUTCDate(0); return r; };
 const diffDays=(a,b)=>Math.round((a-b)/864e5);
 const TODAY=(()=>{ const n=new Date(); return D(`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`); })();
-// 不是 YouTube 的網址（X 推文等）→ {href, x}；不是 http(s) 網址就 null
-const linkOf=u=>{ try{ const url=new URL(String(u||"").trim()); if(!/^https?:$/.test(url.protocol)) return null;
-  const host=url.hostname.replace(/^(www|mobile)\./,""); return {href:url.href,x:host==="x.com"||host==="twitter.com"}; }catch(e){ return null; } };
-const vidOf=u=>{ const p=parseClipUrl(u||""); return p&&p.src==="youtube"?p.vid:null; };
 
 let raw=[], songs=[], items=[];
 let fType="all", order="desc", side="alt";
@@ -155,52 +149,7 @@ const RECENT_DAYS=30;
 const openMonths=new Set(), openCards=new Set(), shown=new Set(), openPosts=new Set(); // openPosts：已展開推文的事件 // 展開的月份／卡片；已經淡入過的（重畫時不再重播動畫）
 try{ order=localStorage.getItem("mela-tl-order")||order; side=localStorage.getItem("mela-tl-side")||side; }catch(e){}
 
-async function getJSON(u){ try{ const r=await fetch(u,{cache:"no-cache"}); return r.ok?await r.json():[]; }catch(e){ return []; } }
 
-// ---- Google 試算表（CSV；parseCSV、isYes 在 common.js）----
-// 依標題文字找欄位（順序不拘）
-const TL_COLS={date:["日期","日付","date"],type:["種類","類型","種別","type"],title:["標題","タイトル","title"],url:["網址","url","link","連結"],
-  note:["說明","説明","備註","メモ","note"],with:["聯動對象","联动对象","コラボ相手","合作對象","with"],yearly:["每年","毎年","yearly"],hide:["隱藏","非表示","hide"]};
-// 「種類」欄可以填中文／日文／英文
-const TYPE_WORDS={anniv:["紀念","記念","anniv","生日","誕生","birthday"],collab:["聯動","联动","合作","コラボ","collab"],short:["short","ショート"],offline:["現地","公式イベント","offline","オフライン"],event:["事件","イベント","event"],live:["live","ライブ","演唱會","演唱会","concert"],
-  release:["影片","動画","video","發布","发布","リリース","release","mv","cover","歌ってみた","原創","オリジナル","original"],stream:["直播","配信","stream"]};
-const typeOf=v=>{ v=String(v||"").trim().toLowerCase(); if(!v) return ""; for(const k in TYPE_WORDS) if(TYPE_WORDS[k].some(w=>v.includes(w))) return k; return TYPES.includes(v)?v:""; };
-function sheetToEvents(text){
-  const rows=parseCSV(text||""); if(rows.length<2) return [];
-  const head=rows[0].map(h=>h.trim().toLowerCase()), idx={};
-  for(const k in TL_COLS) idx[k]=head.findIndex(h=>TL_COLS[k].some(w=>h.includes(w.toLowerCase())));
-  const get=(r,k)=>idx[k]>=0?(r[idx[k]]||"").trim():"";
-  return rows.slice(1).map(r=>({date:normDate(get(r,"date"))||"",type:typeOf(get(r,"type")),title:get(r,"title"),url:get(r,"url"),
-    note:get(r,"note"),with:get(r,"with"),yearly:isYes(get(r,"yearly")),hide:isYes(get(r,"hide"))})).filter(e=>e.url||(e.date&&e.title));
-}
-const TL_SHEET_KEY="mela-tl-sheet:"+hash(TIMELINE_CSV_URL);
-function readTlCache(){ try{ const c=JSON.parse(localStorage.getItem(TL_SHEET_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
-async function fetchTlSheet(){ const r=await fetch(TIMELINE_CSV_URL+(TIMELINE_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
-  const text=await r.text(); try{ localStorage.setItem(TL_SHEET_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} return text; }
-
-// ---- 合併三個來源：自動 < timeline.json < 試算表 ----
-// 同一支影片（或沒有網址時：同日期＋同標題）視為同一個事件，後面的來源只覆蓋有填的欄位。
-// 試算表「隱藏」打勾 → 把那個事件拿掉（例如自動抓到、但不想放進編年史的影片）。
-function mergeSources(autoList,jsonList,sheetList){
-  // 同一個網址（或沒有網址時：同日期＋同標題）＝同一組。組裡：
-  //   沒填日期、或日期相同 → 修改那一筆（只覆蓋有填的欄位）
-  //   填了不同的日期     → 另外一個事件（同一支影片在不同天發生的事）
-  // 「隱藏」：沒填日期 → 整組都隱藏；有填日期 → 只隱藏那一天的
-  const out=[], groups=new Map(), hideAll=new Set();
-  const baseOf=e=>{ const v=vidOf(e.url); if(v) return "v:"+v; const u=linkOf(e.url); return u?"u:"+u.href:"d:"+normDate(e.date)+"|"+String(e.title||"").trim(); };
-  const pick=(g,d)=>d?(g.find(x=>x.date&&normDate(x.date)===d)||g.find(x=>!x.date)):g[0];
-  for(const src of [autoList,jsonList,sheetList]) for(const e of src||[]){ if(!e) continue;
-    const b=baseOf(e), d=e.date?normDate(e.date):"", g=groups.get(b)||[]; groups.set(b,g);
-    if(e.hide){
-      if(!d){ hideAll.add(b); g.forEach(x=>x._hide=true); }
-      else { const t=pick(g,d); if(t) t._hide=true; else g.push({date:d,_hide:true}); } // 先記下來，之後同一天的也隱藏
-      continue; }
-    const t=pick(g,d);
-    if(t){ for(const f in e) if(e[f]!==""&&e[f]!=null&&e[f]!==false) t[f]=e[f]; }
-    else { const c={...e}; for(const f in c) if(c[f]===""||c[f]===false) delete c[f];
-      if(hideAll.has(b)) c._hide=true; g.push(c); out.push(c); } }
-  return out.filter(e=>!e._hide);
-}
 
 // 把 timeline.json ＋ songs.json 整理成一串事件
 // 聯動對象：陣列，或用 、 , ， / ／ 換行 分隔的文字
@@ -364,15 +313,10 @@ $("toToday").onclick=()=>{ if(!$("todayRow")){ period="recent"; fMonth=null; ren
 window.onLangChange=render;
 
 (async()=>{
-  const arr=d=>Array.isArray(d)?d:[];
-  const cached=TIMELINE_CSV_URL?readTlCache():null;
-  const sheetP=cached?Promise.resolve(cached.text):TIMELINE_CSV_URL?fetchTlSheet().catch(e=>{ console.warn("timeline sheet failed",e); return ""; }):Promise.resolve("");
-  let [autoL,jsonL,songL,sheetText]=await Promise.all([getJSON("timeline_auto.json"),getJSON("timeline.json"),getJSON("songs.json"),sheetP]);
-  autoL=arr(autoL); jsonL=arr(jsonL); songs=arr(songL);
-  const apply=text=>{ raw=mergeSources(autoL,jsonL,sheetToEvents(text)); build(); };
-  apply(sheetText); setLang(pickLang());
-  // 快取過期：背景更新，有變才重畫
-  if(cached&&Date.now()-cached.at>=TL_SHEET_TTL) fetchTlSheet().then(t=>{ if(t!==cached.text){ apply(t); render(); } }).catch(e=>console.warn("timeline sheet refresh failed",e));
+  const d=await loadTimeline({songs:true});
+  raw=d.raw; songs=d.songs; build(); setLang(pickLang());
+  // 試算表快取過期：背景更新，有變才重畫
+  d.refresh?.then(r=>{ if(r){ raw=r; build(); render(); } });
 })();
 </script>
 </body>

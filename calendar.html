@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>めらめら出勤Calendar｜熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="熱千めら 直播與影片月曆（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<link rel="stylesheet" href="assets/style.css?v=202610071943">
+</head>
+<body data-title-key="titleCalendar">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleCalendar"></span></h1>
+      <p class="sub" data-i18n="subCalendar"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count"><b id="count">0</b> <span data-i18n="calItems"></span></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabTimeline"></a>
+    <a href="calendar.html" aria-current="page" data-i18n="tabCalendar"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="cal-tools">
+      <button type="button" class="cal-nav" id="calPrev" data-i18n-title="prevMonth">‹</button>
+      <h2 class="cal-month" id="calMonth"></h2>
+      <button type="button" class="cal-nav" id="calNext" data-i18n-title="nextMonth">›</button>
+      <span class="sp"></span>
+      <select id="calPick" data-i18n-title="pickMonth"></select>
+      <button type="button" id="calToday" data-i18n="thisMonth"></button>
+    </div>
+    <div class="cal" id="cal" role="grid"></div>
+    <p class="cal-note" data-i18n="calNote"></p>
+  </section>
+
+  <footer>
+    <p class="official-label" data-i18n="officialLinks"></p>
+    <nav class="official" aria-label="Official links">
+      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
+      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
+      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
+      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
+    </nav>
+    <p data-i18n="footer"></p>
+    <p class="official-label" data-i18n="unofficialLinks"></p>
+    <div class="dc">
+      <span class="dc-tag" data-i18n="dcPromo"></span>
+      <span class="dc-label" data-i18n="dcLabel"></span>
+      <ul>
+        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
+        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
+      </ul>
+      <span class="dc-join" data-i18n="dcJoin"></span>
+    </div>
+    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
+    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
+    <p class="rights" data-i18n="rights"></p>
+  </footer>
+</div>
+
+<script src="assets/common.js?v=202610071943"></script>
+<script src="assets/timeline-data.js?v=202610071943"></script>
+<script>
+/* ===== 出勤 Calendar（月曆）=====
+ * 資料跟編年史一樣（assets/timeline-data.js：timeline_auto.json＋timeline.json＋試算表）。
+ * 月曆上只放「有 YouTube 網址的直播／聯動／影片」，顯示影片封面，點了開 YouTube。
+ */
+const CAL_TYPES=new Set(["stream","collab","release"]); // 要放上月曆的種類（Shorts、紀念日、事件等不放）
+addStrings({
+ zh:{titleCalendar:"めらめら出勤Calendar",subCalendar:"めらちゃん每個月的直播和影片，用月曆一眼看完。點封面就會開 YouTube。",calItems:"支",
+   prevMonth:"上個月",nextMonth:"下個月",pickMonth:"選擇月份",thisMonth:"本月",calMonthFmt:"{y} 年 {m} 月",calWd:"日一二三四五六",upcoming:"預定",
+   calEmpty:"這個月沒有直播或影片",calNote:"只顯示有 YouTube 網址的直播、聯動和影片。紀念日、活動等請看「出勤紀錄」。"},
+ ja:{titleCalendar:"めらめら出勤カレンダー",subCalendar:"めらちゃんの配信と動画を、月ごとのカレンダーで。サムネイルを押すと YouTube が開きます。",calItems:"本",
+   prevMonth:"前の月",nextMonth:"次の月",pickMonth:"月を選ぶ",thisMonth:"今月",calMonthFmt:"{y}年{m}月",calWd:"日月火水木金土",upcoming:"予定",
+   calEmpty:"この月の配信・動画はありません",calNote:"YouTube の配信・コラボ・動画だけを表示しています。記念日やイベントは「出勤記録」へ。"},
+ en:{titleCalendar:"Mela Mela Shift Calendar",subCalendar:"Mela's streams and videos, month by month. Tap a thumbnail to open it on YouTube.",calItems:"videos",
+   prevMonth:"Previous month",nextMonth:"Next month",pickMonth:"Choose a month",thisMonth:"This month",calMonthFmt:"{M} {y}",calWd:"Sun Mon Tue Wed Thu Fri Sat",upcoming:"Upcoming",
+   calEmpty:"No streams or videos this month",calNote:"Only YouTube streams, collabs and videos are shown. See the Shift Log for anniversaries and events."}
+});
+const tf=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const MONTHS_EN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const pad=n=>String(n).padStart(2,"0");
+const NOW=new Date(), TODAY=`${NOW.getFullYear()}-${pad(NOW.getMonth()+1)}-${pad(NOW.getDate())}`;
+let vids=[], ym=TODAY.slice(0,7); // 目前顯示的月份 "2026-10"
+try{ const h=location.hash.match(/^#(\d{4}-\d{2})$/); if(h) ym=h[1]; }catch(e){}
+
+function setData(raw){
+  vids=raw.filter(e=>e&&e.date&&CAL_TYPES.has(e.type)&&vidOf(e.url)).map(e=>({...e,date:normDate(e.date),vid:vidOf(e.url)}))
+    .sort((a,b)=>(a.date+(a.start||"")).localeCompare(b.date+(b.start||"")));
+}
+const monthLabel=k=>{ const [y,m]=k.split("-"); return tf("calMonthFmt",{y,m:+m,M:MONTHS_EN[m-1]}); };
+const shiftMonth=(k,n)=>{ const [y,m]=k.split("-").map(Number), d=new Date(Date.UTC(y,m-1+n,1)); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}`; };
+
+function render(){
+  const [y,m]=ym.split("-").map(Number);
+  $("calMonth").textContent=monthLabel(ym);
+  // 月份選單：有資料的月份＋今天這個月＋目前顯示的月份
+  const months=[...new Set([...vids.map(v=>v.date.slice(0,7)),TODAY.slice(0,7),ym])].sort().reverse();
+  $("calPick").innerHTML=months.map(k=>`<option value="${k}"${k===ym?" selected":""}>${monthLabel(k)}${vids.some(v=>v.date.startsWith(k))?"":" ·"}</option>`).join("");
+  const inMonth=vids.filter(v=>v.date.startsWith(ym));
+  $("count").textContent=inMonth.length;
+  const byDay={}; inMonth.forEach(v=>(byDay[+v.date.slice(8,10)]=byDay[+v.date.slice(8,10)]||[]).push(v));
+  const first=new Date(Date.UTC(y,m-1,1)).getUTCDay(), days=new Date(Date.UTC(y,m,0)).getUTCDate();
+  const wd=lang==="en"?t("calWd").split(" "):[...t("calWd")];
+  let h=`<div class="cal-row cal-head" role="row">${wd.map((w,i)=>`<div class="cal-wd${i===0?" sun":i===6?" sat":""}" role="columnheader">${w}</div>`).join("")}</div><div class="cal-body">`;
+  for(let i=0;i<first;i++) h+=`<div class="cal-day out" aria-hidden="true"></div>`;
+  for(let d=1;d<=days;d++){
+    const key=`${ym}-${pad(d)}`, list=byDay[d]||[], w=(first+d-1)%7;
+    h+=`<div class="cal-day${key===TODAY?" today":""}${w===0?" sun":w===6?" sat":""}${list.length?" has":""}" role="gridcell"><span class="cal-d">${d}</span>`
+      +list.map(v=>{ const lbl=esc(v.title||"")+(v.upcoming?` (${t("upcoming")})`:"");
+        return `<a class="cal-v tl-type-${v.type}${v.upcoming?" up":""}" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.vid)}" target="_blank" rel="noopener" title="${lbl}" aria-label="${lbl}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(v.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()"></a>`; }).join("")
+      +`</div>`;
+  }
+  for(let i=(first+days)%7;i&&i<7;i++) h+=`<div class="cal-day out" aria-hidden="true"></div>`;
+  h+=`</div>`;
+  if(!inMonth.length) h+=`<p class="cal-empty">${t("calEmpty")}</p>`;
+  $("cal").innerHTML=h;
+  try{ history.replaceState(null,"",ym===TODAY.slice(0,7)?location.pathname+location.search:"#"+ym); }catch(e){}
+}
+const go=k=>{ ym=k; render(); };
+$("calPrev").onclick=()=>go(shiftMonth(ym,-1));
+$("calNext").onclick=()=>go(shiftMonth(ym,1));
+$("calToday").onclick=()=>go(TODAY.slice(0,7));
+$("calPick").onchange=e=>go(e.target.value);
+window.onLangChange=render;
+
+(async()=>{
+  const d=await loadTimeline();
+  setData(d.raw); setLang(pickLang());
+  d.refresh?.then(r=>{ if(r){ setData(r); render(); } });
+})();
+</script>
+</body>
+</html>
