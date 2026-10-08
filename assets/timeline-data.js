@@ -64,6 +64,14 @@ function mergeSources(autoList,jsonList,sheetList){
   return out.filter(e=>!e._hide);
 }
 
+// 手動加的（試算表、timeline.json）未來的直播／聯動沒有 upcoming 標記 → 日期在今天以後的自動當成「預定」
+// （自動抓的由 YouTube API 判斷，已經有標記；今天的不自動加，因為不知道播了沒）
+const UPCOMING_TYPES=new Set(["stream","collab"]);
+function markUpcoming(list){
+  const n=new Date(), today=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`;
+  for(const e of list) if(!e.upcoming&&e.date&&UPCOMING_TYPES.has(e.type||"stream")&&normDate(e.date)>today) e.upcoming=true;
+  return list;
+}
 // 讀三個來源並合併 → { raw: 合併後的事件, songs, refresh }
 // refresh：試算表快取過期時，背景抓新的；有變動會 resolve 成新的 raw，沒變或失敗是 null
 async function loadTimeline(opts={}){
@@ -72,7 +80,7 @@ async function loadTimeline(opts={}){
   const sheetP=cached?Promise.resolve(cached.text):TIMELINE_CSV_URL?fetchTlSheet().catch(e=>{ console.warn("timeline sheet failed",e); return ""; }):Promise.resolve("");
   let [autoL,jsonL,songL,sheetText]=await Promise.all([getJSON("timeline_auto.json"),getJSON("timeline.json"),opts.songs?getJSON("songs.json"):[],sheetP]);
   autoL=arr(autoL); jsonL=arr(jsonL);
-  const merge=text=>mergeSources(autoL,jsonL,sheetToEvents(text));
+  const merge=text=>markUpcoming(mergeSources(autoL,jsonL,sheetToEvents(text)));
   const refresh=cached&&Date.now()-cached.at>=TL_SHEET_TTL
     ?fetchTlSheet().then(t=>t!==cached.text?merge(t):null).catch(e=>{ console.warn("timeline sheet refresh failed",e); return null; }):null;
   return {raw:merge(sheetText),songs:arr(songL),refresh};
