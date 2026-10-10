@@ -3,15 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<!-- 還沒正式上線：不讓搜尋引擎收錄，其他頁的分頁列也沒有連到這裡。上線時拿掉這行，並在三頁的 nav 加連結 -->
-<meta name="robots" content="noindex,nofollow">
 <title>熱千めら めらめら出勤紀錄</title>
 <meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=202610090002">
+<link rel="stylesheet" href="assets/style.css?v=202610101606">
 <style>
-/* ===== 周邊頁（還沒上線，先放在這頁裡；上線時可搬到 style.css） ===== */
+/* ===== 周邊頁 ===== */
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
 .g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
@@ -125,6 +123,7 @@ body.scrolled .g-spend-note{display:none}
     <a href="songs.html" data-i18n="tabSongs"></a>
     <a href="timeline.html" data-i18n="tabTimeline"></a>
     <a href="calendar.html" data-i18n="tabCalendar"></a>
+    <a href="voicegoods.html" data-i18n="tabVoiceGoods"></a>
     <a href="goods.html" aria-current="page" data-i18n="tabGoods"></a>
   </nav>
   </div>
@@ -177,9 +176,9 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610090002"></script>
+<script src="assets/common.js?v=202610101606"></script>
 <script>
-/* ===== 周邊頁（還沒上線） =====
+/* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
  *   goods project code（企劃代號，英文）／goods project name（企劃名稱）／date（日期）／goods official website（官方商店）
  *   x link（推文）／goods name（品名）／goods picture（圖片網址）／note（商品說明）／project note（企劃說明）／oversea（海外合作）
@@ -202,21 +201,21 @@ body.scrolled .g-spend-note{display:none}
 const GOODS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1311668276&single=true&output=csv";
 const GOODS_TTL = 5*60*1000, GOODS_KEY = "mela-goods-csv"; // 試算表在訪客瀏覽器快取 5 分鐘
 addStrings({
- zh:{titleGoods:"めらめら周邊紀錄",tabGoods:"周邊",subGoods:"熱千めら 出過的官方周邊。勾選已入手的，整理自己的收藏。",
+ zh:{titleGoods:"めら組繳稅簿",subGoods:"熱千めら 出過的官方周邊。勾選已入手的，整理自己的收藏。",
    haveLabel:"已入手",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
    shop:"官方商店",post:"宣傳推文",markHave:"標記已入手",spendLabel:"花費",spendNote:"※花費金額是用商品的日圓定價估算，不包含運費等其他雜費；非日圓計價的商品，以發售當時的匯率換算成日圓估算。",spendShow:"按一下顯示／隱藏金額",spendMiss:"（未含 {n} 件沒有金額的）",moreSeries:"顯示更多（還有 {n} 個企劃）",isHave:"✓ 已入手",qtyDec:"數量減一",qtyInc:"數量加一",unmark:"取消已入手",noImage:"沒有圖片",oversea:"海外合作",xPost:"推文",showPost:"顯示宣傳推文",hidePost:"收起推文",
    goodsNotice:"本站不販售任何商品，購買請到官方商店。圖片 Ⓒ COVER。",
    haveNotice:"「已入手」只存在這台裝置的這個瀏覽器裡：換瀏覽器、換手機或電腦、使用無痕模式，或清除瀏覽紀錄／網站資料（Cookie）後都會不見。建議不時按「匯出備份」存一份檔案，之後可以用「匯入備份」還原，也能用來搬到其他裝置。",
    bkExport:"匯出備份",bkImport:"匯入備份",bkExported:"已下載備份檔（{n} 項）。",bkImported:"已匯入：備份裡 {n} 項，新增或更新 {m} 項（數量取兩邊較多的，原本勾的不會被取消）。",bkBad:"這不是本站的備份檔，或檔案損壞。",bkEmpty:"目前沒有勾選任何已入手，不需要備份。",
    empty:"還沒有周邊資料",emptyHave:"還沒有勾選已入手的周邊",emptyNot:"全部都入手了！"},
- ja:{titleGoods:"めらめらグッズ記録",tabGoods:"グッズ",subGoods:"熱千めらの公式グッズの記録。持っているものにチェックして、コレクションを整理できます。",
+ ja:{titleGoods:"めらめらグッズ記録",subGoods:"熱千めらの公式グッズの記録。持っているものにチェックして、コレクションを整理できます。",
    haveLabel:"入手済み",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
    shop:"公式ショップ",post:"告知ポスト",markHave:"入手済みにする",spendLabel:"使った金額",spendNote:"※金額は商品の定価（日本円）をもとにした概算で、送料などの諸費用は含みません。日本円以外で販売された商品は、発売当時の為替レートで円に換算しています。",spendShow:"押すと金額を表示／非表示",spendMiss:"（金額不明の {n} 件を除く）",moreSeries:"もっと見る（残り {n} 件）",isHave:"✓ 入手済み",qtyDec:"1つ減らす",qtyInc:"1つ増やす",unmark:"入手済みを取り消す",noImage:"画像なし",oversea:"海外コラボ",xPost:"ポスト",showPost:"告知ポストを表示",hidePost:"ポストを閉じる",
    goodsNotice:"当サイトではグッズを販売していません。ご購入は公式ショップへ。画像 Ⓒ COVER",
    haveNotice:"「入手済み」はこの端末のこのブラウザにだけ保存されます。ブラウザや端末を変えたとき、シークレット（プライベート）モードのとき、閲覧履歴やサイトデータ（Cookie）を消去したときは消えてしまいます。ときどき「バックアップを保存」でファイルに保存しておくと、「バックアップを読み込む」で元に戻したり、別の端末に移したりできます。",
    bkExport:"バックアップを保存",bkImport:"バックアップを読み込む",bkExported:"バックアップファイルを保存しました（{n} 件）。",bkImported:"読み込みました：バックアップ {n} 件のうち {m} 件を追加・更新（個数は多いほうを採用、今のチェックは消えません）。",bkBad:"このサイトのバックアップファイルではないか、ファイルが壊れています。",bkEmpty:"入手済みのチェックがまだないので、バックアップは不要です。",
    empty:"まだグッズがありません",emptyHave:"入手済みのグッズはまだありません",emptyNot:"全部そろいました！"},
- en:{titleGoods:"Mela Mela Merch Log",tabGoods:"Merch",subGoods:"Achichi Mela's official merch so far. Tick what you own to keep track of your collection.",
+ en:{titleGoods:"Mela Mela Merch Log",subGoods:"Achichi Mela's official merch so far. Tick what you own to keep track of your collection.",
    haveLabel:"Owned",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
    shop:"Official shop",post:"Announcement",markHave:"Mark as owned",spendLabel:"Spent",spendNote:"* The total is an estimate based on list prices in yen and excludes shipping and other fees. Items not priced in yen are converted at the exchange rate when they were released.",spendShow:"Click to show / hide the amount",spendMiss:" (excl. {n} without a price)",moreSeries:"Show more ({n} more)",isHave:"✓ Owned",qtyDec:"One less",qtyInc:"One more",unmark:"Unmark as owned",noImage:"No image",oversea:"Overseas",xPost:"Post",showPost:"Show announcement",hidePost:"Hide post",
    goodsNotice:"This site does not sell anything — please buy from the official shop. Images Ⓒ COVER.",

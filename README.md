@@ -8,6 +8,8 @@
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
 | `timeline.html` | 編年史頁（直播、影片、紀念日的時間線） |
 | `calendar.html` | 出勤 Calendar（月曆，顯示有 YouTube 網址的直播／聯動／影片封面；資料跟編年史共用） |
+| `goods.html` | 周邊頁（官方グッズ的收藏紀錄；資料來自 Google 試算表「周邊頁紀錄」分頁，圖片放 `assets/goods/`） |
+| `voicegoods.html` | 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；資料來自 Google 試算表「Voice」分頁，見下面） |
 | `assets/timeline-data.js` | 編年史和月曆共用的資料讀取／合併程式 |
 | `assets/style.css` | 各頁共用的外觀（顏色、字體、版面） |
 | `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器） |
@@ -256,3 +258,37 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 ### 注意
 
 - GitHub Actions 會自己 commit `timeline_auto.json`，本機 push 前要先 `git pull --rebase`。
+
+---
+
+## 「音聲」分頁（voicegoods.html）
+
+記錄官方販售的ボイス、動く壁紙等數位商品，訪客可以勾「已入手」整理自己的收藏（只存在自己的瀏覽器，可匯出／匯入備份）。資料來自 Google 試算表的「Voice」分頁，不用改程式。
+
+### 試算表欄位
+
+第一列是標題，網站依標題文字認欄位（位置不限）。**每一列＝一個品項**，同一個 `project code` 的列會併成一個企劃：
+
+| 標題 | 說明 |
+|---|---|
+| `project code` | 企劃代號（商品頁網址最後一段）。企劃代號和名稱都留空的列，算是上一個企劃的品項 |
+| `project name` | 企劃名稱 |
+| `date` | 發售日，`2026/9/25` 這種格式 |
+| `voice name` | 品名（日語、英語版本分成不同列，可以分開勾） |
+| `price` | 日圓定價，只填數字。只用來算頁首的「花費」，品項上不顯示 |
+| `project website link` | 官方商店網址 |
+| `picture link` | 企劃封面圖網址（同一個企劃每列填同一張即可）。官方商店（shop.hololivepro.com/cdn/）的圖會自動縮成寬 600px |
+
+- 「已入手」用「`project code`｜`voice name`」辨識，改了代號或品名，大家勾過的紀錄就會對不上。
+- 音聲只需要買一份，所以沒有數量加減。
+- 「Voice」分頁要「檔案 → 共用 → 發佈到網路」發佈成 CSV，網址填在 `voicegoods.html` 的 `VOICE_CSV_URL`。訪客的瀏覽器會快取 5 分鐘。
+- 周邊頁（goods.html）的試算表不要再放ボイス，各自記各自的。
+
+---
+
+## 「周邊」分頁（goods.html）
+
+記錄官方グッズ（不含ボイス等數位商品，那些放「音聲」分頁），訪客可以勾「已入手」、加減數量，頁首可以看花費。資料來自 Google 試算表「周邊頁紀錄」分頁，網址填在 `goods.html` 的 `GOODS_CSV_URL`；欄位依標題文字認（`goods project code`、`goods project name`、`date`、`goods official website`、`x link`、`goods name`、`goods picture`、`note`、`project note`、`oversea`、`price`），詳細寫在 `goods.html` 的 script 開頭註解。
+
+- 企劃的資料只填在該企劃的第一列，下面的商品列 `goods project code` 留空；**試算表不要排序**，新企劃加在最下面。
+- 圖片可以填官方商店的網址，或 `assets/goods/檔名.webp`（自己縮小過的圖，寬 800px 左右；標示 Ⓒ COVER）。

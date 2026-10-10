@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>熱千めら めらめら音聲商品</title>
+<meta name="description" content="熱千めら 官方音聲與數位商品紀錄（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<link rel="stylesheet" href="assets/style.css?v=202610101606">
+<style>
+/* ===== 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；樣式跟周邊頁同一套） ===== */
+.g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.g-tools .sp{flex:1}
+.g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+/* 已入手的說明＋備份（匯出／匯入） */
+.g-backup{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.6}
+.g-backup p{margin:0;flex:1 1 320px}
+.g-backup .g-bk-btns{display:flex;flex-wrap:wrap;gap:8px}
+.g-backup button{font-size:12px;padding:5px 12px}
+.g-backup .g-bk-msg{flex:1 1 100%;margin:0;font-size:12px}
+.g-bk-msg.ok{color:var(--accent-text)}
+.g-bk-msg.err{color:#d93d42}
+/* 花費總金額：預設隱藏數字，按一下顯示 */
+.g-spend{padding:4px 12px;font-size:13px;gap:6px;background:var(--surface)}
+.g-spend b{font-size:16px!important;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.g-spend[aria-pressed="false"] b{color:var(--muted);letter-spacing:.12em}
+.g-spend small{font-size:11px;color:var(--muted)}
+.g-spend-note{flex-basis:100%;margin:-4px 0 0;font-size:11px;line-height:1.6;color:var(--muted);text-align:right}
+@media (max-width:600px){.g-spend-note{text-align:left}}
+body.scrolled .g-spend-note{display:none}
+.g-links{display:flex;flex-wrap:wrap;gap:8px}
+.g-links a{font-size:12px;padding:5px 12px}
+.g-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.g-prog{display:flex;align-items:center;gap:8px;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-prog i{display:block;width:72px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.g-prog i b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.g-prog.full{color:var(--accent-text)}
+/* 企劃清單：左邊封面、右邊企劃名稱＋品項（品項只要按「已入手」，不用數量） */
+.v-list{display:flex;flex-direction:column;gap:16px}
+.v-proj{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px 18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+@media (max-width:600px){.v-proj{grid-template-columns:1fr}}
+.v-cover{position:relative;display:block;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--bg)}
+.v-cover img{width:100%;height:100%;object-fit:contain;display:block}
+.v-ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:6px;color:var(--muted);font-size:12px;background:radial-gradient(circle at 30% 25%,var(--accent-soft),transparent 60%),var(--bg)}
+.v-ph svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.6;opacity:.7}
+.v-info{display:flex;flex-direction:column;gap:10px;min-width:0}
+.v-date{font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.v-info h2{margin:2px 0 0;font-family:var(--f-display);font-weight:900;font-size:20px;line-height:1.3;overflow-wrap:anywhere}
+.v-items{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.v-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-top:1px solid var(--line);transition:background .15s}
+.v-item:first-child{border-top:none}
+.v-item.have{background:var(--accent-soft)}
+.v-name{flex:1;min-width:0;font-size:14px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
+.v-have{flex:none;font-size:13px;padding:6px 12px;white-space:nowrap}
+.v-have[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+@media (max-width:420px){.v-item{flex-direction:column;align-items:stretch;gap:6px}.v-have{align-self:flex-end}}
+</style>
+</head>
+<body data-title-key="titleVoiceGoods">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleVoiceGoods"></span></h1>
+      <p class="sub" data-i18n="subVoiceGoods"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count g-total"><span data-i18n="haveLabel"></span> <b id="haveN">0</b> / <span id="totalN">0</span></span>
+        <button type="button" class="count g-spend" id="spendBtn" aria-pressed="false" aria-describedby="spendNote"><span data-i18n="spendLabel"></span> <b id="spendV">¥ •••••</b><small id="spendMiss" hidden></small></button>
+      </div>
+    </div>
+    <p class="g-spend-note" id="spendNote" data-i18n="spendNote" hidden></p>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabTimeline"></a>
+    <a href="calendar.html" data-i18n="tabCalendar"></a>
+    <a href="voicegoods.html" aria-current="page" data-i18n="tabVoiceGoods"></a>
+    <a href="goods.html" data-i18n="tabGoods"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="g-tools">
+      <div class="tags" id="haveChips"></div>
+      <span class="sp"></span>
+      <select id="vOrder">
+        <option value="desc" data-i18n="newFirst"></option>
+        <option value="asc" data-i18n="oldFirst"></option>
+      </select>
+    </div>
+    <p class="g-notice" data-i18n="voiceNotice"></p>
+    <div class="g-backup">
+      <p data-i18n="haveNotice"></p>
+      <div class="g-bk-btns">
+        <button type="button" id="bkExport" data-i18n="bkExport"></button>
+        <button type="button" id="bkImport" data-i18n="bkImport"></button>
+        <input type="file" id="bkFile" accept=".json,application/json" hidden>
+      </div>
+      <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
+    </div>
+    <div class="v-list" id="vList"></div>
+  </section>
+
+  <footer>
+    <p class="official-label" data-i18n="officialLinks"></p>
+    <nav class="official" aria-label="Official links">
+      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
+      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
+      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
+      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
+    </nav>
+    <p data-i18n="footer"></p>
+    <p class="official-label" data-i18n="unofficialLinks"></p>
+    <div class="dc">
+      <span class="dc-tag" data-i18n="dcPromo"></span>
+      <span class="dc-label" data-i18n="dcLabel"></span>
+      <ul>
+        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
+        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
+      </ul>
+      <span class="dc-join" data-i18n="dcJoin"></span>
+    </div>
+    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
+    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
+    <p class="rights" data-i18n="rights"></p>
+  </footer>
+</div>
+
+<script src="assets/common.js?v=202610101606"></script>
+<script>
+/* ===== 音聲頁 =====
+ * 資料來源：Google 試算表「Voice」分頁（VOICE_CSV_URL），欄位依第一列標題認（位置不限）：
+ *   project code（企劃代號，英文）／project name（企劃名稱）／date（發售日）／voice name（品名）／price（金額，日圓）／
+ *   project website link（官方商店網址）／picture link（企劃封面圖，同一個企劃每列都填同一張）
+ * - 每一列＝一個品項（ボイス、動く壁紙…）；同一個企劃代號的列會併成一個企劃。企劃代號和名稱留空的列算是上一個企劃的品項。
+ * - 音聲只需要買一份，所以「已入手」只有勾選，沒有數量。
+ * - price 只用來算頁首的「花費」（已入手的金額加總，預設隱藏，按一下顯示），品項上不顯示金額。
+ * - 「已入手」用「企劃代號|品名」辨識（跟周邊頁同一個格式）：改了代號或品名，大家勾過的紀錄就會不見。
+ *   只存在瀏覽者自己的瀏覽器（localStorage mela-voice-have），跟周邊頁的紀錄互相獨立。
+ *   頁面上有「匯出備份」（mela-voice-backup-日期.json：{site:"mela-voice",version:1,exported,have:[id…]}）和「匯入備份」（合併，不會取消原本勾的）。
+ * - 封面圖是官方商店（shop.hololivepro.com/cdn/）的網址時，自動加 width=600 讀小張的。
+ */
+// Google 試算表「Voice」分頁發佈成 CSV 的網址
+const VOICE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=728281014&single=true&output=csv";
+const VOICE_TTL = 5*60*1000, VOICE_KEY = "mela-voice-csv"; // 試算表在訪客瀏覽器快取 5 分鐘
+addStrings({
+ zh:{titleVoiceGoods:"めらめら音聲商品",subVoiceGoods:"熱千めら 出過的官方音聲和數位商品。勾選已入手的，整理自己的收藏。",
+   haveLabel:"已入手",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
+   shop:"官方商店",markHave:"標記已入手",isHave:"✓ 已入手",unmark:"取消已入手",noImage:"沒有圖片",
+   spendLabel:"花費",spendNote:"※花費金額是用商品的日圓定價估算，不包含手續費等其他雜費。",spendShow:"按一下顯示／隱藏金額",spendMiss:"（未含 {n} 件沒有金額的）",
+   voiceNotice:"本站不販售任何商品，購買請到官方商店。圖片 Ⓒ COVER。",
+   haveNotice:"「已入手」只存在這台裝置的這個瀏覽器裡：換瀏覽器、換手機或電腦、使用無痕模式，或清除瀏覽紀錄／網站資料（Cookie）後都會不見。建議不時按「匯出備份」存一份檔案，之後可以用「匯入備份」還原，也能用來搬到其他裝置。",
+   bkExport:"匯出備份",bkImport:"匯入備份",bkExported:"已下載備份檔（{n} 項）。",bkImported:"已匯入：備份裡 {n} 項，新增 {m} 項（原本勾的不會被取消）。",bkBad:"這不是本站的備份檔，或檔案損壞。",bkEmpty:"目前沒有勾選任何已入手，不需要備份。",
+   empty:"還沒有音聲資料",emptyHave:"還沒有勾選已入手的品項",emptyNot:"全部都入手了！"},
+ ja:{titleVoiceGoods:"めらめらボイス記録",subVoiceGoods:"熱千めらの公式ボイス・デジタルグッズの記録。持っているものにチェックして、コレクションを整理できます。",
+   haveLabel:"入手済み",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
+   shop:"公式ショップ",markHave:"入手済みにする",isHave:"✓ 入手済み",unmark:"入手済みを取り消す",noImage:"画像なし",
+   spendLabel:"使った金額",spendNote:"※金額は商品の定価（日本円）をもとにした概算で、手数料などの諸費用は含みません。",spendShow:"押すと金額を表示／非表示",spendMiss:"（金額不明の {n} 件を除く）",
+   voiceNotice:"当サイトでは商品を販売していません。ご購入は公式ショップへ。画像 Ⓒ COVER",
+   haveNotice:"「入手済み」はこの端末のこのブラウザにだけ保存されます。ブラウザや端末を変えたとき、シークレット（プライベート）モードのとき、閲覧履歴やサイトデータ（Cookie）を消去したときは消えてしまいます。ときどき「バックアップを保存」でファイルに保存しておくと、「バックアップを読み込む」で元に戻したり、別の端末に移したりできます。",
+   bkExport:"バックアップを保存",bkImport:"バックアップを読み込む",bkExported:"バックアップファイルを保存しました（{n} 件）。",bkImported:"読み込みました：バックアップ {n} 件のうち {m} 件を追加（今のチェックは消えません）。",bkBad:"このサイトのバックアップファイルではないか、ファイルが壊れています。",bkEmpty:"入手済みのチェックがまだないので、バックアップは不要です。",
+   empty:"まだボイスのデータがありません",emptyHave:"入手済みのものはまだありません",emptyNot:"全部そろいました！"},
+ en:{titleVoiceGoods:"Mela Mela Voice Log",subVoiceGoods:"Achichi Mela's official voice and digital goods so far. Tick what you own to keep track of your collection.",
+   haveLabel:"Owned",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
+   shop:"Official shop",markHave:"Mark as owned",isHave:"✓ Owned",unmark:"Unmark as owned",noImage:"No image",
+   spendLabel:"Spent",spendNote:"* The total is an estimate based on list prices in yen and excludes fees and other charges.",spendShow:"Click to show / hide the amount",spendMiss:" (excl. {n} without a price)",
+   voiceNotice:"This site does not sell anything — please buy from the official shop. Images Ⓒ COVER.",
+   haveNotice:"Your \"owned\" ticks are stored only in this browser on this device. They will be lost if you switch browsers or devices, use a private/incognito window, or clear your browsing history or site data (cookies). Use \"Export backup\" now and then to save a file — \"Import backup\" restores it, or moves your list to another device.",
+   bkExport:"Export backup",bkImport:"Import backup",bkExported:"Backup downloaded ({n} items).",bkImported:"Imported: {n} items in the backup, {m} added (your current ticks are kept).",bkBad:"This isn't a backup file from this site, or it's damaged.",bkEmpty:"Nothing is marked as owned yet, so there's nothing to back up.",
+   empty:"No voice items yet",emptyHave:"Nothing marked as owned yet",emptyNot:"You've got them all!"}
+});
+
+const HAVE_KEY="mela-voice-have";
+let series=[], have=new Set(), filter="all", order="desc", showSpend=false; // showSpend：花費金額是否顯示（每次開頁面都先隱藏）
+const tfm=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const toIds=d=>Array.isArray(d)&&d.every(x=>typeof x==="string")?d:null;
+try{ have=new Set(toIds(JSON.parse(localStorage.getItem(HAVE_KEY)||"[]"))||[]); }catch(e){}
+try{ order=localStorage.getItem("mela-voice-order")==="asc"?"asc":"desc"; }catch(e){}
+const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify([...have])); }catch(e){} };
+const webUrl=u=>{ try{ const x=new URL(String(u||"").trim()); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
+// 官方商店的圖片讀小張一點
+const smallImg=u=>{ try{ const x=new URL(u); if(x.hostname==="shop.hololivepro.com"&&x.pathname.startsWith("/cdn/")&&!x.searchParams.has("width")) x.searchParams.set("width","600"); return x.href; }catch(e){ return u; } };
+const fmtDate=d=>d?d.replace(/-/g,"."):"";
+const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>';
+
+// 試算表標題 → 欄位（依序比對，先比對到的優先）
+const VCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["date",/date|日期|日付|発売/i],
+  ["name",/voice\s*name|品名|商品名|ボイス名/i],["price",/price|金額|價格|価格|値段|定価/i],["image",/picture|image|圖片|画像/i],["shop",/website|official|shop|商店|ショップ|網址/i]];
+// CSV → 企劃
+function build(text){
+  const rows=parseCSV(text||""); if(!rows.length){ series=[]; return; }
+  const col={}; rows[0].forEach((h,i)=>{ const k=VCOLS.find(([k,re])=>col[k]==null&&re.test(String(h).trim())); if(k) col[k[0]]=i; });
+  const get=(r,k)=>col[k]==null?"":String(r[col[k]]??"").trim();
+  const map=new Map(); let cur=null;
+  for(const r of rows.slice(1)){
+    const code=get(r,"code"), pname=get(r,"pname");
+    if(code||pname){ const key=code||pname;
+      if(!map.has(key)) map.set(key,{key,name:pname||code,cover:"",date:null,shop:"",items:[]});
+      cur=map.get(key);
+      if(pname) cur.name=pname; const d=normDate(get(r,"date")); if(d) cur.date=d;
+      cur.shop=webUrl(get(r,"shop"))||cur.shop; }
+    if(!cur) continue;
+    const img=webUrl(get(r,"image")); if(img&&!cur.cover) cur.cover=smallImg(img);
+    const name=get(r,"name"); if(!name) continue;
+    const id=`${cur.key}|${name}`; if(cur.items.some(i=>i.id===id)) continue; // 同一個企劃裡品名重複的列只算一個
+    cur.items.push({id,name,price:(v=>v?+v:null)(get(r,"price").replace(/[^\d.]/g,""))});
+  }
+  series=[...map.values()].filter(g=>g.items.length);
+}
+// 花費總金額＝已入手品項的金額加總（沒有金額的另外算件數）
+function updateSpend(){ let sum=0, miss=0;
+  for(const g of series) for(const i of g.items){ if(!have.has(i.id)) continue; if(i.price!=null) sum+=i.price; else miss++; }
+  const b=$("spendBtn"); b.setAttribute("aria-pressed",showSpend); b.title=t("spendShow");
+  $("spendV").textContent=showSpend?"¥"+sum.toLocaleString("ja-JP"):"¥ •••••";
+  $("spendNote").hidden=!showSpend; // 金額的註記：顯示金額時才出現
+  $("spendMiss").hidden=!(showSpend&&miss); $("spendMiss").textContent=miss?tfm("spendMiss",{n:miss}):""; }
+$("spendBtn").onclick=()=>{ showSpend=!showSpend; updateSpend(); };
+
+const phHTML=txt=>`<span class="v-ph">${bagSvg}${txt?t("noImage"):""}</span>`;
+function itemHTML(it){ const on=have.has(it.id), e=esc(it.id);
+  return `<div class="v-item${on?" have":""}" data-id="${e}"><span class="v-name">${esc(it.name)}</span>`
+    +`<button type="button" class="v-have" data-have="${e}" aria-pressed="${on}" ${on?`title="${t("unmark")}" `:""}>${on?t("isHave"):t("markHave")}</button></div>`; }
+function progHTML(g){ const n=g.items.filter(i=>have.has(i.id)).length, pct=Math.round(n/g.items.length*100);
+  return `<span class="g-prog${n===g.items.length?" full":""}" title="${t("haveLabel")}"><i><b style="width:${pct}%"></b></i><span>${n} / ${g.items.length}</span></span>`; }
+
+function render(){
+  const all=series.flatMap(g=>g.items), n=all.filter(i=>have.has(i.id)).length;
+  $("haveN").textContent=n; $("totalN").textContent=all.length;
+  const cnt={all:all.length,have:n,not:all.length-n};
+  $("haveChips").innerHTML=[["all","fAll"],["have","fHave"],["not","fNot"]].map(([k,l])=>`<button type="button" class="chip" data-filter="${k}" aria-pressed="${filter===k}">${t(l)} <span class="n">${cnt[k]}</span></button>`).join("");
+  $("vOrder").value=order;
+  const keep=i=>filter==="all"||(filter==="have")===have.has(i.id);
+  const list=[...series].sort((a,b)=>(a.date||"").localeCompare(b.date||"")*(order==="asc"?1:-1)); // 同一天維持試算表的順序
+  const html=list.filter(g=>g.items.some(keep)).map(g=>{
+    const cover=g.cover?`<img src="${esc(g.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'v-ph',innerHTML:bagSvg}))">`:phHTML(false);
+    return `<section class="v-proj" data-key="${esc(g.key)}">
+      ${g.shop?`<a class="v-cover" href="${esc(g.shop)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">${cover}</a>`:`<span class="v-cover">${cover}</span>`}
+      <div class="v-info">
+        <div>${g.date?`<time class="v-date" datetime="${g.date}">${fmtDate(g.date)}</time>`:""}<h2>${esc(g.name)}</h2></div>
+        <div class="g-row">${g.shop?`<div class="g-links"><a class="btn" href="${esc(g.shop)}" target="_blank" rel="noopener">${t("shop")} ↗</a></div>`:""}<span class="g-prog-wrap">${progHTML(g)}</span></div>
+        <div class="v-items">${g.items.filter(keep).map(itemHTML).join("")}</div>
+      </div></section>`; }).join("");
+  updateSpend();
+  $("vList").innerHTML=html||`<div class="empty"><h2>${t(!all.length?"empty":filter==="have"?"emptyHave":"emptyNot")}</h2></div>`;
+}
+
+document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.filter){ filter=b.dataset.filter; return render(); }
+  if(b.dataset.have!=null){ const id=b.dataset.have, on=!have.has(id);
+    on?have.add(id):have.delete(id); saveHave();
+    if(filter!=="all") return render();
+    // 只更新這一列和數字，不整頁重畫
+    const row=b.closest(".v-item"); row.classList.toggle("have",on); b.setAttribute("aria-pressed",on); b.textContent=on?t("isHave"):t("markHave"); on?b.title=t("unmark"):b.removeAttribute("title");
+    const g=series.find(s=>s.items.some(i=>i.id===id)); b.closest(".v-proj").querySelector(".g-prog-wrap").innerHTML=progHTML(g);
+    const all=series.flatMap(s=>s.items), h=all.filter(i=>have.has(i.id)).length; $("haveN").textContent=h; updateSpend();
+    const cnt=$("haveChips").querySelectorAll(".n"); cnt[1].textContent=h; cnt[2].textContent=all.length-h; }
+});
+// ---- 已入手的備份：匯出成 .json 檔、再匯入（合併，不會取消原本的勾選） ----
+function bkMsg(text,cls){ const m=$("bkMsg"); m.textContent=text; m.className="g-bk-msg "+cls; m.hidden=false; }
+$("bkExport").onclick=()=>{
+  if(!have.size) return bkMsg(t("bkEmpty"),"");
+  const d=new Date(), p2=n=>String(n).padStart(2,"0"), day=`${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}`;
+  const data={site:"mela-voice",version:1,exported:d.toISOString(),have:[...have]};
+  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:"application/json"}));
+  const a=Object.assign(document.createElement("a"),{href:url,download:`mela-voice-backup-${day}.json`});
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  bkMsg(tfm("bkExported",{n:have.size}),"ok");
+};
+$("bkImport").onclick=()=>{ $("bkFile").value=""; $("bkFile").click(); };
+$("bkFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+  try{ const d=JSON.parse(await f.text());
+    const inc=toIds(Array.isArray(d)?d:(d&&d.site==="mela-voice")?d.have:null); if(!inc) throw new Error("bad");
+    let m=0; for(const id of inc) if(!have.has(id)){ have.add(id); m++; }
+    saveHave(); render(); bkMsg(tfm("bkImported",{n:inc.length,m}),"ok");
+  }catch(err){ bkMsg(t("bkBad"),"err"); } };
+$("vOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-voice-order",order)}catch(_){} render(); };
+window.onLangChange=()=>{ $("bkMsg").hidden=true; render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
+
+function readCache(){ try{ const c=JSON.parse(localStorage.getItem(VOICE_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
+async function fetchVoice(){ const r=await fetch(VOICE_CSV_URL+(VOICE_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
+  const text=await r.text(); try{ localStorage.setItem(VOICE_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} return text; }
+(async()=>{
+  const cached=readCache();
+  const text=cached?cached.text:await fetchVoice().catch(e=>{ console.warn("voice sheet failed",e); return ""; });
+  build(text); setLang(pickLang());
+  // 快取過期：背景更新，有變才重畫
+  if(cached&&Date.now()-cached.at>=VOICE_TTL) fetchVoice().then(t2=>{ if(t2!==cached.text){ build(t2); render(); } }).catch(e=>console.warn("voice sheet refresh failed",e));
+})();
+</script>
+</body>
+</html>
