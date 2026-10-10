@@ -7,14 +7,15 @@
 <meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=202610101638">
+<link rel="stylesheet" href="assets/style.css?v=202610101642">
 <style>
 /* ===== 周邊頁 ===== */
+.view{gap:10px}
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
 .g-search{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:11px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink)}
 .g-search:focus{outline:2px solid var(--accent);outline-offset:1px}
-.g-frow{gap:8px 10px;align-items:flex-start}
+.g-frow{gap:6px 10px;align-items:flex-start}
 .g-frow .chips-label{padding-top:6px;min-width:2.5em}
 .g-sel{gap:8px 14px}
 .g-sel label{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
@@ -24,7 +25,7 @@
 .g-bk-msg.ok{color:var(--accent-text)}
 .g-bk-msg.err{color:#d93d42}
 .g-list{display:flex;flex-direction:column;gap:30px}
-.g-list{gap:16px!important}
+.g-list{gap:16px!important;margin-top:6px}
 .g-series{display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
 .g-series.open{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .g-head{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px 18px;align-items:center}
@@ -152,7 +153,6 @@ body.scrolled .g-spend-note{display:none}
       </div>
     </div>
     <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
-    </div>
     <div class="g-list" id="gList"></div>
   </section>
 
@@ -182,8 +182,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610101638"></script>
-<script src="assets/share.js?v=202610101638"></script>
+<script src="assets/common.js?v=202610101642"></script>
+<script src="assets/share.js?v=202610101642"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：

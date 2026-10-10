@@ -8,9 +8,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610101638">
+<link rel="stylesheet" href="assets/style.css?v=202610101642">
 <style>
 /* ===== 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；樣式跟周邊頁同一套） ===== */
+.view{gap:10px}
+.g-frow{gap:6px 10px;align-items:flex-start}
+.g-frow .chips-label{padding-top:6px;min-width:2.5em}
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
 .g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
@@ -34,7 +37,7 @@ body.scrolled .g-spend-note{display:none}
 .g-prog i b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
 .g-prog.full{color:var(--accent-text)}
 /* 企劃清單：左邊封面、右邊企劃名稱＋品項（品項只要按「已入手」，不用數量） */
-.v-list{display:flex;flex-direction:column;gap:16px}
+.v-list{display:flex;flex-direction:column;gap:16px;margin-top:6px}
 .v-proj{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px 18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
 @media (max-width:600px){.v-proj{grid-template-columns:1fr}}
 .v-cover{position:relative;display:block;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--bg)}
@@ -106,7 +109,6 @@ body.scrolled .g-spend-note{display:none}
       </div>
     </div>
     <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
-    </div>
     <div class="v-list" id="vList"></div>
   </section>
 
@@ -136,8 +138,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610101638"></script>
-<script src="assets/share.js?v=202610101638"></script>
+<script src="assets/common.js?v=202610101642"></script>
+<script src="assets/share.js?v=202610101642"></script>
 <script>
 /* ===== 音聲頁 =====
  * 資料來源：Google 試算表「Voice」分頁（VOICE_CSV_URL），欄位依第一列標題認（位置不限）：
