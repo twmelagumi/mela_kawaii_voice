@@ -1,11 +1,17 @@
 [
   {
+    "date": "2026-10-11",
+    "type": "stream",
+    "title": "【リズム天国】大人気リズムゲームを初見プレイのじゃ！",
+    "url": "https://www.youtube.com/watch?v=mNcFyUgR_B4",
+    "upcoming": true,
+    "start": "2026-10-11T10:00:00Z"
+  },
+  {
     "date": "2026-10-10",
     "type": "stream",
-    "title": "【SPAGHET】フブキ先輩ゲームくれてやさしーのじゃ！",
-    "url": "https://www.youtube.com/watch?v=D29pagC1PEY",
-    "upcoming": true,
-    "start": "2026-10-10T10:00:00Z"
+    "title": "【SPAGHET】フブキ先輩がパスタを殴るホラゲーをくださったのじゃ",
+    "url": "https://www.youtube.com/watch?v=D29pagC1PEY"
   },
   {
     "date": "2026-10-09",
