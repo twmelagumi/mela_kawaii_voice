@@ -8,18 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610101631">
+<link rel="stylesheet" href="assets/style.css?v=202610101638">
 <style>
 /* ===== 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；樣式跟周邊頁同一套） ===== */
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
 .g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
 /* 已入手的說明＋備份（匯出／匯入） */
-.g-backup{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.6}
-.g-backup p{margin:0;flex:1 1 320px}
-.g-backup .g-bk-btns{display:flex;flex-wrap:wrap;gap:8px}
-.g-backup button{font-size:12px;padding:5px 12px}
-.g-backup .g-bk-msg{flex:1 1 100%;margin:0;font-size:12px}
+.g-bk-msg{margin:0;font-size:12px}
 .g-bk-msg.ok{color:var(--accent-text)}
 .g-bk-msg.err{color:#d93d42}
 /* 花費總金額：預設隱藏數字，按一下顯示 */
@@ -101,15 +97,15 @@ body.scrolled .g-spend-note{display:none}
       </select>
     </div>
     <p class="g-notice" data-i18n="voiceNotice"></p>
-    <div class="g-backup">
-      <p data-i18n="haveNotice"></p>
-      <div class="g-bk-btns">
-        <button type="button" id="bkExport" data-i18n="bkExport"></button>
-        <button type="button" id="bkImport" data-i18n="bkImport"></button>
+    <div class="g-tools g-frow" id="recRow"><span class="chips-label" data-i18n="recLabel"></span>
+      <div class="tags">
+        <button type="button" class="chip primary" id="shOpen" data-i18n="shOpen"></button>
+        <button type="button" class="chip" id="bkExport" data-i18n="bkExport"></button>
+        <button type="button" class="chip" id="bkImport" data-i18n="bkImport"></button>
         <input type="file" id="bkFile" accept=".json,application/json" hidden>
       </div>
-      <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
-      <div class="g-share" id="shareBox"></div>
+    </div>
+    <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
     </div>
     <div class="v-list" id="vList"></div>
   </section>
@@ -140,8 +136,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610101631"></script>
-<script src="assets/share.js?v=202610101631"></script>
+<script src="assets/common.js?v=202610101638"></script>
+<script src="assets/share.js?v=202610101638"></script>
 <script>
 /* ===== 音聲頁 =====
  * 資料來源：Google 試算表「Voice」分頁（VOICE_CSV_URL），欄位依第一列標題認（位置不限）：
@@ -290,7 +286,7 @@ $("bkFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
   }catch(err){ bkMsg(t("bkBad"),"err"); } };
 $("vOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-voice-order",order)}catch(_){} render(); };
 window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
-MelaShare.init({kind:"voice",panel:$("shareBox"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),
+MelaShare.init({kind:"voice",panel:$("recRow"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),
   merge:hits=>{ let n=0; for(const [id] of hits) if(!have.has(id)){ have.add(id); n++; } if(n){ saveHave(); render(); } return n; }});
 
 function readCache(){ try{ const c=JSON.parse(localStorage.getItem(VOICE_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
