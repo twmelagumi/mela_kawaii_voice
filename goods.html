@@ -7,7 +7,7 @@
 <meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=202610101606">
+<link rel="stylesheet" href="assets/style.css?v=202610101618">
 <style>
 /* ===== 周邊頁 ===== */
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -146,6 +146,7 @@ body.scrolled .g-spend-note{display:none}
         <input type="file" id="bkFile" accept=".json,application/json" hidden>
       </div>
       <p class="g-bk-msg" id="bkMsg" role="status" aria-live="polite" hidden></p>
+      <div class="g-share" id="shareBox"></div>
     </div>
     <div class="g-list" id="gList"></div>
   </section>
@@ -176,7 +177,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610101606"></script>
+<script src="assets/common.js?v=202610101618"></script>
+<script src="assets/share.js?v=202610101618"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
@@ -391,7 +393,9 @@ $("bkFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
     saveHave(); render(); bkMsg(tfm("bkImported",{n:inc.size,m}),"ok");
   }catch(err){ bkMsg(t("bkBad"),"err"); } };
 $("gOrder").onchange=e=>{ order=e.target.value; limit=PAGE; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
-window.onLangChange=()=>{ $("bkMsg").hidden=true; render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
+window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
+MelaShare.init({kind:"goods",panel:$("shareBox"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),
+  merge:hits=>{ let n=0; for(const [id,k] of hits) if(k>(have.get(id)||0)){ have.set(id,Math.min(999,k)); n++; } if(n){ saveHave(); render(); } return n; }});
 
 function readGoodsCache(){ try{ const c=JSON.parse(localStorage.getItem(GOODS_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
 async function fetchGoods(){ const r=await fetch(GOODS_CSV_URL+(GOODS_CSV_URL.includes("?")?"&":"?")+"_="+Date.now()); if(!r.ok) throw new Error("HTTP "+r.status);
@@ -399,7 +403,7 @@ async function fetchGoods(){ const r=await fetch(GOODS_CSV_URL+(GOODS_CSV_URL.in
 (async()=>{
   const cached=readGoodsCache();
   const text=cached?cached.text:await fetchGoods().catch(e=>{ console.warn("goods sheet failed",e); return ""; });
-  build(text); setLang(pickLang());
+  build(text); setLang(pickLang()); MelaShare.ready();
   // 快取過期：背景更新，有變才重畫
   if(cached&&Date.now()-cached.at>=GOODS_TTL) fetchGoods().then(t2=>{ if(t2!==cached.text){ build(t2); render(); } }).catch(e=>console.warn("goods sheet refresh failed",e));
 })();

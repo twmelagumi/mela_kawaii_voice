@@ -418,3 +418,18 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
   .cal-day.today .cal-d{padding:0 5px}
   .cal-v{border-radius:4px;border-width:1.5px}
 }
+
+/* 收藏代碼（周邊頁／音聲頁共用，assets/share.js） */
+.g-share{flex:1 1 100%;display:flex;flex-direction:column;gap:8px;margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}
+.g-backup .g-share p{margin:0;flex:0 0 auto}
+.g-share-t{font-weight:700;color:var(--ink);font-size:13px}
+.g-share-d{font-size:12px;color:var(--muted);line-height:1.6}
+.g-share .g-bk-btns{display:flex;flex-wrap:wrap;gap:8px}
+.g-share-qr{display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px}
+.g-share-qr[hidden],.g-share-in[hidden]{display:none}
+.g-share-qr canvas{width:min(300px,100%);height:auto;aspect-ratio:1;image-rendering:pixelated;border:1px solid var(--line);border-radius:8px;background:#fff}
+.g-share-qr>div{flex:1 1 180px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.g-share-in{display:flex;flex-direction:column;gap:8px}
+.g-share-in textarea{width:100%;box-sizing:border-box;font-family:var(--f-code);font-size:12px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);resize:vertical}
+.g-share-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--accent);border-radius:10px;background:var(--accent-soft);font-size:13px}
+.g-share-banner p{margin:0;flex:1 1 260px}
