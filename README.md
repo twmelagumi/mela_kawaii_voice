@@ -288,7 +288,9 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 ## 「周邊」分頁（goods.html）
 
-記錄官方グッズ（不含ボイス等數位商品，那些放「音聲」分頁），訪客可以勾「已入手」、加減數量，頁首可以看花費。資料來自 Google 試算表「周邊頁紀錄」分頁，網址填在 `goods.html` 的 `GOODS_CSV_URL`；欄位依標題文字認（`goods project code`、`goods project name`、`date`、`goods official website`、`x link`、`goods name`、`goods picture`、`note`、`project note`、`oversea`、`price`），詳細寫在 `goods.html` 的 script 開頭註解。
+記錄官方グッズ（不含ボイス等數位商品，那些放「音聲」分頁），訪客可以勾「已入手」、加減數量，頁首可以看花費。資料來自 Google 試算表「周邊頁紀錄」分頁，網址填在 `goods.html` 的 `GOODS_CSV_URL`；欄位依標題文字認（`goods project code`、`goods project name`、`date`、`goods official website`、`x link`、`goods name`、`goods type`、`goods picture`、`note`、`project note`、`oversea`、`price`），詳細寫在 `goods.html` 的 script 開頭註解。
+
+**搜尋與篩選**：頁首有搜尋框（比對企劃名、品名、企劃代號、說明、類型），下面依序是「企劃」分類、「種類」、年份／狀態（全部／已入手／未入手）／排序。`goods type` 欄（可留空）：品項列填 `badge`／`acrylic stand`／`keychain`／`plushie` → 種類篩選（其他英文字會原樣出現為按鈕；要加有中日英名稱的，在 `goods.html` 的 `addStrings` 加 `tp_類型名`，空白換底線）；**企劃那一列**填 `anniversary`／`birthday` → 企劃分類「周年紀念／生日紀念」，沒填但 oversea 有標的算「海外合作」，其餘算「其他」。搜尋、狀態或種類篩選時，符合的企劃會自動展開。
 
 - 企劃的資料只填在該企劃的第一列，下面的商品列 `goods project code` 留空；**試算表不要排序**，新企劃加在最下面。
 - 圖片可以填官方商店的網址，或 `assets/goods/檔名.webp`（自己縮小過的圖，寬 800px 左右；標示 Ⓒ COVER）。

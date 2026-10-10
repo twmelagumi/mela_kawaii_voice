@@ -7,11 +7,17 @@
 <meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=202610101618">
+<link rel="stylesheet" href="assets/style.css?v=202610101626">
 <style>
 /* ===== 周邊頁 ===== */
 .g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .g-tools .sp{flex:1}
+.g-search{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:11px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink)}
+.g-search:focus{outline:2px solid var(--accent);outline-offset:1px}
+.g-frow{gap:8px 10px;align-items:flex-start}
+.g-frow .chips-label{padding-top:6px;min-width:2.5em}
+.g-sel{gap:8px 14px}
+.g-sel label{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 .g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
 /* 已入手的說明＋備份（匯出／匯入） */
 .g-backup{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.6}
@@ -129,13 +135,16 @@ body.scrolled .g-spend-note{display:none}
   </div>
 
   <section class="view">
-    <div class="g-tools">
-      <div class="tags" id="haveChips"></div>
-      <span class="sp"></span>
-      <select id="gOrder">
+    <input type="search" class="g-search" id="gQ" data-i18n-ph="srchPh" autocomplete="off" enterkeyhint="search">
+    <div class="g-tools g-frow"><span class="chips-label" data-i18n="catLabel"></span><div class="tags" id="catChips"></div></div>
+    <div class="g-tools g-frow"><span class="chips-label" data-i18n="tpLabel"></span><div class="tags" id="typeChips"></div></div>
+    <div class="g-tools g-sel">
+      <label><span data-i18n="yearLabel"></span> <select id="gYear"></select></label>
+      <label><span data-i18n="statusLabel"></span> <select id="gStatus"></select></label>
+      <label><span data-i18n="sortLabel"></span> <select id="gOrder">
         <option value="desc" data-i18n="newFirst"></option>
         <option value="asc" data-i18n="oldFirst"></option>
-      </select>
+      </select></label>
     </div>
     <p class="g-notice" data-i18n="goodsNotice"></p>
     <div class="g-backup">
@@ -177,8 +186,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610101618"></script>
-<script src="assets/share.js?v=202610101618"></script>
+<script src="assets/common.js?v=202610101626"></script>
+<script src="assets/share.js?v=202610101626"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
@@ -204,21 +213,21 @@ const GOODS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIET
 const GOODS_TTL = 5*60*1000, GOODS_KEY = "mela-goods-csv"; // 試算表在訪客瀏覽器快取 5 分鐘
 addStrings({
  zh:{titleGoods:"めら組繳稅簿",subGoods:"熱千めら 出過的官方周邊。勾選已入手的，整理自己的收藏。",
-   haveLabel:"已入手",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
+   haveLabel:"已入手",tpLabel:"種類",tpAll:"全部",srchPh:"搜尋企劃或周邊名稱…",catLabel:"企劃",cat_anniversary:"周年紀念",cat_birthday:"生日紀念",cat_oversea:"海外合作",cat_other:"其他",yearLabel:"年份",statusLabel:"狀態",sortLabel:"排序",emptyMatch:"沒有符合的周邊",tp_badge:"徽章",tp_acrylic_stand:"壓克力立牌",tp_keychain:"吊飾",tp_plushie:"娃娃",fAll:"全部",fHave:"已入手",fNot:"未入手",newFirst:"新 → 舊",oldFirst:"舊 → 新",
    shop:"官方商店",post:"宣傳推文",markHave:"標記已入手",spendLabel:"花費",spendNote:"※花費金額是用商品的日圓定價估算，不包含運費等其他雜費；非日圓計價的商品，以發售當時的匯率換算成日圓估算。",spendShow:"按一下顯示／隱藏金額",spendMiss:"（未含 {n} 件沒有金額的）",moreSeries:"顯示更多（還有 {n} 個企劃）",isHave:"✓ 已入手",qtyDec:"數量減一",qtyInc:"數量加一",unmark:"取消已入手",noImage:"沒有圖片",oversea:"海外合作",xPost:"推文",showPost:"顯示宣傳推文",hidePost:"收起推文",
    goodsNotice:"本站不販售任何商品，購買請到官方商店。圖片 Ⓒ COVER。",
    haveNotice:"「已入手」只存在這台裝置的這個瀏覽器裡：換瀏覽器、換手機或電腦、使用無痕模式，或清除瀏覽紀錄／網站資料（Cookie）後都會不見。建議不時按「匯出備份」存一份檔案，之後可以用「匯入備份」還原，也能用來搬到其他裝置。",
    bkExport:"匯出備份",bkImport:"匯入備份",bkExported:"已下載備份檔（{n} 項）。",bkImported:"已匯入：備份裡 {n} 項，新增或更新 {m} 項（數量取兩邊較多的，原本勾的不會被取消）。",bkBad:"這不是本站的備份檔，或檔案損壞。",bkEmpty:"目前沒有勾選任何已入手，不需要備份。",
    empty:"還沒有周邊資料",emptyHave:"還沒有勾選已入手的周邊",emptyNot:"全部都入手了！"},
  ja:{titleGoods:"めらめらグッズ記録",subGoods:"熱千めらの公式グッズの記録。持っているものにチェックして、コレクションを整理できます。",
-   haveLabel:"入手済み",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
+   haveLabel:"入手済み",tpLabel:"種類",tpAll:"すべて",srchPh:"企画・グッズ名で検索…",catLabel:"企画",cat_anniversary:"周年記念",cat_birthday:"誕生日記念",cat_oversea:"海外コラボ",cat_other:"その他",yearLabel:"年",statusLabel:"状態",sortLabel:"並び順",emptyMatch:"該当するグッズがありません",tp_badge:"バッジ",tp_acrylic_stand:"アクスタ",tp_keychain:"キーホルダー",tp_plushie:"ぬいぐるみ",fAll:"すべて",fHave:"入手済み",fNot:"未入手",newFirst:"新しい順",oldFirst:"古い順",
    shop:"公式ショップ",post:"告知ポスト",markHave:"入手済みにする",spendLabel:"使った金額",spendNote:"※金額は商品の定価（日本円）をもとにした概算で、送料などの諸費用は含みません。日本円以外で販売された商品は、発売当時の為替レートで円に換算しています。",spendShow:"押すと金額を表示／非表示",spendMiss:"（金額不明の {n} 件を除く）",moreSeries:"もっと見る（残り {n} 件）",isHave:"✓ 入手済み",qtyDec:"1つ減らす",qtyInc:"1つ増やす",unmark:"入手済みを取り消す",noImage:"画像なし",oversea:"海外コラボ",xPost:"ポスト",showPost:"告知ポストを表示",hidePost:"ポストを閉じる",
    goodsNotice:"当サイトではグッズを販売していません。ご購入は公式ショップへ。画像 Ⓒ COVER",
    haveNotice:"「入手済み」はこの端末のこのブラウザにだけ保存されます。ブラウザや端末を変えたとき、シークレット（プライベート）モードのとき、閲覧履歴やサイトデータ（Cookie）を消去したときは消えてしまいます。ときどき「バックアップを保存」でファイルに保存しておくと、「バックアップを読み込む」で元に戻したり、別の端末に移したりできます。",
    bkExport:"バックアップを保存",bkImport:"バックアップを読み込む",bkExported:"バックアップファイルを保存しました（{n} 件）。",bkImported:"読み込みました：バックアップ {n} 件のうち {m} 件を追加・更新（個数は多いほうを採用、今のチェックは消えません）。",bkBad:"このサイトのバックアップファイルではないか、ファイルが壊れています。",bkEmpty:"入手済みのチェックがまだないので、バックアップは不要です。",
    empty:"まだグッズがありません",emptyHave:"入手済みのグッズはまだありません",emptyNot:"全部そろいました！"},
  en:{titleGoods:"Mela Mela Merch Log",subGoods:"Achichi Mela's official merch so far. Tick what you own to keep track of your collection.",
-   haveLabel:"Owned",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
+   haveLabel:"Owned",tpLabel:"Type",tpAll:"All",srchPh:"Search projects or items…",catLabel:"Project",cat_anniversary:"Anniversary",cat_birthday:"Birthday",cat_oversea:"Overseas",cat_other:"Other",yearLabel:"Year",statusLabel:"Status",sortLabel:"Sort",emptyMatch:"No matching items",tp_badge:"Badge",tp_acrylic_stand:"Acrylic stand",tp_keychain:"Keychain",tp_plushie:"Plushie",fAll:"All",fHave:"Owned",fNot:"Not yet",newFirst:"Newest first",oldFirst:"Oldest first",
    shop:"Official shop",post:"Announcement",markHave:"Mark as owned",spendLabel:"Spent",spendNote:"* The total is an estimate based on list prices in yen and excludes shipping and other fees. Items not priced in yen are converted at the exchange rate when they were released.",spendShow:"Click to show / hide the amount",spendMiss:" (excl. {n} without a price)",moreSeries:"Show more ({n} more)",isHave:"✓ Owned",qtyDec:"One less",qtyInc:"One more",unmark:"Unmark as owned",noImage:"No image",oversea:"Overseas",xPost:"Post",showPost:"Show announcement",hidePost:"Hide post",
    goodsNotice:"This site does not sell anything — please buy from the official shop. Images Ⓒ COVER.",
    haveNotice:"Your \"owned\" ticks are stored only in this browser on this device. They will be lost if you switch browsers or devices, use a private/incognito window, or clear your browsing history or site data (cookies). Use \"Export backup\" now and then to save a file — \"Import backup\" restores it, or moves your list to another device.",
@@ -227,7 +236,7 @@ addStrings({
 });
 
 const HAVE_KEY="mela-goods-have";
-let series=[], have=new Map(), filter="all", order="desc", showSpend=false; // showSpend：花費金額是否顯示（每次開頁面都先隱藏）
+let series=[], have=new Map(), filter="all", tfilter="all", cfilter="all", yfilter="all", query="", order="desc", showSpend=false; // showSpend：花費金額是否顯示（每次開頁面都先隱藏）
 const PAGE=10; let limit=PAGE; // 企劃一次顯示 10 個 // have：商品 id → 入手數量（1 以上）
 const openPosts=new Set(); // 已展開宣傳推文的企劃
 const openSeries=new Set(); // 已展開的企劃（展開後才產生商品卡片、才讀商品圖片）
@@ -253,7 +262,7 @@ const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12
 // 試算表標題 → 欄位（依序比對，先比對到的優先）
 const GCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["pnote",/project\s*note|企劃說明|企画メモ/i],
   ["date",/date|日期|日付|発売/i],["shop",/official|website|shop|商店|ショップ/i],["post",/x\s*link|tweet|推文|ポスト|^x$/i],
-  ["name",/goods\s*name|品名|商品名/i],["image",/picture|image|圖片|画像/i],["oversea",/oversea|海外/i],["price",/price|金額|價格|価格|値段|定価/i],["note",/note|說明|備註|メモ/i]];
+  ["name",/goods\s*name|品名|商品名/i],["type",/goods\s*type|類型|类型|種類|タイプ|^type$/i],["image",/picture|image|圖片|画像/i],["oversea",/oversea|海外/i],["price",/price|金額|價格|価格|値段|定価/i],["note",/note|說明|備註|メモ/i]];
 // CSV → 企劃
 function build(text){
   const rows=parseCSV(text||""); if(!rows.length){ series=[]; return; }
@@ -269,15 +278,16 @@ function build(text){
       cur.shop=goodUrl(get(r,"shop"))||cur.shop; cur.note=get(r,"pnote")||cur.note; if(isYes(get(r,"oversea"))) cur.oversea=true; }
     if(!cur) continue;
     const name=get(r,"name"), post=goodUrl(cleanX(get(r,"post")));
-    if(!name){ if(post) cur.post=post; const c=imgUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
+    if(!name){ if(post) cur.post=post; const pt=get(r,"type").toLowerCase(); if(pt) cur.ptype=pt; const c=imgUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
     const img=imgUrl(get(r,"image"));
-    cur.items.push({id:`${cur.key}|${name}`,name,image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
+    cur.items.push({id:`${cur.key}|${name}`,name,type:get(r,"type").toLowerCase().replace(/[\s_-]+/g," ").trim(),image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
       price:(v=>v?+v:null)(get(r,"price").replace(/[^\d.]/g,"")), // 金額（日圓）：先讀進來，頁面上還不顯示
       oversea:!(code||pname)&&isYes(get(r,"oversea"))});
   }
   for(const g of map.values()){ // x link 只有第一個商品有 → 算企劃的宣傳推文
     const withPost=g.items.filter(i=>i.post);
     if(!g.post&&withPost.length===1&&withPost[0]===g.items[0]){ g.post=g.items[0].post; g.items[0].post=""; } }
+  for(const g of map.values()){ const p=g.ptype||""; g.cat=/anniv|周年|記念|纪念/.test(p)?"anniversary":/birth|生日|誕生/.test(p)?"birthday":g.oversea?"oversea":"other"; }
   series=[...map.values()].filter(g=>g.items.length);
 }
 
@@ -313,18 +323,31 @@ function cardHTML(it,g){ const on=have.has(it.id), link=it.shop||g.shop||it.post
       ${haveHTML(it.id)}
     </div></article>`; }
 
+const fillStatus=(a,h)=>{ const el=$("gStatus"); el.innerHTML=[["all","fAll",a],["have","fHave",h],["not","fNot",a-h]].map(([k,l,c])=>`<option value="${k}">${t(l)} (${c})</option>`).join(""); el.value=filter; };
+const tpName=ty=>{ const k="tp_"+ty.replace(/ /g,"_"), v=t(k); return v&&v!==k?v:ty; };
 function render(){
   const all=series.flatMap(g=>g.items), n=all.filter(i=>have.has(i.id)).length;
   $("haveN").textContent=n; $("totalN").textContent=all.length;
-  const cnt={all:all.length,have:n,not:all.length-n};
-  $("haveChips").innerHTML=[["all","fAll"],["have","fHave"],["not","fNot"]].map(([k,l])=>`<button type="button" class="chip" data-filter="${k}" aria-pressed="${filter===k}">${t(l)} <span class="n">${cnt[k]}</span></button>`).join("");
   $("gOrder").value=order;
-  const keep=i=>filter==="all"||(filter==="have")===have.has(i.id);
+  // 企劃分類：試算表企劃那一列的 goods type 填 anniversary／birthday；沒填但標了 oversea 的算海外合作；其餘算其他
+  const cats=["anniversary","birthday","oversea","other"], ccount=new Map(cats.map(k=>[k,0]));
+  for(const g of series) ccount.set(g.cat,ccount.get(g.cat)+g.items.length);
+  $("catChips").innerHTML=[["all",t("tpAll"),all.length],...cats.map(k=>[k,t("cat_"+k),ccount.get(k)])].map(([k,l,c])=>`<button type="button" class="chip" data-cat="${k}" aria-pressed="${cfilter===k}">${esc(l)} <span class="n">${c}</span></button>`).join("");
+  // 種類篩選（goods type 欄）：常見的四種固定列出，其餘照出現順序
+  const tcount=new Map(); for(const i of all) if(i.type) tcount.set(i.type,(tcount.get(i.type)||0)+1);
+  const known=["badge","acrylic stand","keychain","plushie"], types=[...known,...[...tcount.keys()].filter(k=>!known.includes(k))];
+  $("typeChips").innerHTML=[["all",t("tpAll"),all.length],...types.map(k=>[k,tpName(k),tcount.get(k)||0])].map(([k,l,c])=>`<button type="button" class="chip" data-type="${esc(k)}" aria-pressed="${tfilter===k}">${esc(l)} <span class="n">${c}</span></button>`).join("");
+  const years=[...new Set(series.map(g=>(g.date||"").slice(0,4)).filter(Boolean))].sort().reverse(); if(yfilter!=="all"&&!years.includes(yfilter)) yfilter="all";
+  $("gYear").innerHTML=`<option value="all">${t("tpAll")}</option>`+years.map(y=>`<option value="${y}">${y}</option>`).join(""); $("gYear").value=yfilter;
+  fillStatus(all.length,n);
+  const q=query.trim().toLowerCase(), hay=(i,g)=>[i.name,i.note,i.type,i.type&&tpName(i.type),g.name,g.key,g.note].join("\n").toLowerCase();
+  const keep=(i,g)=>(filter==="all"||(filter==="have")===have.has(i.id))&&(tfilter==="all"||i.type===tfilter)&&(!q||hay(i,g).includes(q));
+  const pass=g=>(cfilter==="all"||g.cat===cfilter)&&(yfilter==="all"||(g.date||"").startsWith(yfilter));
   const list=[...series].sort((a,b)=>(a.date||"").localeCompare(b.date||"")*(order==="asc"?1:-1));
-  const vis=list.filter(g=>g.items.some(keep)), rest=vis.length-limit;
-  const html=vis.slice(0,limit).map(g=>{ const items=g.items.filter(keep);
+  const vis=list.filter(g=>pass(g)&&g.items.some(i=>keep(i,g))), rest=vis.length-limit;
+  const html=vis.slice(0,limit).map(g=>{ const items=g.items.filter(i=>keep(i,g));
     const gn=g.items.filter(i=>have.has(i.id)).length, pct=Math.round(gn/g.items.length*100);
-    const open=openSeries.has(g.key)||filter!=="all"; // 篩選已入手／未入手時全部展開
+    const open=openSeries.has(g.key)||filter!=="all"||tfilter!=="all"||!!q; // 篩選已入手／未入手／類型時全部展開
     return `<section class="g-series${open?" open":""}">
       <div class="g-head">
         <button type="button" class="g-cover" data-series="${esc(g.key)}" aria-expanded="${open}" aria-label="${esc(g.name)}">${g.cover?`<img src="${esc(g.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'g-ph',innerHTML:bagSvg}))">`:`<span class="g-ph">${bagSvg}</span>`}</button>
@@ -340,7 +363,7 @@ function render(){
       ${open?`<div class="g-grid">${items.map(i=>cardHTML(i,g)).join("")}</div>`:""}
     </section>`; }).join("")+(rest>0?`<button type="button" class="g-more" data-more-series>${tfm("moreSeries",{n:rest})}</button>`:"");
   updateSpend();
-  $("gList").innerHTML=html||`<div class="empty"><h2>${t(!all.length?"empty":filter==="have"?"emptyHave":"emptyNot")}</h2></div>`;
+  $("gList").innerHTML=html||`<div class="empty"><h2>${t(!all.length?"empty":(q||tfilter!=="all"||cfilter!=="all"||yfilter!=="all")?"emptyMatch":filter==="have"?"emptyHave":"emptyNot")}</h2></div>`;
   if($("gList").querySelector(".g-post")) loadPosts().then(()=>window.twttr?.widgets?.load($("gList")));
 }
 function seriesLinks(g){ const x=isXPost(g.post), open=openPosts.has(g.key);
@@ -353,7 +376,8 @@ function loadPosts(){ if(postsP) return postsP;
     s.onload=()=>window.twttr?.ready?twttr.ready(()=>res()):res(); s.onerror=()=>res(); document.head.appendChild(s); }); }
 
 document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
-  if(b.dataset.filter){ filter=b.dataset.filter; limit=PAGE; return render(); }
+  if(b.dataset.cat!=null){ cfilter=b.dataset.cat; limit=PAGE; return render(); }
+  if(b.dataset.type!=null){ tfilter=b.dataset.type; limit=PAGE; return render(); }
   if(b.hasAttribute("data-more-series")){ limit+=PAGE; return render(); }
   if(b.dataset.series!=null){ const k=b.dataset.series; openSeries.has(k)?openSeries.delete(k):openSeries.add(k); return render(); }
   if(b.dataset.post!=null){ const k=b.dataset.post; openPosts.has(k)?openPosts.delete(k):openPosts.add(k); return render(); }
@@ -368,7 +392,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b
     const g=series.find(s=>s.items.some(i=>i.id===id)), gn=g.items.filter(i=>have.has(i.id)).length, p=card.closest(".g-series").querySelector(".g-prog");
     p.classList.toggle("full",gn===g.items.length); p.querySelector("b").style.width=Math.round(gn/g.items.length*100)+"%"; p.lastChild.textContent=`${gn} / ${g.items.length}`;
     $("haveN").textContent=series.flatMap(s=>s.items).filter(i=>have.has(i.id)).length; updateSpend();
-    const cnt=$("haveChips").querySelectorAll(".n"), a=+$("totalN").textContent, h=+$("haveN").textContent; cnt[1].textContent=h; cnt[2].textContent=a-h; }
+    fillStatus(+$("totalN").textContent,+$("haveN").textContent); }
 });
 // ---- 已入手的備份：匯出成 .json 檔、再匯入（合併，不會取消原本的勾選） ----
 const tfm=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
@@ -392,6 +416,9 @@ $("bkFile").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
     let m=0; for(const [id,k] of inc) if(k>(have.get(id)||0)){ have.set(id,k); m++; } // 合併：數量取較多的
     saveHave(); render(); bkMsg(tfm("bkImported",{n:inc.size,m}),"ok");
   }catch(err){ bkMsg(t("bkBad"),"err"); } };
+$("gStatus").onchange=e=>{ filter=e.target.value; limit=PAGE; render(); };
+$("gYear").onchange=e=>{ yfilter=e.target.value; limit=PAGE; render(); };
+$("gQ").oninput=e=>{ query=e.target.value; limit=PAGE; render(); };
 $("gOrder").onchange=e=>{ order=e.target.value; limit=PAGE; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
 window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
 MelaShare.init({kind:"goods",panel:$("shareBox"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),

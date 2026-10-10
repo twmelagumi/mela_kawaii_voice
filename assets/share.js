@@ -12,7 +12,7 @@
  * 兩頁的紀錄都放在同一個代碼裡：在其中一頁匯入，另一頁的部分先存在 localStorage（mela-share-pending），下次開那一頁時自動套用。
  */
 const MelaShare=(()=>{
-  const GK="mela-goods-have", VK="mela-voice-have", PK="mela-share-pending", PREFIX="MELA1.", QR_SRC="assets/qrcode.min.js?v=202610101618";
+  const GK="mela-goods-have", VK="mela-voice-have", PK="mela-share-pending", PREFIX="MELA1.", QR_SRC="assets/qrcode.min.js?v=202610101626";
   addStrings({
    zh:{shTitle:"搬到其他裝置：代碼、連結、QR code",shDesc:"代碼裡包含「周邊」和「音聲」兩頁已入手的紀錄，在任一頁匯入，兩頁都會套用（合併，不會取消原本勾的）。代碼只存雜湊值、看不出品名；匯入時比對目前的清單，品名改過或已下架的品項對不上。",
      shCopyCode:"複製代碼",shCopyLink:"複製匯入連結",shQR:"顯示 QR code",shHideQR:"收起 QR code",shPaste:"貼上代碼匯入",shImport:"匯入",shCancel:"取消",shDownload:"下載圖片",
