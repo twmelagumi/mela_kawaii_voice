@@ -13,7 +13,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了這個檔案，記得把 index.html、songs.html 裡的 ?v= 版本號也一起改。
-const LAST_UPDATED = "2026-10-10 16:53";
+const LAST_UPDATED = "2026-10-11 20:12";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -165,7 +165,7 @@ function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; 
 
 /* ===== 往下捲時把上方標題列縮小（往下捲超過 120px 縮小，捲回最頂端才恢復，避免來回跳動） ===== */
 (function(){ let on=false; const f=()=>{ const y=window.scrollY;
-  if(!on&&y>120){ on=true; document.body.classList.add("scrolled"); } else if(on&&y<=0){ on=false; document.body.classList.remove("scrolled"); document.dispatchEvent(new Event("mela:unscrolled")); } };
+  if(!on&&y>120){ on=true; document.body.classList.add("scrolled"); } else if(on&&y<=0){ on=false; document.body.classList.remove("scrolled"); } };
   window.addEventListener("scroll",f,{passive:true}); document.addEventListener("DOMContentLoaded",f); })();
 
 /* ===== 往下捲後，右上角浮出「選單」鈕：點開列出所有分頁（上方那排分頁此時會收起來，由這顆鈕取代） ===== */
@@ -175,13 +175,15 @@ function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; 
   const panel=document.createElement("nav"); panel.id="fabPanel"; panel.className="fab-panel"; panel.hidden=true; panel.setAttribute("aria-label","Pages");
   nav.querySelectorAll("a").forEach(a=>panel.appendChild(a.cloneNode(true))); // 連結、目前所在頁（aria-current）、多語文字都沿用上面那排分頁
   document.body.append(btn,panel);
-  const place=()=>{ if(!document.body.classList.contains("scrolled")) return; const tb=document.querySelector(".topbar"), y=(tb?tb.getBoundingClientRect().bottom:0)+10;
+  const hd=document.querySelector(".topbar>header")||document.querySelector("header");
+  const place=()=>{ const gone=nav.getBoundingClientRect().bottom<(hd?hd.getBoundingClientRect().bottom:0)+4; // 分頁列已經捲到標題列後面 → 浮出選單鈕
+    document.body.classList.toggle("nav-gone",gone); if(!gone){ set(false); return; }
+    const y=(hd?hd.getBoundingClientRect().bottom:0)+10;
     btn.style.top=y+"px"; panel.style.top=(y+btn.offsetHeight+8)+"px"; };
   const set=on=>{ panel.hidden=!on; btn.setAttribute("aria-expanded",on); if(on) place(); };
   btn.onclick=()=>set(panel.hidden);
   document.addEventListener("click",e=>{ if(!panel.hidden&&!e.target.closest("#fabPanel,#fabMenu")) set(false); });
   document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!panel.hidden){ set(false); btn.focus(); } });
-  document.addEventListener("mela:unscrolled",()=>set(false));
   let q=0; const sched=()=>{ if(q) return; q=requestAnimationFrame(()=>{ q=0; place(); }); };
   window.addEventListener("scroll",sched,{passive:true}); window.addEventListener("resize",sched); place(); }
   if(document.querySelector(".views")) init(); else document.addEventListener("DOMContentLoaded",init); })();
