@@ -1,11 +1,17 @@
 [
   {
+    "date": "2026-10-14",
+    "type": "stream",
+    "title": "【のじゃEnglish】soccer?or football?",
+    "url": "https://www.youtube.com/watch?v=nyvtNTotwdw",
+    "upcoming": true,
+    "start": "2026-10-13T22:00:00Z"
+  },
+  {
     "date": "2026-10-12",
     "type": "stream",
     "title": "【マシュマロ雑談】１００個の質問に答えますのじゃ",
-    "url": "https://www.youtube.com/watch?v=W6shqY3W-Es",
-    "upcoming": true,
-    "start": "2026-10-12T10:00:00Z"
+    "url": "https://www.youtube.com/watch?v=W6shqY3W-Es"
   },
   {
     "date": "2026-10-11",
