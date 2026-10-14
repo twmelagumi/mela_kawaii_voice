@@ -1,11 +1,17 @@
 [
   {
+    "date": "2026-10-15",
+    "type": "stream",
+    "title": "３行しか文字読めないけど爆弾解除できますか？",
+    "url": "https://www.youtube.com/watch?v=tQS9sZ_zoZI",
+    "upcoming": true,
+    "start": "2026-10-15T11:00:00Z"
+  },
+  {
     "date": "2026-10-14",
     "type": "stream",
     "title": "ホロライブ新人ユニットがホラゲ「R.E.P.O.」で遊ぶのじゃ",
-    "url": "https://www.youtube.com/watch?v=xKhbOWNoYN8",
-    "upcoming": true,
-    "start": "2026-10-14T11:00:00Z"
+    "url": "https://www.youtube.com/watch?v=xKhbOWNoYN8"
   },
   {
     "date": "2026-10-14",
@@ -15,11 +21,15 @@
   },
   {
     "date": "2026-10-14",
+    "type": "short",
+    "title": "熱千めらのプロフィール #ホロライブ",
+    "url": "https://www.youtube.com/watch?v=GfGdVEkJ_j8"
+  },
+  {
+    "date": "2026-10-14",
     "type": "stream",
     "title": "【防災訓練】インターネット・ヒヤリハットをご紹介しますのじゃ",
-    "url": "https://www.youtube.com/watch?v=F53LLDirjFw",
-    "upcoming": true,
-    "start": "2026-10-14T03:00:00Z"
+    "url": "https://www.youtube.com/watch?v=F53LLDirjFw"
   },
   {
     "date": "2026-10-12",
