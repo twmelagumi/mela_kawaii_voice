@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610151635">
+<link rel="stylesheet" href="assets/style.css?v=202610151649">
 </head>
 <body data-title-key="titleCalendar">
 <div class="wrap">
@@ -38,7 +38,7 @@
     <a href="timeline.html" aria-current="page" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>
   </nav>
-  <nav class="views sub-views" aria-label="History／Calendar">
+  <nav class="views sub-views" data-i18n-aria="tabShift">
     <a href="timeline.html" data-i18n="tabShiftLog"></a>
     <a href="calendar.html" aria-current="page" data-i18n="tabShiftCal"></a>
   </nav>
@@ -57,34 +57,11 @@
     <p class="cal-note" data-i18n="calNote"></p>
   </section>
 
-  <footer>
-    <p class="official-label" data-i18n="officialLinks"></p>
-    <nav class="official" aria-label="Official links">
-      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
-      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
-      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
-      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
-    </nav>
-    <p data-i18n="footer"></p>
-    <p class="official-label" data-i18n="unofficialLinks"></p>
-    <div class="dc">
-      <span class="dc-tag" data-i18n="dcPromo"></span>
-      <span class="dc-label" data-i18n="dcLabel"></span>
-      <ul>
-        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
-        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
-        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
-      </ul>
-      <span class="dc-join" data-i18n="dcJoin"></span>
-    </div>
-    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
-    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
-    <p class="rights" data-i18n="rights"></p>
-  </footer>
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610151635"></script>
-<script src="assets/timeline-data.js?v=202610151635"></script>
+<script src="assets/common.js?v=202610151649"></script>
+<script src="assets/timeline-data.js?v=202610151649"></script>
 <script>
 /* ===== 出勤 Calendar（月曆）=====
  * 資料跟編年史一樣（assets/timeline-data.js：timeline_auto.json＋timeline.json＋試算表）。

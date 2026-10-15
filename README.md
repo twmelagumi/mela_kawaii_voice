@@ -12,13 +12,19 @@
 | `voicegoods.html` | 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；資料來自 Google 試算表「Voice」分頁，見下面） |
 | `assets/timeline-data.js` | 編年史和月曆共用的資料讀取／合併程式 |
 | `assets/style.css` | 各頁共用的外觀（顏色、字體、版面） |
-| `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器） |
+| `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器、頁尾、浮動選單、回到頁面上方、深色／淺色切換） |
+| `assets/collect.js` | 周邊頁和音聲頁共用的程式（試算表讀取、花費、.json 備份） |
+| `assets/share.js`、`assets/qrcode.min.js` | 周邊／音聲「已入手」的轉移代碼、匯入連結、QR code（見最後「收藏代碼」） |
+| `subs.html` | 隱藏頁（不給搜尋引擎收錄，導覽列不會連到） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |
 | `songs.json` | 「歌曲」分頁的歌單，由管理者自己編輯後上傳 |
 | `timeline.json` | 編年史的固定事件（出道日、生日、重要直播…） |
 | `timeline_auto.json` | 編年史自動抓到的 YouTube 直播／影片（GitHub Actions 自動更新，不用手動改） |
+| `song_stats.json` | 歌單原創曲／Cover 的 YouTube 播放次數（GitHub Actions 自動更新） |
 | `scripts/update_timeline.py` | 自動抓 YouTube 的程式 |
 | `.github/workflows/update-timeline.yml` | 每天早上 9 點（台灣時間）執行上面的程式 |
+| `scripts/update_song_stats.py`、`.github/workflows/update-song-stats.yml` | 每兩天更新 `song_stats.json` |
+| `scripts/bump_version.py` | 改了網站程式後、commit 前執行：更新頁尾「最後更新」時間和各頁的 `?v=` 版本號 |
 
 網站片段有兩個來源，會自動合併、去掉重複：
 
@@ -115,12 +121,20 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 - 直接雙擊 `index.html` 會讀不到片段、YouTube 也會出錯。請用 GitHub Pages 的網址看，或在資料夾執行 `python -m http.server` 後開 http://localhost:8000 。
 - 換到其他網路空間時，一樣把 `index.html` 和 `clips.json` 放在同一個資料夾就好。
+- 改了 html 或 `assets/` 裡的程式，commit 前在 repo 根目錄執行 `python scripts/bump_version.py`：會把頁尾的「最後更新」改成現在時間，並更新所有頁面引用 `assets/` 的 `?v=` 版本號，讓訪客的瀏覽器抓新版。只改資料檔（例如 `songs.json`）時不用執行。
+
+## 網站共用的版面
+
+- **分頁**：第一層是「回音／歌單／出勤紀錄／繳稅簿」。「出勤紀錄」底下有第二層 History（`timeline.html`）／Calendar（`calendar.html`），「繳稅簿」底下有第二層 周邊（`goods.html`）／音聲（`voicegoods.html`）。第二層寫在各頁 html 的 `<nav class="views sub-views">`；分頁名稱的翻譯在 `assets/common.js`（`tabShift`、`tabShiftLog`、`tabShiftCal`、`tabTax`、`tabGoods`、`tabVoiceGoods`）。
+- **標題列**固定在畫面最上方，大小不變；分頁那排會跟著頁面捲走，捲走後右上角浮出「選單」鈕（包含第二層）。往下捲一段後左下角有「回到頁面上方」。
+- **頁尾**各頁共用，內容寫在 `assets/common.js` 的 `FOOTER_HTML`，頁面裡只放空的 `<footer></footer>`。改官方連結、Discord 連結改這裡就好。
+- **深色／淺色**：「非官方粉絲網站」標籤右邊的按鈕切換，選擇存在訪客瀏覽器（`mela-theme`）；沒選過就跟系統設定。顏色變數在 `assets/style.css` 開頭（`:root` 和 `[data-theme="dark"]`）。
 
 ---
 
 ## 「歌曲」分頁（songs.json）
 
-網站上方有「聲音／歌曲」兩個分頁，歌曲分頁是獨立的 `songs.html`。歌單不開放投稿，內容全部來自 `songs.json`。
+歌單頁是獨立的 `songs.html`（上方分頁的「歌單」）。歌單不開放投稿，內容全部來自 `songs.json`。
 直接分享歌單頁的網址：`https://你的網址/songs.html`（舊的 `#songs` 連結會自動轉過去）
 
 ### 格式

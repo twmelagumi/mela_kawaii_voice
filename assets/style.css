@@ -1,5 +1,5 @@
-/* 熱千めら めらめら出勤紀錄 — shared styles for index.html (voices), songs.html (songs) and timeline.html.
-   Layout: header + page tabs, then each page's own content; playing opens a player sheet at the bottom. */
+/* 熱千めら めらめら出勤紀錄 — 各頁共用的樣式（所有 html 都會載入；頁面專用的寫在各頁的 <style>）。
+   版面：固定在上方的標題列＋分頁（可有第二層），下面是各頁內容；播放時頁面下方出現播放器。 */
 :root{
   --bg:#f1f5fa; --surface:#ffffff; --ink:#1d2836; --muted:#5f6d7e; --line:#d8e2ee;
   --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#1f7ad0; --accent-soft:#e2f1ff; --wave:#b3c6da;
@@ -474,3 +474,28 @@ body.has-player:not(.player-mini) .totop{display:none} /* 底部整排播放器�
 .sub-views{border-bottom-color:transparent}
 .sub-views a{font-size:14px;padding:6px 16px}
 .fab-panel a.sub{padding-left:30px;font-size:14px;font-weight:600}
+
+/* ===== 收藏頁（周邊 goods.html／音聲 voicegoods.html）共用 ===== */
+.g-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.g-frow{gap:6px 10px;align-items:flex-start}
+.g-frow .chips-label{padding-top:6px;min-width:2.5em}
+.g-notice{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+/* 備份／匯入的結果訊息 */
+.g-bk-msg{margin:0;font-size:12px}
+.g-bk-msg.ok{color:var(--accent-text)}
+.g-bk-msg.err{color:#d93d42}
+.g-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.g-links{display:flex;flex-wrap:wrap;gap:8px}
+.g-links a{font-size:12px;padding:5px 12px}
+.g-prog{display:flex;align-items:center;gap:8px;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-prog i{display:block;width:72px;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.g-prog i b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+.g-prog.full{color:var(--accent-text)}
+/* 花費總金額：預設隱藏數字，按一下顯示 */
+.g-spend{padding:4px 12px;font-size:13px;gap:6px;background:var(--surface)}
+.g-spend b{font-size:16px!important;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.g-spend[aria-pressed="false"] b{color:var(--muted);letter-spacing:.12em}
+.g-spend small{font-size:11px;color:var(--muted)}
+.g-spend-note{flex-basis:100%;margin:-4px 0 0;font-size:11px;line-height:1.6;color:var(--muted);text-align:right}
+@media (max-width:600px){.g-spend-note{text-align:left}}
+body.scrolled .g-spend-note{display:none}

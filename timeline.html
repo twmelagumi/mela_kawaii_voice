@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610151635">
+<link rel="stylesheet" href="assets/style.css?v=202610151649">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -38,7 +38,7 @@
     <a href="timeline.html" aria-current="page" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>
   </nav>
-  <nav class="views sub-views" aria-label="History／Calendar">
+  <nav class="views sub-views" data-i18n-aria="tabShift">
     <a href="timeline.html" aria-current="page" data-i18n="tabShiftLog"></a>
     <a href="calendar.html" data-i18n="tabShiftCal"></a>
   </nav>
@@ -64,34 +64,11 @@
     <div class="tl anim" id="tl"></div>
   </section>
 
-  <footer>
-    <p class="official-label" data-i18n="officialLinks"></p>
-    <nav class="official" aria-label="Official links">
-      <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
-      <a class="ob ob-x" href="https://x.com/achichi_mela" target="_blank" rel="noopener"><span>X</span><b>@achichi_mela</b></a>
-      <a class="ob ob-yt" href="https://www.youtube.com/@hololive_ASOBIMAWARITAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>アソビ★まわり隊！</b></a>
-      <a class="ob ob-holo" href="https://hololive.hololivepro.com/talents/achichi-mela/" target="_blank" rel="noopener"><b data-i18n="holoOfficial"></b></a>
-    </nav>
-    <p data-i18n="footer"></p>
-    <p class="official-label" data-i18n="unofficialLinks"></p>
-    <div class="dc">
-      <span class="dc-tag" data-i18n="dcPromo"></span>
-      <span class="dc-label" data-i18n="dcLabel"></span>
-      <ul>
-        <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
-        <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
-        <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
-      </ul>
-      <span class="dc-join" data-i18n="dcJoin"></span>
-    </div>
-    <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
-    <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
-    <p class="rights" data-i18n="rights"></p>
-  </footer>
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610151635"></script>
-<script src="assets/timeline-data.js?v=202610151635"></script>
+<script src="assets/common.js?v=202610151649"></script>
+<script src="assets/timeline-data.js?v=202610151649"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -114,21 +91,21 @@ addStrings({
  zh:{titleTimeline:"めらめら出勤紀錄",subTimeline:"めらちゃん的直播、影片和紀念日，沿著時間線一路往下看。",events:"個事件",
    ty_all:"全部",ty_stream:"直播",ty_collab:"聯動",ty_release:"影片",ty_short:"Shorts",ty_event:"事件",ty_offline:"現地活動",ty_live:"LIVE",ty_anniv:"紀念日",ty_auto:"收錄",withLabel:"聯動對象",openLink:"開啟連結",upcoming:"預定",startAt:"{t} 開始",
    sideLabel:"排法",sideAlt:"左右交錯",sideType:"依種類分邊",newFirst:"新 → 舊",oldFirst:"舊 → 新",toToday:"跳到今天",today:"今天",
-   periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",daysAgo:"{n} 天前",
+   periodLabel:"期間",recentYear:"最近一年",allPeriod:"全部",wholeYear:"整年",yearFmt:"{y} 年",monthChip:"{m} 月",olderN:"顯示更早的活動（{n}）",emptyPeriod:"這段期間沒有活動",monthFmt:"{y} 年 {m} 月",wd:"日一二三四五六",wdFmt:"週{w}",inDays:"還有 {n} 天",
    msYear:"出道 {n} 週年",yearly:"{t} {n} 週年",
    autoTitle:"這天唱的歌",showPost:"顯示推文",hidePost:"收起推文",earlier:"更早",nItems:"{n} 件",songsN:"歌 {n} 首",moreN:"還有 {n} 個 ▾",less:"收合 ▴",
    empty:"還沒有事件",emptyHint:"更新 timeline.json 後就會出現在這裡。",k_song:"歌"},
  ja:{titleTimeline:"めらめら出勤記録",subTimeline:"めらちゃんの配信・動画・記念日を、時間の流れにそってたどれます。",events:"件",
    ty_all:"すべて",ty_stream:"配信",ty_collab:"コラボ",ty_release:"動画",ty_short:"ショート",ty_event:"イベント",ty_offline:"公式イベント",ty_live:"LIVE",ty_anniv:"記念日",ty_auto:"収録",withLabel:"コラボ相手",openLink:"リンクを開く",upcoming:"予定",startAt:"{t} 開始",
    sideLabel:"並べ方",sideAlt:"左右交互",sideType:"種類で左右",newFirst:"新しい順",oldFirst:"古い順",toToday:"今日へ",today:"今日",
-   periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",daysAgo:"{n} 日前",
+   periodLabel:"期間",recentYear:"直近1年",allPeriod:"すべて",wholeYear:"通年",yearFmt:"{y}年",monthChip:"{m}月",olderN:"もっと前を表示（{n}）",emptyPeriod:"この期間のイベントはありません",monthFmt:"{y}年{m}月",wd:"日月火水木金土",wdFmt:"（{w}）",inDays:"あと {n} 日",
    msYear:"デビュー {n} 周年",yearly:"{t} {n} 周年",
    autoTitle:"この日の歌",showPost:"ポストを表示",hidePost:"ポストを閉じる",earlier:"それ以前",nItems:"{n} 件",songsN:"歌 {n} 曲",moreN:"ほか {n} 件 ▾",less:"閉じる ▴",
    empty:"まだイベントがありません",emptyHint:"timeline.json を更新するとここに表示されます。",k_song:"歌"},
  en:{titleTimeline:"Mela Mela Shift Log",subTimeline:"Mela's streams, videos and anniversaries, one dot at a time.",events:"events",
    ty_all:"All",ty_stream:"Stream",ty_collab:"Collab",ty_release:"Video",ty_short:"Shorts",ty_event:"Event",ty_offline:"Offline Event",ty_live:"LIVE",ty_anniv:"Anniversary",ty_auto:"Clips",withLabel:"With",openLink:"Open link",upcoming:"Upcoming",startAt:"starts {t}",
    sideLabel:"Layout",sideAlt:"Alternate",sideType:"By type",newFirst:"Newest first",oldFirst:"Oldest first",toToday:"Jump to today",today:"Today",
-   periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",daysAgo:"{n} days ago",
+   periodLabel:"Period",recentYear:"Past year",allPeriod:"All",wholeYear:"Whole year",yearFmt:"{y}",monthChip:"{M}",olderN:"Show earlier ({n})",emptyPeriod:"Nothing in this period",monthFmt:"{M} {y}",wd:"Sun Mon Tue Wed Thu Fri Sat",wdFmt:"{w}",inDays:"in {n} days",
    msYear:"Debut anniversary #{n}",yearly:"{t} — year {n}",
    autoTitle:"Songs from this day",showPost:"Show post",hidePost:"Hide post",earlier:"earlier",nItems:"{n}",songsN:"{n} songs",moreN:"{n} more ▾",less:"Show less ▴",
    empty:"No events yet",emptyHint:"Add some to timeline.json and they'll show up here.",k_song:"Song"}
@@ -300,7 +277,6 @@ function reveal(){ const els=document.querySelectorAll(".tl-item");
   io?.disconnect(); io=new IntersectionObserver(es=>es.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add("in"); shown.add(x.target.dataset.id); io.unobserve(x.target);} }),{rootMargin:"0px 0px -40px 0px"});
   els.forEach(x=>{ if(!x.classList.contains("in")) io.observe(x); }); }
 
-const findItem=id=>items.find(e=>e.id===id);
 document.addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.type){ fType=b.dataset.type; return render(); }
