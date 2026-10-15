@@ -158,6 +158,97 @@
         "en": "\"A Tale of the Secret Saint\" (転生した大聖女は、聖女であることをひた隠す) is one of Mela's favorite works."
       },
       "answer": true
+    },
+    {
+      "id": "unit-members",
+      "type": "tf",
+      "q": {
+        "zh": "アソビ★まわり隊！的成員是熱千めら、宙科そぴあ、鈴鳴つづり、百灯キョーコ。",
+        "ja": "アソビ★まわり隊！のメンバーは、熱千めら・宙科そぴあ・鈴鳴つづり・百灯キョーコである。",
+        "en": "The members of ASOBI★MAWARITAI! are Achichi Mela, Sorashina Sopia, Suzunari Tsuzuri and Hyakuto Kyoko."
+      },
+      "answer": true,
+      "explain": {
+        "zh": "沒錯，就是這 4 位！",
+        "ja": "正解！この4人です。",
+        "en": "Correct — those are the four members!"
+      }
+    },
+    {
+      "id": "muen-sokusai",
+      "type": "tf",
+      "q": {
+        "zh": "「無炎息災」念做「むえんいえん」。",
+        "ja": "「無炎息災」の読み方は「むえんいえん」である。",
+        "en": "\"無炎息災\" is read \"muen'ien\"."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "正確念法是「むびょうそくさい」。",
+        "ja": "正しい読み方は「むびょうそくさい」です。",
+        "en": "It's read \"mubyōsokusai\"."
+      }
+    },
+    {
+      "id": "role",
+      "type": "tf",
+      "q": {
+        "zh": "めら是【アソビ★まわり隊！】的「よしよし」擔當。",
+        "ja": "めらは【アソビ★まわり隊！】の「よしよし」担当である。",
+        "en": "In ASOBI★MAWARITAI!, Mela is in charge of \"yoshi-yoshi\" (head pats)."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "めら是「ご利益」擔當。",
+        "ja": "めらは「ご利益」担当です。",
+        "en": "Mela is in charge of \"goriyaku\" (blessings / good fortune)."
+      }
+    },
+    {
+      "id": "first-cover",
+      "type": "choice",
+      "q": {
+        "zh": "めら的第一首翻唱曲是哪一首？",
+        "ja": "めらの初めてのカバー曲は？",
+        "en": "What was Mela's first cover song?"
+      },
+      "options": [
+        "私は、わたしの事が好き。",
+        "可愛くてごめん",
+        "ダーリンダンス"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "fav-game",
+      "type": "tf",
+      "q": {
+        "zh": "めら最喜歡玩的遊戲是《R.E.P.O.》。",
+        "ja": "めらが一番好きなゲームは『R.E.P.O.』である。",
+        "en": "Mela's favorite game to play is R.E.P.O."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "めら最喜歡的是《GeoGuessr》。",
+        "ja": "めらが一番好きなのは『GeoGuessr』です。",
+        "en": "Her favorite is GeoGuessr."
+      }
+    },
+    {
+      "id": "debut-date",
+      "type": "choice",
+      "q": {
+        "zh": "めら的初配信是哪一天？",
+        "ja": "めらの初配信はいつ？",
+        "en": "When was Mela's debut stream?"
+      },
+      "options": [
+        "2026/9/17",
+        "2026/9/24",
+        "2026/10/1"
+      ],
+      "answer": 2,
+      "shuffle": false
     }
   ]
 }
