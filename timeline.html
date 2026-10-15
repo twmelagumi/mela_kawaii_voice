@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610151625">
+<link rel="stylesheet" href="assets/style.css?v=202610151635">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -35,9 +35,12 @@
   <nav class="views">
     <a href="./" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
-    <a href="timeline.html" aria-current="page" data-i18n="tabTimeline"></a>
-    <a href="calendar.html" data-i18n="tabCalendar"></a>
+    <a href="timeline.html" aria-current="page" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>
+  </nav>
+  <nav class="views sub-views" aria-label="History／Calendar">
+    <a href="timeline.html" aria-current="page" data-i18n="tabShiftLog"></a>
+    <a href="calendar.html" data-i18n="tabShiftCal"></a>
   </nav>
   </div>
 
@@ -87,8 +90,8 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610151625"></script>
-<script src="assets/timeline-data.js?v=202610151625"></script>
+<script src="assets/common.js?v=202610151635"></script>
+<script src="assets/timeline-data.js?v=202610151635"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
