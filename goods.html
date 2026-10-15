@@ -7,7 +7,8 @@
 <meta name="description" content="熱千めら 官方周邊紀錄（非官方粉絲網站）">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=202610151612">
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=202610151617">
 <style>
 /* ===== 周邊頁 ===== */
 .view{gap:10px}
@@ -65,7 +66,8 @@
 .g-card.have .g-badge{transform:scale(1)}
 .g-body{display:flex;flex-direction:column;gap:6px;padding:10px 12px 12px;flex:1;min-width:0}
 .g-ovs{background:#ffe9d6!important;color:#b5520f!important}
-@media (prefers-color-scheme:dark){.g-ovs{background:#3a2616!important;color:#ffaa70!important}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .g-ovs{background:#3a2616!important;color:#ffaa70!important}}
+:root[data-theme="dark"] .g-ovs{background:#3a2616!important;color:#ffaa70!important}
 .g-type{align-self:flex-start;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent-text)}
 .g-body h3{margin:0;font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
 .g-body .g-note{margin:0;font-size:12px;color:var(--muted);white-space:pre-line;overflow-wrap:anywhere}
@@ -182,8 +184,8 @@ body.scrolled .g-spend-note{display:none}
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610151612"></script>
-<script src="assets/share.js?v=202610151612"></script>
+<script src="assets/common.js?v=202610151617"></script>
+<script src="assets/share.js?v=202610151617"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
@@ -355,7 +357,7 @@ function render(){
           <span class="g-prog${gn===g.items.length?" full":""}" title="${t("haveLabel")}"><i><b style="width:${pct}%"></b></i>${gn} / ${g.items.length}</span></div>
         </div>
       </div>
-      ${isXPost(g.post)&&openPosts.has(g.key)?`<div class="g-post"><blockquote class="twitter-tweet" data-dnt="true" data-lang="${{zh:"zh-tw",ja:"ja",en:"en"}[lang]}" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(g.post)}">${t("openX")} ↗</a></blockquote></div>`:""}
+      ${isXPost(g.post)&&openPosts.has(g.key)?`<div class="g-post"><blockquote class="twitter-tweet" data-dnt="true" data-lang="${{zh:"zh-tw",ja:"ja",en:"en"}[lang]}" data-theme="${isDark()?"dark":"light"}"><a href="${esc(g.post)}">${t("openX")} ↗</a></blockquote></div>`:""}
       ${open?`<div class="g-grid">${items.map(i=>cardHTML(i,g)).join("")}</div>`:""}
     </section>`; }).join("")+(rest>0?`<button type="button" class="g-more" data-more-series>${tfm("moreSeries",{n:rest})}</button>`:"");
   updateSpend();

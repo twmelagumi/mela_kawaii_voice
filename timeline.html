@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
-<link rel="stylesheet" href="assets/style.css?v=202610151612">
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=202610151617">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -87,8 +88,8 @@
   </footer>
 </div>
 
-<script src="assets/common.js?v=202610151612"></script>
-<script src="assets/timeline-data.js?v=202610151612"></script>
+<script src="assets/common.js?v=202610151617"></script>
+<script src="assets/timeline-data.js?v=202610151617"></script>
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -207,7 +208,7 @@ function cardHTML(e,isL,future,foldable){
     +(postUrl?`<button type="button" data-post="${e.id}" aria-expanded="${openPosts.has(e.id)}">${openPosts.has(e.id)?t("hidePost"):t("showPost")}</button>`:"")
     +(foldable?`<button type="button" data-card="${e.id}">${t("less")}</button>`:"");
   // 展開的推文：用 X 官方嵌入（widgets.js 在 render 後才載入）
-  const postBox=postUrl&&openPosts.has(e.id)?`<div class="tl-post"><blockquote class="twitter-tweet" data-dnt="true" data-lang="${{zh:"zh-tw",ja:"ja",en:"en"}[lang]}" data-theme="${matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}"><a href="${esc(postUrl)}">${t("openX")} ↗</a></blockquote></div>`:"";
+  const postBox=postUrl&&openPosts.has(e.id)?`<div class="tl-post"><blockquote class="twitter-tweet" data-dnt="true" data-lang="${{zh:"zh-tw",ja:"ja",en:"en"}[lang]}" data-theme="${isDark()?"dark":"light"}"><a href="${esc(postUrl)}">${t("openX")} ↗</a></blockquote></div>`:"";
   const acts=btns?`<div class="tl-acts">${btns}</div>`:"";
   return `<article class="tl-item tl-type-${e.type} ${e.type}${isL?" l":""}${future?" future":""}${shown.has(e.id)?" in":""}" data-id="${e.id}">
     ${dateHTML(e)}<span class="tl-dot" aria-hidden="true"></span>

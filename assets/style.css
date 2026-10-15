@@ -9,9 +9,12 @@
   --r:14px; color-scheme:light;
 }
 html[lang="ja"]{--f-body:"Noto Sans JP","Noto Sans TC",system-ui,sans-serif}
-@media (prefers-color-scheme:dark){:root{
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121821; --surface:#1b2330; --ink:#e8eff8; --muted:#9aa8b9; --line:#2d3a4b;
   --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#7cc3ff; --accent-soft:#1a3350; --wave:#41546b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121821; --surface:#1b2330; --ink:#e8eff8; --muted:#9aa8b9; --line:#2d3a4b;
+  --accent:#53b0ff; --accent-ink:#0b2540; --accent-text:#7cc3ff; --accent-soft:#1a3350; --wave:#41546b; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
@@ -251,9 +254,12 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
   --t-auto:#8fa3b8;   --t-auto-i:#5f6d7e;
   --tl-line:#c4d3e3;
 }
-@media (prefers-color-scheme:dark){:root{
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --t-stream-i:#7cc3ff; --t-collab-i:#b9a6ff; --t-release-i:#ff9cc0; --t-short-i:#5fe0d3; --t-event-i:#ffaa70; --t-offline-i:#6fdc87; --t-live-i:#ff8a90; --t-anniv-i:#ffcf5a; --t-auto-i:#9aa8b9;
   --t-auto:#5d7088; --tl-line:#34465c}}
+:root[data-theme="dark"]{
+  --t-stream-i:#7cc3ff; --t-collab-i:#b9a6ff; --t-release-i:#ff9cc0; --t-short-i:#5fe0d3; --t-event-i:#ffaa70; --t-offline-i:#6fdc87; --t-live-i:#ff8a90; --t-anniv-i:#ffcf5a; --t-auto-i:#9aa8b9;
+  --t-auto:#5d7088; --tl-line:#34465c}
 
 .tl-tools{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 .tl-tools .tags{align-items:center}
@@ -457,3 +463,8 @@ body.nav-gone .fab-panel:not([hidden]){display:flex;flex-direction:column;positi
 .totop:hover{background:var(--accent-soft);color:var(--accent-text)}
 body.has-player:not(.player-mini) .totop{display:none} /* 底部整排播放器展開時先藏起來 */
 @media (max-width:600px){body.has-player.player-mini .totop{bottom:calc(300px + env(safe-area-inset-bottom,0px))}} /* 手機上浮動播放器幾乎佔滿寬度，按鈕移到它上方 */
+
+/* 深色／淺色切換鈕（common.js 放在「非官方粉絲網站」標籤右邊） */
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;margin:0 0 6px 6px;vertical-align:top;border-radius:50%;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.theme-btn:hover{color:var(--accent-text);border-color:var(--accent)}
+.theme-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
