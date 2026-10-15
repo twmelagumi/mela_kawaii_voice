@@ -26,6 +26,7 @@ html{scroll-padding-top:150px}
 .topbar>header{position:sticky;top:0;z-index:9;margin-inline:-16px;padding:12px 16px 10px;background:var(--bg)}
 body.scrolled .topbar>header{box-shadow:0 8px 18px -10px rgba(0,0,0,.45)}
 .topbar>.views{margin-top:-10px}
+.topbar>.views.sub-views{margin-top:-8px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
 h1{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,5vw,42px);line-height:1.1;margin:0;text-wrap:balance}
 h1 .jp{color:var(--accent-text)}
@@ -182,7 +183,7 @@ body.has-player .toast{bottom:auto;top:calc(16px + env(safe-area-inset-top,0px))
 .views{overflow-x:auto;scrollbar-width:none}
 .views::-webkit-scrollbar{display:none}
 .views a{white-space:nowrap;flex:none}
-@media (max-width:600px){.views{gap:0}.views a{padding:8px 11px;font-size:15px}}
+@media (max-width:600px){.views{gap:0}.views a{padding:8px 10px;font-size:14px}.sub-views a{padding-inline:16px}}
 .view{display:flex;flex-direction:column;gap:22px}
 /* song list */
 .setlist{display:flex;flex-direction:column;gap:18px}
@@ -468,3 +469,8 @@ body.has-player:not(.player-mini) .totop{display:none} /* 底部整排播放器�
 .theme-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;margin:0 0 6px 6px;vertical-align:top;border-radius:50%;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
 .theme-btn:hover{color:var(--accent-text);border-color:var(--accent)}
 .theme-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 第二層分頁（繳稅簿底下的 周邊／音聲）與選單裡的子項目 */
+.sub-views{border-bottom-color:transparent}
+.sub-views a{font-size:14px;padding:6px 16px}
+.fab-panel a.sub{padding-left:30px;font-size:14px;font-weight:600}
