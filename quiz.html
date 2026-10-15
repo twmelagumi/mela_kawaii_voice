@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>今日問答｜熱千めら めらめら出勤紀錄</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=202610151649">
+<style>
+/* ===== 小遊戲：今日問答（隱藏頁，導覽列不連過來） ===== */
+.view{gap:14px}
+.qz-card{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:22px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.qz-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.qz-top .sp{flex:1}
+.qz-tag{font-weight:700;padding:2px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text)}
+.qz-q{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(19px,4.6vw,24px);line-height:1.5;text-wrap:pretty}
+.qz-opts{display:grid;gap:10px}
+.qz-opts.tf{grid-template-columns:1fr 1fr}
+.qz-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;border-radius:14px;font-size:16px;font-weight:600;background:var(--bg);border:2px solid var(--line);color:var(--ink);line-height:1.4}
+.qz-opts.tf .qz-opt{justify-content:center;font-size:18px;padding:16px}
+.qz-opt .k{flex:none;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-family:var(--f-code);font-size:13px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.qz-opt:not(:disabled):hover{border-color:var(--accent)}
+.qz-opt:disabled{cursor:default;opacity:1}
+.qz-opt.ok{border-color:#2fa84f;background:color-mix(in srgb,#2fa84f 14%,var(--surface))}
+.qz-opt.ng{border-color:#d93d42;background:color-mix(in srgb,#d93d42 12%,var(--surface))}
+.qz-opt.dim{opacity:.55}
+.qz-res{display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.qz-res h3{margin:0;font-size:17px}
+.qz-res.ok h3{color:#2fa84f}
+.qz-res.ng h3{color:#d93d42}
+.qz-res p{margin:0;font-size:14px;line-height:1.7;white-space:pre-line}
+.qz-res .g-links{display:flex;gap:8px;flex-wrap:wrap}
+.qz-act{display:flex;justify-content:flex-end}
+.qz-act .primary{padding:9px 22px;font-size:15px}
+.qz-score{max-width:640px;width:100%;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:13px;color:var(--muted)}
+.qz-score b{font-family:var(--f-code);color:var(--ink);font-size:15px}
+.qz-note{max-width:640px;margin:0 auto;font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body data-title-key="titleQuiz">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleQuiz"></span></h1>
+      <p class="sub" data-i18n="subQuiz"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabShift"></a>
+    <a href="goods.html" data-i18n="tabTax"></a>
+    <a href="quiz.html" aria-current="page" data-i18n="tabGames"></a>
+  </nav>
+  <nav class="views sub-views" data-i18n-aria="tabGames">
+    <a href="quiz.html" aria-current="page" data-i18n="tabQuiz"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="qz-card" id="qz" aria-live="polite"></div>
+    <div class="qz-score" id="qzScore"></div>
+    <p class="qz-note" data-i18n="qzNote"></p>
+  </section>
+
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
+</div>
+
+<script src="assets/common.js?v=202610151649"></script>
+<script>
+/* ===== 小遊戲：今日問答（隱藏頁）=====
+ * 題庫：quiz.json（格式寫在檔案開頭的「_說明」）。每次隨機出一題；看過的題目記在瀏覽器裡（mela-quiz-seen），
+ * 全部出過一輪才會重複。答完顯示對錯、解說、出處，按「下一題」繼續。
+ * 成績只存在這個瀏覽器（mela-quiz-stats：答過幾題、答對幾題、目前連續答對、最多連續答對）。
+ */
+addStrings({
+ zh:{titleQuiz:"めらめら今日問答",subQuiz:"關於熱千めら的小問答，隨機出題，看看你答得出幾題！",tabGames:"小遊戲",tabQuiz:"今日問答",
+   qzTF:"是非題",qzChoice:"選擇題",qzTrue:"⭕ 是",qzFalse:"❌ 否",qzRight:"答對了！",qzWrong:"可惜，答錯了",qzAnswerIs:"正確答案：{a}",
+   qzNext:"下一題",qzSource:"看出處 ↗",qzNo:"第 {n} 題",qzTotal:"題庫 {n} 題",qzSession:"這次答對 {c} / {a}",qzStreak:"連續答對 {s}",qzBest:"最多連續 {b}",
+   qzEmpty:"題庫還沒有題目。",qzFail:"題庫讀取失敗，請稍後重新整理。",qzNote:"成績只記在這台裝置的這個瀏覽器裡。題目有錯誤歡迎從頁尾「問題回報」告訴我們。",qzKeys:"可用鍵盤 1～4 作答、Enter 下一題"},
+ ja:{titleQuiz:"めらめら今日のクイズ",subQuiz:"熱千めらにまつわるミニクイズ。ランダムに出題、何問わかるかな？",tabGames:"ミニゲーム",tabQuiz:"今日のクイズ",
+   qzTF:"○×クイズ",qzChoice:"選択問題",qzTrue:"⭕ はい",qzFalse:"❌ いいえ",qzRight:"正解！",qzWrong:"残念、不正解",qzAnswerIs:"正解：{a}",
+   qzNext:"次の問題",qzSource:"出典を見る ↗",qzNo:"第 {n} 問",qzTotal:"全 {n} 問",qzSession:"今回の正解 {c} / {a}",qzStreak:"連続正解 {s}",qzBest:"最高連続 {b}",
+   qzEmpty:"まだ問題がありません。",qzFail:"問題を読み込めませんでした。しばらくしてから再読み込みしてください。",qzNote:"成績はこの端末のこのブラウザにだけ保存されます。問題の誤りはページ下の「問題を報告」からお知らせください。",qzKeys:"キーボードの 1～4 で回答、Enter で次へ"},
+ en:{titleQuiz:"Mela Mela Daily Quiz",subQuiz:"A little quiz about Achichi Mela — random questions, how many can you get right?",tabGames:"Games",tabQuiz:"Daily Quiz",
+   qzTF:"True or false",qzChoice:"Multiple choice",qzTrue:"⭕ True",qzFalse:"❌ False",qzRight:"Correct!",qzWrong:"Not quite",qzAnswerIs:"Answer: {a}",
+   qzNext:"Next question",qzSource:"See the source ↗",qzNo:"Question {n}",qzTotal:"{n} in the pool",qzSession:"This session {c} / {a}",qzStreak:"Streak {s}",qzBest:"Best streak {b}",
+   qzEmpty:"No questions yet.",qzFail:"Couldn't load the questions. Please reload in a moment.",qzNote:"Your score is stored only in this browser on this device. Spotted a mistake? Let us know via \"Report it\" at the bottom of the page.",qzKeys:"Keys 1–4 to answer, Enter for next"}
+});
+const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const L=v=>v==null?"":typeof v==="string"?v:(v[lang]||v.zh||Object.values(v).find(Boolean)||""); // 題目文字：目前語言 → 中文 → 任何一個
+const SEEN_KEY="mela-quiz-seen", STATS_KEY="mela-quiz-stats";
+let pool=[], cur=null, picked=null, session={a:0,c:0}, no=0, failed=false;
+let stats={a:0,c:0,streak:0,best:0};
+try{ stats={...stats,...JSON.parse(localStorage.getItem(STATS_KEY)||"{}")}; }catch(e){}
+const saveStats=()=>{ try{ localStorage.setItem(STATS_KEY,JSON.stringify(stats)); }catch(e){} };
+
+// 題目檢查：格式不對的題目略過（console 會列出來，方便改題庫）
+function valid(q){
+  if(!q||!q.id||!q.q) return false;
+  if(q.type==="tf") return typeof q.answer==="boolean";
+  if(q.type==="choice") return Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=1&&q.answer<=q.options.length;
+  return false; }
+// 隨機挑一題：先從還沒看過的挑；全部看過就重新一輪（避免連續出同一題）
+function pick(){
+  let seen=[]; try{ seen=JSON.parse(localStorage.getItem(SEEN_KEY)||"[]"); }catch(e){}
+  const ids=new Set(pool.map(q=>q.id)); seen=seen.filter(id=>ids.has(id));
+  let left=pool.filter(q=>!seen.includes(q.id));
+  if(!left.length){ seen=cur?[cur.id]:[]; left=pool.filter(q=>!seen.includes(q.id)); if(!left.length) left=pool; }
+  const q=left[Math.floor(Math.random()*left.length)];
+  seen.push(q.id); try{ localStorage.setItem(SEEN_KEY,JSON.stringify(seen)); }catch(e){}
+  // 選項順序：選擇題預設打亂（shuffle:false 就照原本順序）；是非題固定「是／否」
+  let order;
+  if(q.type==="tf") order=[true,false];
+  else{ order=q.options.map((_,i)=>i+1); if(q.shuffle!==false) for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; } }
+  cur={...q,order}; picked=null; no++; render(); }
+
+const optText=(q,v)=>q.type==="tf"?t(v?"qzTrue":"qzFalse"):L(q.options[v-1]);
+function render(){
+  const box=$("qz");
+  if(failed||!pool.length){ box.innerHTML=`<p class="qz-q">${t(failed?"qzFail":"qzEmpty")}</p>`; $("qzScore").innerHTML=""; return; }
+  if(!cur) return; // 還沒出題（setLang 會先呼叫一次）
+  const q=cur, done=picked!==null, right=done&&picked===q.answer;
+  const opts=q.order.map((v,i)=>{ const cls=done?(v===q.answer?" ok":v===picked?" ng":" dim"):"";
+    return `<button type="button" class="qz-opt${cls}" data-v="${String(v)}"${done?" disabled":""}>${q.type==="choice"?`<span class="k">${i+1}</span>`:""}<span>${esc(optText(q,v))}</span></button>`; }).join("");
+  const res=done?`<div class="qz-res ${right?"ok":"ng"}"><h3>${t(right?"qzRight":"qzWrong")}</h3>
+      ${right?"":`<p>${esc(tq("qzAnswerIs",{a:optText(q,q.answer)}))}</p>`}
+      ${q.explain?`<p>${esc(L(q.explain))}</p>`:""}
+      ${q.source?`<div class="g-links"><a class="btn" href="${esc(webSafe(q.source))}" target="_blank" rel="noopener">${t("qzSource")}</a></div>`:""}</div>
+    <div class="qz-act"><button type="button" class="primary" id="qzNext">${t("qzNext")}</button></div>`:"";
+  box.innerHTML=`<div class="qz-top"><span>${tq("qzNo",{n:no})}</span><span class="qz-tag">${t(q.type==="tf"?"qzTF":"qzChoice")}</span><span class="sp"></span><span>${tq("qzTotal",{n:pool.length})}</span></div>
+    <p class="qz-q">${esc(L(q.q))}</p>
+    <div class="qz-opts${q.type==="tf"?" tf":""}">${opts}</div>${res}`;
+  $("qzScore").innerHTML=`<span>${tq("qzSession",{c:`<b>${session.c}</b>`,a:`<b>${session.a}</b>`})}</span><span>${tq("qzStreak",{s:`<b>${stats.streak}</b>`})}</span><span>${tq("qzBest",{b:`<b>${stats.best}</b>`})}</span>`;
+  $("qzScore").title=t("qzKeys");
+}
+const webSafe=u=>{ try{ const x=new URL(u); return /^https?:$/.test(x.protocol)?x.href:"#"; }catch(e){ return "#"; } };
+
+function answer(v){ if(!cur||picked!==null) return;
+  picked=cur.type==="tf"?v==="true":+v; const ok=picked===cur.answer;
+  session.a++; stats.a++; if(ok){ session.c++; stats.c++; stats.streak++; stats.best=Math.max(stats.best,stats.streak); } else stats.streak=0;
+  saveStats(); render(); $("qzNext")?.focus({preventScroll:true}); }
+
+document.addEventListener("click",e=>{ const b=e.target.closest(".qz-opt"); if(b&&!b.disabled) return answer(b.dataset.v);
+  if(e.target.closest("#qzNext")) pick(); });
+document.addEventListener("keydown",e=>{ if(e.target.closest("input,textarea,select")||e.altKey||e.ctrlKey||e.metaKey) return;
+  if(picked===null&&cur&&/^[1-9]$/.test(e.key)){ const v=cur.order[+e.key-1]; if(v!==undefined) answer(String(v)); }
+  else if(picked!==null&&e.key==="Enter"&&!e.target.closest("button,a")){ e.preventDefault(); pick(); } });
+window.onLangChange=render;
+
+(async()=>{
+  try{ const r=await fetch("quiz.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status); const d=await r.json();
+    const list=Array.isArray(d)?d:d.questions||[]; pool=list.filter(q=>{ const ok=valid(q); if(!ok) console.warn("quiz: 格式不對，略過",q); return ok; });
+    const dup=pool.map(q=>q.id).filter((id,i,a)=>a.indexOf(id)!==i); if(dup.length) console.warn("quiz: id 重複",dup);
+  }catch(e){ console.warn("quiz load failed",e); failed=true; }
+  setLang(pickLang()); if(pool.length) pick(); else render();
+})();
+</script>
+</body>
+</html>

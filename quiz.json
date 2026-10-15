@@ -1,0 +1,163 @@
+{
+  "_說明": "今日問答的題庫。type：tf＝是非題（answer 填 true 或 false）、choice＝選擇題（options 是選項，answer 填正確選項是第幾個，從 1 開始）。q／options／explain 可以直接寫中文字串，或寫成 {\"zh\":…,\"ja\":…,\"en\":…}，沒填的語言會顯示中文。explain（解說）、source（出處網址，例如帶時間的 YouTube 連結）可以不填。選擇題預設會打亂選項順序，加 \"shuffle\": false 就照原本順序（適合有「以上皆是」的題目）。id 每題不要重複，之後也不要改（用來記錄看過哪些題）。",
+  "questions": [
+    {
+      "id": "birthday",
+      "type": "tf",
+      "q": {
+        "zh": "熱千めら的生日是 4 月 16 日。",
+        "ja": "熱千めらの誕生日は4月16日である。",
+        "en": "Achichi Mela's birthday is April 16."
+      },
+      "answer": true,
+      "explain": {
+        "zh": "是的，めら的生日是 4 月 16 日。",
+        "ja": "正解！めらの誕生日は4月16日です。",
+        "en": "Yes — Mela's birthday is April 16."
+      }
+    },
+    {
+      "id": "name-spelling",
+      "type": "tf",
+      "q": {
+        "zh": "熱千めら的英文名字拼作「Mera」。",
+        "ja": "熱千めらの英語表記は「Mera」である。",
+        "en": "Achichi Mela's name is spelled \"Mera\" in English."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "官方英文拼法是「Mela」。",
+        "ja": "公式の英語表記は「Mela」です。",
+        "en": "The official spelling is \"Mela\"."
+      }
+    },
+    {
+      "id": "unit",
+      "type": "choice",
+      "q": {
+        "zh": "熱千めら所屬的組合是？",
+        "ja": "熱千めらが所属するユニットは？",
+        "en": "Which unit is Achichi Mela part of?"
+      },
+      "options": [
+        "アソビ★まわり隊！",
+        "ReGLOSS",
+        "FLOW GLOW"
+      ],
+      "answer": 1,
+      "source": "https://www.youtube.com/@hololive_ASOBIMAWARITAI"
+    },
+    {
+      "id": "fan-name",
+      "type": "choice",
+      "q": {
+        "zh": "熱千めら的粉絲叫做什麼？",
+        "ja": "熱千めらのファンの呼び名は？",
+        "en": "What are Achichi Mela's fans called?"
+      },
+      "options": [
+        "めら組",
+        "めらっこ",
+        "火蜥蜴民"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "coffee",
+      "type": "tf",
+      "q": {
+        "zh": "めら喜歡喝咖啡。",
+        "ja": "めらはコーヒーが好きである。",
+        "en": "Mela likes coffee."
+      },
+      "answer": false
+    },
+    {
+      "id": "fruit",
+      "type": "tf",
+      "q": {
+        "zh": "めら喜歡吃水果。",
+        "ja": "めらはフルーツが好きである。",
+        "en": "Mela likes fruit."
+      },
+      "answer": false
+    },
+    {
+      "id": "fav-voice",
+      "type": "choice",
+      "q": {
+        "zh": "めら最喜歡哪位 hololive 成員的聲音？",
+        "ja": "めらが一番好きなホロライブメンバーの声は？",
+        "en": "Which hololive member's voice does Mela love the most?"
+      },
+      "options": [
+        "白上フブキ",
+        "宝鐘マリン",
+        "兎田ぺこら",
+        "星街すいせい"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "live-tag",
+      "type": "tf",
+      "q": {
+        "zh": "めら直播的 hashtag 是「#めら組出勤中」。",
+        "ja": "めらの生配信のハッシュタグは「#めら組出勤中」である。",
+        "en": "The hashtag for Mela's streams is \"#めら組出勤中\"."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "正確的是「#めら組出動中」（出動，不是出勤）。",
+        "ja": "正しくは「#めら組出動中」（「出勤」ではなく「出動」）。",
+        "en": "It's \"#めら組出動中\" — 出動 (dispatch), not 出勤 (clock in)."
+      },
+      "source": "https://x.com/search?q=%23%E3%82%81%E3%82%89%E7%B5%84%E5%87%BA%E5%8B%95%E4%B8%AD&src=hashtag_click"
+    },
+    {
+      "id": "height",
+      "type": "tf",
+      "q": {
+        "zh": "めら的身高是 148 公分。",
+        "ja": "めらの身長は148cmである。",
+        "en": "Mela is 148 cm tall."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "めら的身高是 149 公分。",
+        "ja": "めらの身長は149cmです。",
+        "en": "Mela is 149 cm tall."
+      }
+    },
+    {
+      "id": "weakness",
+      "type": "tf",
+      "q": {
+        "zh": "めら的弱點是貓舌頭、怕熱、容易中暑。",
+        "ja": "めらの弱点は、猫舌・暑がり・熱中症になりやすいことである。",
+        "en": "Mela's weak points: she can't handle hot food (\"cat tongue\"), hates the heat, and gets heatstroke easily."
+      },
+      "answer": true
+    },
+    {
+      "id": "toaster",
+      "type": "tf",
+      "q": {
+        "zh": "めら害怕烤吐司機。",
+        "ja": "めらはトースターが怖い。",
+        "en": "Mela is scared of toasters."
+      },
+      "answer": true
+    },
+    {
+      "id": "secret-saint",
+      "type": "tf",
+      "q": {
+        "zh": "《轉生後的大聖女，極力隱瞞聖女的身分》是めら喜歡的作品之一。",
+        "ja": "『転生した大聖女は、聖女であることをひた隠す』はめらの好きな作品のひとつである。",
+        "en": "\"A Tale of the Secret Saint\" (転生した大聖女は、聖女であることをひた隠す) is one of Mela's favorite works."
+      },
+      "answer": true
+    }
+  ]
+}
