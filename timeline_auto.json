@@ -1,11 +1,23 @@
 [
   {
+    "date": "2026-10-23",
+    "type": "stream",
+    "title": "コンビニバイトのホラーゲーム「夜勤事件」で遊ぶのじゃ！",
+    "url": "https://www.youtube.com/watch?v=ZQJkVI2CWq0",
+    "upcoming": true,
+    "start": "2026-10-23T10:00:00Z"
+  },
+  {
     "date": "2026-10-22",
     "type": "collab",
     "title": "【#ホロ鯖かくれんぼ】先輩コラボ解禁なのじゃあああああ！！！！！",
-    "url": "https://www.youtube.com/watch?v=bB5HkHSQWkI",
-    "upcoming": true,
-    "start": "2026-10-22T10:00:00Z"
+    "url": "https://www.youtube.com/watch?v=bB5HkHSQWkI"
+  },
+  {
+    "date": "2026-10-22",
+    "type": "short",
+    "title": "無炎息災が読める新人Vtuber #ホロライブ #熱千めら",
+    "url": "https://www.youtube.com/watch?v=GHAYMynLBuc"
   },
   {
     "date": "2026-10-21",
