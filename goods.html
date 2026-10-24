@@ -362,8 +362,8 @@ window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); MelaSync.
 MelaShare.init({kind:"goods",panel:$("recRow"),ids:()=>[...series.flatMap(g=>g.items.map(i=>i.id)),...alias.keys()], // 舊 id 也列進來：舊的收藏代碼還能對上
   merge:hits=>{ let n=0; for(const [id0,k] of hits){ const id=normId(id0); if(k>(have.get(id)||0)){ have.set(id,Math.min(999,k)); n++; } } if(n){ saveHave(); render(); } return n; }});
 
-// 雲端同步（Google 登入）：「雲端」那一列插在「備份」列上面
-MelaSync.init({kind:"goods",before:$("recRow"),get:()=>new Map(have),set:m=>{ have=new Map(m); saveHave(); render(); }});
+// 雲端同步（Google 登入）：按鈕在標題列的語言切換旁邊
+MelaSync.init({kind:"goods",get:()=>new Map(have),set:m=>{ have=new Map(m); saveHave(); render(); }});
 
 MelaCollect.loadSheet({url:GOODS_CSV_URL,key:GOODS_KEY,ttl:GOODS_TTL},
   text=>{ build(text); setLang(pickLang()); MelaShare.ready(); MelaSync.ready(); },

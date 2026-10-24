@@ -229,7 +229,7 @@ MelaShare.init({kind:"voice",panel:$("recRow"),ids:()=>[...series.flatMap(g=>g.i
   merge:hits=>{ let n=0; for(const [id0] of hits){ const id=normId(id0); if(!have.has(id)){ have.add(id); n++; } } if(n){ saveHave(); render(); } return n; }});
 
 // 雲端同步（Google 登入）：音聲沒有數量，雲端存 1
-MelaSync.init({kind:"voice",before:$("recRow"),get:()=>new Map([...have].map(id=>[id,1])),set:m=>{ have=new Set(m.keys()); saveHave(); render(); }});
+MelaSync.init({kind:"voice",get:()=>new Map([...have].map(id=>[id,1])),set:m=>{ have=new Set(m.keys()); saveHave(); render(); }});
 
 MelaCollect.loadSheet({url:VOICE_CSV_URL,key:VOICE_KEY,ttl:VOICE_TTL},
   text=>{ build(text); setLang(pickLang()); MelaShare.ready(); MelaSync.ready(); },

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250131">
+<link rel="stylesheet" href="assets/style.css?v=202610250101">
 <style>
 /* 隱私權政策／服務條款（內容由 scripts/mklegal.py 產生，要改文字請改那個檔再重新產生） */
 .lg-doc{max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;line-height:1.8}
@@ -52,6 +52,7 @@
 <h2>1. 本站處理的資料</h2>
 <ul>
 <li><b>使用 Google 登入時（周邊頁、音聲頁的「雲端同步」，可自由選擇是否使用）</b>：Google 提供給登入服務的帳號識別碼、email、名稱與大頭貼網址，以及你標記的「已入手」紀錄（品項代號、數量、更新時間）。</li>
+<li><b>個人設定（可自由選擇是否填寫）</b>：你設定的暱稱，以及你上傳的頭像圖片（上傳前會在你的瀏覽器裡裁成正方形並縮小）。</li>
 <li><b>沒有登入時</b>：「已入手」紀錄、語言、深淺色等設定只存在你自己的瀏覽器（localStorage），不會傳送到本站。</li>
 <li><b>瀏覽統計</b>：本站使用 GoatCounter 統計頁面瀏覽次數。GoatCounter 不使用 Cookie，也不保存可以辨識個人的資訊，只記錄瀏覽的頁面、來源網站、瀏覽器與裝置類型等統計資料。</li>
 <li><b>投稿與問題回報</b>：透過 Google 表單送出投稿或回報時，你填寫的內容由 Google 表單保存，本站營運者會看到這些內容。</li>
@@ -59,19 +60,20 @@
 <h2>2. 使用目的</h2>
 <ul>
 <li>在不同裝置之間同步你的「已入手」紀錄。</li>
-<li>統計每個周邊、音聲品項的入手人數（例如入手人數排行榜）。統計結果只會顯示人數，不會顯示是誰。</li>
+<li>統計每個周邊、音聲品項的入手人數（例如入手人數排行榜）。品項的入手人數只會顯示人數，不會顯示是誰。</li>
+<li>排行榜等公開頁面上，會顯示你設定的暱稱和頭像（沒有設定就不會顯示，或顯示為「匿名」）。不會公開你的 email 和 Google 帳號名稱。</li>
 <li>審核投稿、處理問題回報，以及了解網站的使用狀況。</li>
 </ul>
 <p>本站不會把你的資料用在上述以外的用途，不會販售，不會用於廣告，也不會提供給第三方（法律要求的情況除外）。</p>
 <h2>3. 使用的外部服務</h2>
 <ul>
-<li>Supabase：登入與資料庫（保存上面第 1 點的登入資料與已入手紀錄）。</li>
+<li>Supabase：登入、資料庫與檔案儲存（保存上面第 1 點的登入資料、已入手紀錄、暱稱與頭像）。</li>
 <li>Google：Google 帳號登入、Google 表單、Google 試算表（網站內容的資料來源）。</li>
 <li>GitHub Pages：網站主機。GoatCounter：瀏覽統計。</li>
 <li>YouTube、X（Twitter）：網站內嵌的影片與貼文。播放或顯示這些內容時，這些服務可能依它們自己的政策使用 Cookie 等技術。</li>
 </ul>
 <h2>4. 保存期間與刪除</h2>
-<p>登入後保存的資料，會保存到你刪除為止。在周邊頁或音聲頁的「雲端」區按「刪除雲端紀錄」，就會刪除你的已入手紀錄和登入帳號（你瀏覽器裡的紀錄不受影響）。如果無法自行刪除，也可以透過下方的表單聯絡我們處理。</p>
+<p>登入後保存的資料，會保存到你刪除為止。在周邊頁或音聲頁的「雲端」區按「刪除雲端紀錄」，就會刪除你的已入手紀錄、暱稱、頭像和登入帳號（你瀏覽器裡的紀錄不受影響）。暱稱和頭像也可以隨時在「個人設定」修改或移除。不當的頭像或暱稱，本站可以不經通知移除，並停用上傳功能。如果無法自行刪除，也可以透過下方的表單聯絡我們處理。</p>
 <h2>5. 安全</h2>
 <p>資料庫設定成每個人只能讀取和修改自己的紀錄。不過網路服務無法保證絕對安全，請不要在本站輸入不必要的個人資料。</p>
 <h2>6. 本政策的變更</h2>
@@ -85,6 +87,7 @@
 <h2>1. 当サイトが扱う情報</h2>
 <ul>
 <li><b>Google でログインした場合（グッズ・ボイスページの「クラウド同期」。使うかどうかは自由です）</b>：Google からログインサービスに提供されるアカウント識別子、メールアドレス、名前、プロフィール画像の URL と、あなたが付けた「入手済み」の記録（品目コード、個数、更新日時）。</li>
+<li><b>個人設定（入力は任意です）</b>：設定したニックネームと、アップロードしたアイコン画像（アップロード前にブラウザ内で正方形に切り抜いて縮小します）。</li>
 <li><b>ログインしていない場合</b>：「入手済み」の記録や言語・表示テーマなどの設定は、あなたのブラウザ（localStorage）にだけ保存され、当サイトには送信されません。</li>
 <li><b>アクセス解析</b>：ページの閲覧数を GoatCounter で集計しています。GoatCounter は Cookie を使わず、個人を特定できる情報も保存しません。閲覧したページ、参照元サイト、ブラウザ・端末の種類などの統計のみを記録します。</li>
 <li><b>投稿・不具合の報告</b>：Google フォームから送信された内容は Google フォームに保存され、当サイトの運営者が確認します。</li>
@@ -92,19 +95,20 @@
 <h2>2. 利用目的</h2>
 <ul>
 <li>「入手済み」の記録を複数の端末で同期するため。</li>
-<li>グッズ・ボイスの各品目の入手人数を集計するため（入手人数ランキングなど）。集計結果では人数だけを表示し、誰が入手したかは表示しません。</li>
+<li>グッズ・ボイスの各品目の入手人数を集計するため（入手人数ランキングなど）。品目の入手人数は人数だけを表示し、誰が入手したかは表示しません。</li>
+<li>ランキングなどの公開ページに、設定したニックネームとアイコンを表示するため（設定していない場合は表示しないか「匿名」と表示します）。メールアドレスや Google アカウント名は公開しません。</li>
 <li>投稿の確認、不具合への対応、サイトの利用状況の把握のため。</li>
 </ul>
 <p>上記以外の目的には使わず、販売や広告への利用、第三者への提供もしません（法令に基づく場合を除きます）。</p>
 <h2>3. 利用している外部サービス</h2>
 <ul>
-<li>Supabase：ログインとデータベース（上の 1 のログイン情報と入手済みの記録を保存）。</li>
+<li>Supabase：ログイン、データベース、ファイル保存（上の 1 のログイン情報、入手済みの記録、ニックネーム、アイコンを保存）。</li>
 <li>Google：Google アカウントでのログイン、Google フォーム、Google スプレッドシート（サイトのデータの元）。</li>
 <li>GitHub Pages：サイトのホスティング。GoatCounter：アクセス解析。</li>
 <li>YouTube、X（Twitter）：埋め込みの動画・ポスト。表示・再生するときに、各サービスが自身のポリシーに基づき Cookie などを使うことがあります。</li>
 </ul>
 <h2>4. 保存期間と削除</h2>
-<p>ログイン後に保存された情報は、あなたが削除するまで保存されます。グッズページまたはボイスページの「クラウド」欄で「クラウドの記録を削除」を押すと、入手済みの記録とログイン用アカウントが削除されます（ブラウザ内の記録はそのまま残ります）。ご自身で削除できない場合は、下のフォームからご連絡ください。</p>
+<p>ログイン後に保存された情報は、あなたが削除するまで保存されます。グッズページまたはボイスページの「クラウド」欄で「クラウドの記録を削除」を押すと、入手済みの記録、ニックネーム、アイコン、ログイン用アカウントが削除されます（ブラウザ内の記録はそのまま残ります）。ニックネームとアイコンは「個人設定」でいつでも変更・削除できます。不適切なアイコンやニックネームは予告なく削除し、アップロードを停止することがあります。ご自身で削除できない場合は、下のフォームからご連絡ください。</p>
 <h2>5. 安全管理</h2>
 <p>データベースは、各自が自分の記録だけを読み書きできるように設定しています。ただしインターネット上のサービスで完全な安全は保証できないため、必要のない個人情報は入力しないでください。</p>
 <h2>6. このポリシーの変更</h2>
@@ -118,6 +122,7 @@
 <h2>1. Data this site handles</h2>
 <ul>
 <li><b>If you sign in with Google</b> (the optional "Cloud" sync on the Merch and Voice pages): the account identifier, email address, name and profile picture URL that Google provides to the sign-in service, and the "owned" items you mark (item code, count and time updated).</li>
+<li><b>Profile settings</b> (optional): the nickname you set and the avatar image you upload (cropped to a square and shrunk in your browser before upload).</li>
 <li><b>If you don't sign in</b>: your "owned" list and settings such as language and theme are stored only in your own browser (localStorage) and are never sent to this site.</li>
 <li><b>Analytics</b>: page views are counted with GoatCounter, which uses no cookies and stores no personally identifiable information — only statistics such as the page viewed, the referring site, and the browser and device type.</li>
 <li><b>Submissions and bug reports</b>: anything you send through a Google Form is stored by Google Forms and read by the site maintainer.</li>
@@ -125,19 +130,20 @@
 <h2>2. How the data is used</h2>
 <ul>
 <li>To sync your "owned" list across your devices.</li>
-<li>To count how many people own each merch or voice item (for example, a ranking). Only the number of people is shown, never who they are.</li>
+<li>To count how many people own each merch or voice item (for example, a ranking). Item counts only show the number of people, never who they are.</li>
+<li>To show the nickname and avatar you set on public pages such as rankings (if you haven't set them, nothing is shown or you appear as "Anonymous"). Your email address and Google account name are never made public.</li>
 <li>To review submissions, handle bug reports and understand how the site is used.</li>
 </ul>
 <p>Your data is not used for anything else, is never sold or used for advertising, and is not shared with third parties except where required by law.</p>
 <h2>3. Services this site uses</h2>
 <ul>
-<li>Supabase: sign-in and database (stores the sign-in data and "owned" list in section 1).</li>
+<li>Supabase: sign-in, database and file storage (stores the sign-in data, "owned" list, nickname and avatar in section 1).</li>
 <li>Google: Google sign-in, Google Forms, and Google Sheets (the source of the site's data).</li>
 <li>GitHub Pages: hosting. GoatCounter: analytics.</li>
 <li>YouTube and X (Twitter): embedded videos and posts. When they load or play, these services may use cookies or similar technologies under their own policies.</li>
 </ul>
 <h2>4. Retention and deletion</h2>
-<p>Data saved after you sign in is kept until you delete it. Press "Delete cloud data" in the "Cloud" section of the Merch or Voice page to delete your "owned" list and your sign-in account (the list in your browser is not affected). If you can't do this yourself, contact us using the form below.</p>
+<p>Data saved after you sign in is kept until you delete it. Press "Delete cloud data" in the "Cloud" section of the Merch or Voice page to delete your "owned" list, nickname, avatar and sign-in account (the list in your browser is not affected). You can change or remove your nickname and avatar any time in "Profile settings". Inappropriate avatars or nicknames may be removed without notice and uploading disabled. If you can't do this yourself, contact us using the form below.</p>
 <h2>5. Security</h2>
 <p>The database is set up so that each person can only read and change their own records. No online service can be perfectly secure, so please don't enter personal information you don't need to.</p>
 <h2>6. Changes to this policy</h2>
@@ -150,7 +156,8 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610250131"></script>
+<script src="assets/common.js?v=202610250101"></script>
+<script src="assets/sync.js?v=202610250101"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script>
 // 依網站語言顯示對應的那一份
 window.onLangChange=()=>{ document.querySelectorAll("[data-doc-lang]").forEach(a=>a.hidden=a.dataset.docLang!==lang); };

@@ -325,10 +325,14 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 `assets/sync.js`（`MelaSync`）：用 Supabase 的 Google 登入，把「已入手」存到雲端，跨裝置同步。沒登入時跟以前一樣只存在瀏覽器。supabase-js 放在 `assets/supabase.min.js`（2.118.0，MIT），需要時才載入。
 
 - 設定在 `assets/sync.js` 開頭：Supabase Project URL、publishable key（公開的，安全性靠資料表的 RLS）、`LOGIN_PUBLIC`。
-- **測試期間** `LOGIN_PUBLIC = false`：網址加 `?login=1` 才會出現「雲端」那一列（會記住，`?login=0` 取消）；已經登入的人一直看得到。正式公開時改成 `true`。
+- **測試期間** `LOGIN_PUBLIC = false`：網址加 `?login=1` 才會出現標題列的「Google 登入」按鈕（會記住，`?login=0` 取消）；已經登入的人一直看得到。正式公開時改成 `true`。
+- 畫面：標題列語言切換左邊。沒登入＝「Google 登入」按鈕（點了先看說明再登入）；登入後＝頭像（右下角小圓點：綠＝已同步、黃＝同步中、紅＝連不上），點頭像打開選單：名稱、email、同步狀態、立即同步、登出、刪除雲端紀錄。
 - 資料表 `public.collection`：`user_id`、`kind`（goods／voice）、`item_id`（周邊「代號#good index」、音聲「代號#index」）、`qty`（1–999，音聲固定 1）、`updated_at`；每人只能讀寫自己的列（RLS）。
 - 同步規則：這台第一次跟某個帳號同步、而且兩邊不一樣時，讓使用者選「合併（數量取較多的）／用雲端的／用這台的」。之後每次改動只傳有變的部分；開頁面時先補傳這台離線時改的，再用雲端的更新這台。連不上雲端時照常存在這台。
 - 「刪除雲端紀錄」：呼叫資料庫函式 `delete_me()`（連登入帳號一起刪）；沒有這個函式時只刪紀錄。
 - Supabase 免費方案一週沒有使用會暫停，要到 Supabase 後台恢復（資料不會不見）；暫停期間網站照常運作，只是不能同步。
 - 隱私權政策 `privacy.html`、服務條款 `terms.html`（Google 登入的同意畫面需要這兩個網址）：中日英三語在同一頁，內容寫在 `scripts/mklegal.py`，改文字後在 repo 根目錄跑 `python scripts/mklegal.py` 重新產生。頁尾和「雲端」說明都有連結。
 - `.github/workflows/supabase-keepalive.yml`：每週一、週四對資料庫發一個很小的查詢（用公開的 publishable key，只會拿到空陣列），避免免費方案因為一週沒使用而暫停。失敗時 Actions 會顯示紅色並寄信通知。
+- 每一頁的標題列都有登入按鈕（`assets/sync.js` 每頁都載入；收藏頁之外只有帳號功能，不同步）。
+- 個人設定（帳號選單 →「個人設定」）：暱稱（最多 24 字）和頭像。頭像在瀏覽器裡先裁成正方形、縮成 256×256 的 webp（100KB 以內）才上傳到 Supabase Storage 的 `avatars` bucket（`使用者ID/avatar.webp`，公開讀取）；資料存在 `public.profiles`（`nickname`、`avatar_url`、`upload_banned`）。
+- 停用某人的頭像上傳：在 Supabase 的 Table Editor 把他 `profiles` 那列的 `upload_banned` 改成 true、`avatar_url` 清空，再到 Storage 的 `avatars` 刪掉他的資料夾。使用者自己不能改 `upload_banned`。
