@@ -302,18 +302,19 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 ## 「周邊」分頁（goods.html）
 
-記錄官方グッズ（不含ボイス等數位商品，那些放「音聲」分頁），訪客可以勾「已入手」、加減數量，頁首可以看花費。資料來自 Google 試算表「周邊頁紀錄」分頁，網址填在 `goods.html` 的 `GOODS_CSV_URL`；欄位依標題文字認（`goods project code`、`goods project name`、`date`、`goods official website`、`x link`、`goods name`、`goods type`、`goods picture`、`note`、`project note`、`oversea`、`price`），詳細寫在 `goods.html` 的 script 開頭註解。
+記錄官方グッズ（不含ボイス等數位商品，那些放「音聲」分頁），訪客可以勾「已入手」、加減數量，頁首可以看花費。資料來自 Google 試算表「周邊頁紀錄」分頁，網址填在 `goods.html` 的 `GOODS_CSV_URL`；欄位依標題文字認（`goods project code`、`goods project name`、`date`、`goods official website`、`x link`、`good index`、`goods name`、`goods type`、`goods picture`、`note`、`project note`、`oversea`、`price`），詳細寫在 `goods.html` 的 script 開頭註解。
 
 **搜尋與篩選**：頁首有搜尋框（比對企劃名、品名、企劃代號、說明、類型），下面依序是「企劃」分類、「種類」、年份／狀態（全部／已入手／未入手）／排序。`goods type` 欄（可留空）：品項列填 `badge`／`acrylic stand`／`keychain`／`plushie` → 種類篩選（其他英文字會原樣出現為按鈕；要加有中日英名稱的，在 `goods.html` 的 `addStrings` 加 `tp_類型名`，空白換底線）；**企劃那一列**填 `anniversary`／`birthday` → 企劃分類「周年紀念／生日紀念」，沒填但 oversea 有標的算「海外合作」，其餘算「其他」。搜尋、狀態或種類篩選時，符合的企劃會自動展開。
 
 - 企劃的資料只填在該企劃的第一列，下面的商品列 `goods project code` 留空；**試算表不要排序**，新企劃加在最下面。
+- `good index`：企劃列填 0，商品依序 1、2、3…，**填了之後不要改**。「已入手」用「企劃代號#good index」記錄（例 `asobimawari-tai_debut#3`），所以品名改了紀錄也不會不見。企劃代號和 good index 只在內部使用，頁面上不顯示、搜尋也搜不到。
 - 圖片可以填官方商店的網址，或 `assets/goods/檔名.webp`（自己縮小過的圖，寬 800px 左右；標示 Ⓒ COVER）。
 
 ## 收藏代碼（周邊頁／音聲頁）
 
 兩頁的「已入手」除了 .json 備份，也能做成**代碼／匯入連結／QR code**搬到其他裝置（`assets/share.js`，QR 用 `assets/qrcode.min.js`＝qrcode-generator 1.4.4，MIT）。
 
-- 一組代碼同時包含周邊和音聲兩頁的紀錄，格式 `MELA1.`＋base64url：版本、周邊（品項雜湊＋數量）、音聲（品項雜湊）、2 bytes 檢查碼。品項雜湊＝「企劃代號|品名」的 32 位元 FNV-1a，代碼裡看不出品名。
+- 一組代碼同時包含周邊和音聲兩頁的紀錄，格式 `MELA1.`＋base64url：版本、周邊（品項雜湊＋數量）、音聲（品項雜湊）、2 bytes 檢查碼。品項雜湊＝品項 id（周邊：「企劃代號#good index」，沒有 index 的用「企劃代號|品名」；音聲：「企劃代號|品名」）的 32 位元 FNV-1a，代碼裡看不出品名。舊的（用「代號|品名」做的）周邊代碼也還能匯入。
 - 匯入連結＝頁面網址＋`#r=代碼`（# 後面不會送到伺服器）；QR code 的內容就是這個連結，手機相機掃了會開站並詢問是否匯入。
 - 一律「合併」：不會取消原本勾的，周邊數量取較多的。在其中一頁匯入時，另一頁的部分暫存在 localStorage `mela-share-pending`，下次開那一頁時自動套用。
-- 品名在試算表改過或已下架的品項，匯入時會對不上（會提示幾項找不到）。
+- 已下架的品項、或沒有 good index 而品名改過的品項，匯入時會對不上（會提示幾項找不到）。

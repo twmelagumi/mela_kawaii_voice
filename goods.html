@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610151649">
+<link rel="stylesheet" href="assets/style.css?v=202610250101">
 <style>
 /* ===== 周邊頁 ===== */
 .view{gap:10px}
@@ -139,9 +139,9 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610151649"></script>
-<script src="assets/collect.js?v=202610151649"></script>
-<script src="assets/share.js?v=202610151649"></script>
+<script src="assets/common.js?v=202610250101"></script>
+<script src="assets/collect.js?v=202610250101"></script>
+<script src="assets/share.js?v=202610250101"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
@@ -154,7 +154,8 @@
  * - 企劃第一列（goods name 空白）的 goods picture＝企劃封面。頁面一開始只顯示企劃（封面＋標題），點封面或標題才展開商品卡片、讀商品圖片
  * - goods picture 也可以填網站裡的圖片路徑 assets/goods/檔名.webp（自己縮小過的圖，例如新聞稿素材，寬 800px 左右）
  * - goods picture 可留空：顯示預設圖示。官方商店（shop.hololivepro.com/cdn/）的圖片會自動加 width=600 讀小張的
- * - 「已入手」用「企劃代號|品名」辨識：改了代號或品名，大家勾過的紀錄就會不見
+ * - good index（企劃內的商品編號：0＝企劃列，商品 1、2、3…，之後不再變動）：「已入手」用「企劃代號#good index」辨識，品名改了也不影響
+ *   沒填 good index 的商品才用舊的「企劃代號|品名」。舊 id 的紀錄、備份檔、收藏代碼會自動對應到新 id（alias）
  * 「已入手」只存在瀏覽者自己的瀏覽器（localStorage），換瀏覽器或清除資料就會不見。
  *   頁面上有「匯出備份」（下載 mela-goods-backup-日期.json：{site:"mela-goods",version:2,exported,have:{id:數量}}）和「匯入備份」（合併，數量取較多的，不會取消原本的勾選；也讀得懂 version 1 的 id 陣列）。
  * - 已入手可以記數量：入手後按鈕兩邊有 −／＋（減到 0＝取消已入手）
@@ -188,6 +189,8 @@ addStrings({
 
 const HAVE_KEY="mela-goods-have";
 let series=[], have=new Map(), filter="all", tfilter="all", cfilter="all", yfilter="all", query="", order="desc";
+// 舊 id（企劃代號|品名）→ 新 id（企劃代號#good index）。舊的已入手紀錄、備份檔、收藏代碼都靠這個對應
+const alias=new Map();
 const PAGE=10; let limit=PAGE; // 企劃一次顯示 10 個 // have：商品 id → 入手數量（1 以上）
 const openPosts=new Set(); // 已展開宣傳推文的企劃
 const openSeries=new Set(); // 已展開的企劃（展開後才產生商品卡片、才讀商品圖片）
@@ -209,7 +212,7 @@ const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12
 // 試算表標題 → 欄位（依序比對，先比對到的優先）
 const GCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["pnote",/project\s*note|企劃說明|企画メモ/i],
   ["date",/date|日期|日付|発売/i],["shop",/official|website|shop|商店|ショップ/i],["post",/x\s*link|tweet|推文|ポスト|^x$/i],
-  ["name",/goods\s*name|品名|商品名/i],["type",/goods\s*type|類型|类型|種類|タイプ|^type$/i],["image",/picture|image|圖片|画像/i],["oversea",/oversea|海外/i],["price",/price|金額|價格|価格|値段|定価/i],["note",/note|說明|備註|メモ/i]];
+  ["idx",/goods?\s*index|^index$|^idx$|商品編號|番号/i],["name",/goods\s*name|品名|商品名/i],["type",/goods\s*type|類型|类型|種類|タイプ|^type$/i],["image",/picture|image|圖片|画像/i],["oversea",/oversea|海外/i],["price",/price|金額|價格|価格|値段|定価/i],["note",/note|說明|備註|メモ/i]];
 // CSV → 企劃
 function build(text){
   const rows=parseCSV(text||""); if(!rows.length){ series=[]; return; }
@@ -219,7 +222,7 @@ function build(text){
   for(const r of rows.slice(1)){
     const code=get(r,"code"), pname=get(r,"pname");
     if(code||pname){ const key=code||pname;
-      if(!map.has(key)) map.set(key,{key,name:pname||code,cover:"",date:null,shop:"",post:"",note:"",oversea:false,items:[]});
+      if(!map.has(key)) map.set(key,{key,code,name:pname||code,cover:"",date:null,shop:"",post:"",note:"",oversea:false,items:[]});
       cur=map.get(key);
       if(pname) cur.name=pname; const d=normDate(get(r,"date")); if(d) cur.date=d;
       cur.shop=webUrl(get(r,"shop"))||cur.shop; cur.note=get(r,"pnote")||cur.note; if(isYes(get(r,"oversea"))) cur.oversea=true; }
@@ -227,7 +230,10 @@ function build(text){
     const name=get(r,"name"), post=webUrl(cleanX(get(r,"post")));
     if(!name){ if(post) cur.post=post; const pt=get(r,"type").toLowerCase(); if(pt) cur.ptype=pt; const c=imgUrl(get(r,"image")); if(c) cur.cover=smallImg(c); continue; } // 沒有品名的列：企劃資料（goods picture＝企劃封面）
     const img=imgUrl(get(r,"image"));
-    cur.items.push({id:`${cur.key}|${name}`,name,type:get(r,"type").toLowerCase().replace(/[\s_-]+/g," ").trim(),image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
+    // 商品 id：有 goods project code 和 good index（1 以上）→「代號#index」（之後品名改了也不受影響）；沒有 → 舊的「代號|品名」
+    const idx=get(r,"idx").replace(/\.0+$/,""), oldId=`${cur.key}|${name}`, id=cur.code&&/^[1-9]\d*$/.test(idx)?`${cur.code}#${idx}`:oldId;
+    if(id!==oldId) alias.set(oldId,id);
+    cur.items.push({id,name,type:get(r,"type").toLowerCase().replace(/[\s_-]+/g," ").trim(),image:img?smallImg(img):"",post,shop:"",note:get(r,"note"),
       price:(v=>v?+v:null)(get(r,"price").replace(/[^\d.]/g,"")), // 金額（日圓）：先讀進來，頁面上還不顯示
       oversea:!(code||pname)&&isYes(get(r,"oversea"))});
   }
@@ -236,7 +242,11 @@ function build(text){
     if(!g.post&&withPost.length===1&&withPost[0]===g.items[0]){ g.post=g.items[0].post; g.items[0].post=""; } }
   for(const g of map.values()){ const p=g.ptype||""; g.cat=/anniv|周年|記念|纪念/.test(p)?"anniversary":/birth|生日|誕生/.test(p)?"birthday":g.oversea?"oversea":"other"; }
   series=[...map.values()].filter(g=>g.items.length);
+  // 把舊 id 的已入手紀錄換成新 id（數量取較多的）
+  let moved=false; for(const [k,n] of [...have]) if(alias.has(k)){ const nk=alias.get(k); have.delete(k); have.set(nk,Math.max(n,have.get(nk)||0)); moved=true; }
+  if(moved) saveHave();
 }
+const normId=id=>alias.get(id)||id;
 
 function linksHTML(o){ return (o.shop||o.post)?`<div class="g-links">${o.shop?`<a class="btn" href="${esc(o.shop)}" target="_blank" rel="noopener">${t("shop")} ↗</a>`:""}${o.post?`<a class="btn" href="${esc(o.post)}" target="_blank" rel="noopener">${isXPost(o.post)?"X "+t("xPost"):t("post")} ↗</a>`:""}</div>`:""; }
 
@@ -281,7 +291,7 @@ function render(){
   const years=[...new Set(series.map(g=>(g.date||"").slice(0,4)).filter(Boolean))].sort().reverse(); if(yfilter!=="all"&&!years.includes(yfilter)) yfilter="all";
   $("gYear").innerHTML=`<option value="all">${t("tpAll")}</option>`+years.map(y=>`<option value="${y}">${y}</option>`).join(""); $("gYear").value=yfilter;
   fillStatus(all.length,n);
-  const q=query.trim().toLowerCase(), hay=(i,g)=>[i.name,i.note,i.type,i.type&&tpName(i.type),g.name,g.key,g.note].join("\n").toLowerCase();
+  const q=query.trim().toLowerCase(), hay=(i,g)=>[i.name,i.note,i.type,i.type&&tpName(i.type),g.name,g.note].join("\n").toLowerCase(); // 只搜看得到的文字（企劃代號、good index 是內部用的，不給搜）
   const keep=(i,g)=>(filter==="all"||(filter==="have")===have.has(i.id))&&(tfilter==="all"||i.type===tfilter)&&(!q||hay(i,g).includes(q));
   const pass=g=>(cfilter==="all"||g.cat===cfilter)&&(yfilter==="all"||(g.date||"").startsWith(yfilter));
   const list=[...series].sort((a,b)=>(a.date||"").localeCompare(b.date||"")*(order==="asc"?1:-1));
@@ -341,15 +351,15 @@ MelaCollect.backup({site:"mela-goods",size:()=>have.size,data:()=>({version:2,ha
     const src=Array.isArray(d)?d:(d&&d.site==="mela-goods")?d.have:null;
     if(Array.isArray(src)&&!src.every(x=>typeof x==="string")) throw new Error("bad");
     const inc=toHave(src); if(!inc) throw new Error("bad");
-    let m=0; for(const [id,k] of inc) if(k>(have.get(id)||0)){ have.set(id,k); m++; }
+    let m=0; for(const [id0,k] of inc){ const id=normId(id0); if(k>(have.get(id)||0)){ have.set(id,k); m++; } }
     saveHave(); render(); return {n:inc.size,m}; }});
 $("gStatus").onchange=e=>{ filter=e.target.value; limit=PAGE; render(); };
 $("gYear").onchange=e=>{ yfilter=e.target.value; limit=PAGE; render(); };
 $("gQ").oninput=e=>{ query=e.target.value; limit=PAGE; render(); };
 $("gOrder").onchange=e=>{ order=e.target.value; limit=PAGE; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
 window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
-MelaShare.init({kind:"goods",panel:$("recRow"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),
-  merge:hits=>{ let n=0; for(const [id,k] of hits) if(k>(have.get(id)||0)){ have.set(id,Math.min(999,k)); n++; } if(n){ saveHave(); render(); } return n; }});
+MelaShare.init({kind:"goods",panel:$("recRow"),ids:()=>[...series.flatMap(g=>g.items.map(i=>i.id)),...alias.keys()], // 舊 id 也列進來：舊的收藏代碼還能對上
+  merge:hits=>{ let n=0; for(const [id0,k] of hits){ const id=normId(id0); if(k>(have.get(id)||0)){ have.set(id,Math.min(999,k)); n++; } } if(n){ saveHave(); render(); } return n; }});
 
 MelaCollect.loadSheet({url:GOODS_CSV_URL,key:GOODS_KEY,ttl:GOODS_TTL},
   text=>{ build(text); setLang(pickLang()); MelaShare.ready(); },
