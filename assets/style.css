@@ -492,7 +492,7 @@ body.has-player:not(.player-mini) .totop{display:none} /* 底部整排播放器�
 .g-prog i b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
 .g-prog.full{color:var(--accent-text)}
 /* 花費總金額：預設隱藏數字，按一下顯示 */
-.g-spend{padding:4px 12px;font-size:13px;gap:6px;background:var(--surface)}
+.g-spend{padding:4px 12px;font-size:13px;gap:6px;white-space:nowrap;background:var(--surface)}
 .g-spend b{font-size:16px!important;font-weight:600;color:var(--ink);letter-spacing:.02em}
 .g-spend[aria-pressed="false"] b{color:var(--muted);letter-spacing:.12em}
 .g-spend small{font-size:11px;color:var(--muted)}
@@ -521,7 +521,13 @@ footer .legal .sep{margin:0 8px}
 .acct-dot{position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg);background:var(--muted)}
 .acct-dot.ok{background:#3fb950}.acct-dot.sync{background:#f5b524}.acct-dot.bad{background:#e5484d}
 .acct-pop{position:absolute;top:calc(100% + 8px);right:0;z-index:40;box-sizing:border-box;width:min(290px,calc(100vw - 32px));display:flex;flex-direction:column;gap:8px;padding:16px;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 36px rgba(0,0,0,.28)}
-@media (max-width:600px){.acct-pop{right:auto;left:0}}
+/* 手機：登入按鈕移到最上面一行（「非官方粉絲網站」那行的右邊），語言切換留在下面，讓統計／投稿按鈕有空間 */
+@media (max-width:600px){
+  .topbar>header .acct{position:absolute;top:12px;right:16px}
+  .acct-in{height:28px}
+  .acct-av{width:30px;height:30px}
+  .right .hrow{justify-content:flex-end;row-gap:8px}
+}
 .acct-pop button{width:100%;justify-content:center}
 .acct-name{font-size:16px;line-height:1.4;overflow-wrap:anywhere}
 .acct-mail{margin-top:-6px;font-size:13px;color:var(--muted);overflow-wrap:anywhere}

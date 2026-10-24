@@ -15,7 +15,7 @@ const MelaSync=(()=>{
   const SB_URL="https://qmpmejxmsfidilszqqkk.supabase.co";
   const SB_KEY="sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH"; // publishable key：本來就是公開的，安全性靠資料表的 RLS
   const LOGIN_PUBLIC=true; // 公開顯示 Google 登入
-  const SB_SRC="assets/supabase.min.js?v=202610250247"; // supabase-js 2.118.0（MIT），需要時才載入
+  const SB_SRC="assets/supabase.min.js?v=202610250401"; // supabase-js 2.118.0（MIT），需要時才載入
   const TOKEN_KEY="sb-qmpmejxmsfidilszqqkk-auth-token", TEST_KEY="mela-login-test", LINK_KEY="mela-sync-link";
 
   addStrings({
