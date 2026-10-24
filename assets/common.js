@@ -14,7 +14,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了 assets/ 裡的檔案，要把所有 html 的 ?v= 版本號一起改（scripts/bump_version.py 會同時更新這裡和 ?v=）。
-const LAST_UPDATED = "2026-10-25 01:01";
+const LAST_UPDATED = "2026-10-25 01:31";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -166,6 +166,10 @@ function closePlayer(){ ytPlayer?.destroy?.(); ytPlayer=null; $("stage").innerHT
   if(typeof window.onPlayerClosed==="function") window.onPlayerClosed(); }
 
 /* ===== 頁尾（各頁共用）：頁面裡放空的 <footer></footer>，這裡填內容 ===== */
+// 隱私權政策／服務條款（privacy.html、terms.html，內容由 scripts/mklegal.py 產生）
+addStrings({zh:{titlePrivacy:"隱私權政策",titleTerms:"服務條款",privacyLink:"隱私權政策",termsLink:"服務條款"},
+  ja:{titlePrivacy:"プライバシーポリシー",titleTerms:"利用規約",privacyLink:"プライバシーポリシー",termsLink:"利用規約"},
+  en:{titlePrivacy:"Privacy Policy",titleTerms:"Terms of Service",privacyLink:"Privacy Policy",termsLink:"Terms of Service"}});
 const FOOTER_HTML=`<p class="official-label" data-i18n="officialLinks"></p>
 <nav class="official" data-i18n-aria="officialLinks">
   <a class="ob ob-yt" href="https://www.youtube.com/@AchichiMela" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>YouTube</span><b>Mela Ch.</b></a>
@@ -187,7 +191,8 @@ const FOOTER_HTML=`<p class="official-label" data-i18n="officialLinks"></p>
 </div>
 <p class="report" hidden><span data-i18n="reportLabel"></span> <a id="reportLink" href="#" target="_blank" rel="noopener" data-i18n="reportLink"></a></p>
 <p class="colophon"><span id="updated" hidden><span data-i18n="updatedLabel"></span> <time id="updatedAt"></time><span class="sep" aria-hidden="true">·</span></span><span data-i18n="madeWith"></span></p>
-<p class="rights" data-i18n="rights"></p>`;
+<p class="rights" data-i18n="rights"></p>
+<p class="legal"><a href="privacy.html" data-i18n="privacyLink"></a><span class="sep" aria-hidden="true">·</span><a href="terms.html" data-i18n="termsLink"></a></p>`;
 (function(){ const fill=()=>{ const f=document.querySelector("footer"); if(f&&!f.children.length) f.innerHTML=FOOTER_HTML; };
   if(document.querySelector("footer")) fill(); else document.addEventListener("DOMContentLoaded",fill); })();
 

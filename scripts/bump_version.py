@@ -12,7 +12,7 @@ from datetime import datetime, timezone, timedelta
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 V_RE = re.compile(r'(assets/[\w.\-]+\.(?:css|js))\?v=(\d+)')
-FILES = sorted(glob.glob("*.html")) + ["assets/share.js"]  # share.js 裡有 qrcode.min.js 的 ?v=
+FILES = sorted(glob.glob("*.html")) + ["assets/share.js", "assets/sync.js"]  # share.js 裡有 qrcode.min.js、sync.js 裡有 supabase.min.js 的 ?v=
 
 def versions():
     found = {}

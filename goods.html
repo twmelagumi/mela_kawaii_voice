@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250101">
+<link rel="stylesheet" href="assets/style.css?v=202610250131">
 <style>
 /* ===== 周邊頁 ===== */
 .view{gap:10px}
@@ -139,9 +139,10 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610250101"></script>
-<script src="assets/collect.js?v=202610250101"></script>
-<script src="assets/share.js?v=202610250101"></script>
+<script src="assets/common.js?v=202610250131"></script>
+<script src="assets/collect.js?v=202610250131"></script>
+<script src="assets/share.js?v=202610250131"></script>
+<script src="assets/sync.js?v=202610250131"></script>
 <script>
 /* ===== 周邊頁 =====
  * 資料來源：Google 試算表「周邊頁紀錄」分頁（GOODS_CSV_URL），欄位依第一列標題認：
@@ -206,7 +207,7 @@ const toHave=d=>{ const m=new Map();
   else return null; return m; };
 try{ have=toHave(JSON.parse(localStorage.getItem(HAVE_KEY)||"{}"))||new Map(); }catch(e){}
 try{ order=localStorage.getItem("mela-goods-order")||"desc"; }catch(e){}
-const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify(Object.fromEntries(have))); }catch(e){} };
+const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify(Object.fromEntries(have))); }catch(e){} MelaSync.push(); }; // 登入時同步到雲端（assets/sync.js）
 const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
 
 // 試算表標題 → 欄位（依序比對，先比對到的優先）
@@ -357,12 +358,15 @@ $("gStatus").onchange=e=>{ filter=e.target.value; limit=PAGE; render(); };
 $("gYear").onchange=e=>{ yfilter=e.target.value; limit=PAGE; render(); };
 $("gQ").oninput=e=>{ query=e.target.value; limit=PAGE; render(); };
 $("gOrder").onchange=e=>{ order=e.target.value; limit=PAGE; try{localStorage.setItem("mela-goods-order",order)}catch(_){} render(); };
-window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
+window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); MelaSync.paint(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
 MelaShare.init({kind:"goods",panel:$("recRow"),ids:()=>[...series.flatMap(g=>g.items.map(i=>i.id)),...alias.keys()], // 舊 id 也列進來：舊的收藏代碼還能對上
   merge:hits=>{ let n=0; for(const [id0,k] of hits){ const id=normId(id0); if(k>(have.get(id)||0)){ have.set(id,Math.min(999,k)); n++; } } if(n){ saveHave(); render(); } return n; }});
 
+// 雲端同步（Google 登入）：「雲端」那一列插在「備份」列上面
+MelaSync.init({kind:"goods",before:$("recRow"),get:()=>new Map(have),set:m=>{ have=new Map(m); saveHave(); render(); }});
+
 MelaCollect.loadSheet({url:GOODS_CSV_URL,key:GOODS_KEY,ttl:GOODS_TTL},
-  text=>{ build(text); setLang(pickLang()); MelaShare.ready(); },
+  text=>{ build(text); setLang(pickLang()); MelaShare.ready(); MelaSync.ready(); },
   text=>{ build(text); render(); });
 </script>
 </body>

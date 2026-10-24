@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250101">
+<link rel="stylesheet" href="assets/style.css?v=202610250131">
 <style>
 /* ===== 音聲頁（官方ボイス、動く壁紙等數位商品的收藏紀錄；跟周邊頁共用的 g-* 樣式在 assets/style.css） ===== */
 .view{gap:10px}
@@ -95,18 +95,20 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610250101"></script>
-<script src="assets/collect.js?v=202610250101"></script>
-<script src="assets/share.js?v=202610250101"></script>
+<script src="assets/common.js?v=202610250131"></script>
+<script src="assets/collect.js?v=202610250131"></script>
+<script src="assets/share.js?v=202610250131"></script>
+<script src="assets/sync.js?v=202610250131"></script>
 <script>
 /* ===== 音聲頁 =====
  * 資料來源：Google 試算表「Voice」分頁（VOICE_CSV_URL），欄位依第一列標題認（位置不限）：
- *   project code（企劃代號，英文）／project name（企劃名稱）／date（發售日）／voice name（品名）／price（金額，日圓）／
+ *   project code（企劃代號，英文）／project name（企劃名稱）／date（發售日）／index（企劃內的品項編號，從 0 開始，之後不再變動）／voice name（品名）／price（金額，日圓）／
  *   project website link（官方商店網址）／picture link（企劃封面圖，同一個企劃每列都填同一張）
  * - 每一列＝一個品項（ボイス、動く壁紙…）；同一個企劃代號的列會併成一個企劃。企劃代號和名稱留空的列算是上一個企劃的品項。
  * - 音聲只需要買一份，所以「已入手」只有勾選，沒有數量。
  * - price 只用來算頁首的「花費」（已入手的金額加總，預設隱藏，按一下顯示），品項上不顯示金額。
- * - 「已入手」用「企劃代號|品名」辨識（跟周邊頁同一個格式）：改了代號或品名，大家勾過的紀錄就會不見。
+ * - 「已入手」用「企劃代號#index」辨識（例 startingvoice_achichimela#1），品名改了也不影響；代號和 index 只在內部用，頁面上不顯示。
+ *   沒填 index 的品項才用舊的「企劃代號|品名」。舊 id 的紀錄、備份檔、收藏代碼會自動對應到新 id（alias）。
  *   只存在瀏覽者自己的瀏覽器（localStorage mela-voice-have），跟周邊頁的紀錄互相獨立。
  *   頁面上有「匯出備份」（mela-voice-backup-日期.json：{site:"mela-voice",version:1,exported,have:[id…]}）和「匯入備份」（合併，不會取消原本勾的）。
  * - 封面圖是官方商店（shop.hololivepro.com/cdn/）的網址時，自動加 width=600 讀小張的。
@@ -134,15 +136,17 @@ addStrings({
 
 const HAVE_KEY="mela-voice-have";
 let series=[], have=new Set(), filter="all", order="desc";
+// 舊 id（企劃代號|品名）→ 新 id（企劃代號#index）。舊的已入手紀錄、備份檔、收藏代碼都靠這個對應
+const alias=new Map();
 const toIds=d=>Array.isArray(d)&&d.every(x=>typeof x==="string")?d:null;
 try{ have=new Set(toIds(JSON.parse(localStorage.getItem(HAVE_KEY)||"[]"))||[]); }catch(e){}
 try{ order=localStorage.getItem("mela-voice-order")==="asc"?"asc":"desc"; }catch(e){}
-const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify([...have])); }catch(e){} };
+const saveHave=()=>{ try{ localStorage.setItem(HAVE_KEY,JSON.stringify([...have])); }catch(e){} MelaSync.push(); }; // 登入時同步到雲端（assets/sync.js）
 const bagSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>';
 
 // 試算表標題 → 欄位（依序比對，先比對到的優先）
 const VCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["date",/date|日期|日付|発売/i],
-  ["name",/voice\s*name|品名|商品名|ボイス名/i],["price",/price|金額|價格|価格|値段|定価/i],["image",/picture|image|圖片|画像/i],["shop",/website|official|shop|商店|ショップ|網址/i]];
+  ["idx",/^index$|^idx$|(goods|voice)\s*index|商品編號|番号/i],["name",/voice\s*name|品名|商品名|ボイス名/i],["price",/price|金額|價格|価格|値段|定価/i],["image",/picture|image|圖片|画像/i],["shop",/website|official|shop|商店|ショップ|網址/i]];
 // CSV → 企劃
 function build(text){
   const rows=parseCSV(text||""); if(!rows.length){ series=[]; return; }
@@ -152,18 +156,25 @@ function build(text){
   for(const r of rows.slice(1)){
     const code=get(r,"code"), pname=get(r,"pname");
     if(code||pname){ const key=code||pname;
-      if(!map.has(key)) map.set(key,{key,name:pname||code,cover:"",date:null,shop:"",items:[]});
+      if(!map.has(key)) map.set(key,{key,code,name:pname||code,cover:"",date:null,shop:"",items:[]});
       cur=map.get(key);
       if(pname) cur.name=pname; const d=normDate(get(r,"date")); if(d) cur.date=d;
       cur.shop=webUrl(get(r,"shop"))||cur.shop; }
     if(!cur) continue;
     const img=webUrl(get(r,"image")); if(img&&!cur.cover) cur.cover=smallImg(img);
     const name=get(r,"name"); if(!name) continue;
-    const id=`${cur.key}|${name}`; if(cur.items.some(i=>i.id===id)) continue; // 同一個企劃裡品名重複的列只算一個
+    // 品項 id：有 project code 和 index（0 以上的整數）→「代號#index」（之後品名改了也不受影響）；沒有 → 舊的「代號|品名」
+    const idx=get(r,"idx").replace(/\.0+$/,""), oldId=`${cur.key}|${name}`, id=cur.code&&/^\d+$/.test(idx)?`${cur.code}#${+idx}`:oldId;
+    if(cur.items.some(i=>i.id===id)) continue; // 同一個企劃裡重複的列只算一個
+    if(id!==oldId) alias.set(oldId,id);
     cur.items.push({id,name,price:(v=>v?+v:null)(get(r,"price").replace(/[^\d.]/g,""))});
   }
   series=[...map.values()].filter(g=>g.items.length);
+  // 把舊 id（代號|品名）的已入手紀錄換成新 id
+  let moved=false; for(const k of [...have]) if(alias.has(k)){ have.delete(k); have.add(alias.get(k)); moved=true; }
+  if(moved) saveHave();
 }
+const normId=id=>alias.get(id)||id;
 
 // 頁首「花費」＝已入手品項的金額加總（音聲只有一份）
 const updateSpend=MelaCollect.spend(()=>series.flatMap(g=>g.items.filter(i=>have.has(i.id)).map(i=>[i.price,1])));
@@ -210,15 +221,18 @@ document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b
 // ---- 已入手的備份（.json）：{site:"mela-voice",version:1,have:[id…]}；匯入＝合併 ----
 MelaCollect.backup({site:"mela-voice",size:()=>have.size,data:()=>({version:1,have:[...have]}),
   merge:d=>{ const inc=toIds(Array.isArray(d)?d:(d&&d.site==="mela-voice")?d.have:null); if(!inc) throw new Error("bad");
-    let m=0; for(const id of inc) if(!have.has(id)){ have.add(id); m++; }
+    let m=0; for(const id0 of inc){ const id=normId(id0); if(!have.has(id)){ have.add(id); m++; } }
     saveHave(); render(); return {n:inc.length,m}; }});
 $("vOrder").onchange=e=>{ order=e.target.value; try{localStorage.setItem("mela-voice-order",order)}catch(_){} render(); };
-window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
-MelaShare.init({kind:"voice",panel:$("recRow"),ids:()=>series.flatMap(g=>g.items.map(i=>i.id)),
-  merge:hits=>{ let n=0; for(const [id] of hits) if(!have.has(id)){ have.add(id); n++; } if(n){ saveHave(); render(); } return n; }});
+window.onLangChange=()=>{ $("bkMsg").hidden=true; MelaShare.hideMsg(); MelaSync.paint(); render(); }; // 換語言時收起備份訊息（訊息是用舊語言寫的）
+MelaShare.init({kind:"voice",panel:$("recRow"),ids:()=>[...series.flatMap(g=>g.items.map(i=>i.id)),...alias.keys()], // 舊 id 也列進來：舊的收藏代碼還能對上
+  merge:hits=>{ let n=0; for(const [id0] of hits){ const id=normId(id0); if(!have.has(id)){ have.add(id); n++; } } if(n){ saveHave(); render(); } return n; }});
+
+// 雲端同步（Google 登入）：音聲沒有數量，雲端存 1
+MelaSync.init({kind:"voice",before:$("recRow"),get:()=>new Map([...have].map(id=>[id,1])),set:m=>{ have=new Set(m.keys()); saveHave(); render(); }});
 
 MelaCollect.loadSheet({url:VOICE_CSV_URL,key:VOICE_KEY,ttl:VOICE_TTL},
-  text=>{ build(text); setLang(pickLang()); MelaShare.ready(); },
+  text=>{ build(text); setLang(pickLang()); MelaShare.ready(); MelaSync.ready(); },
   text=>{ build(text); render(); });
 </script>
 </body>

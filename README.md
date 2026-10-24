@@ -288,12 +288,13 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 | `project code` | 企劃代號（商品頁網址最後一段）。企劃代號和名稱都留空的列，算是上一個企劃的品項 |
 | `project name` | 企劃名稱 |
 | `date` | 發售日，`2026/9/25` 這種格式 |
+| `index` | 企劃內的品項編號，從 0 開始，之後不要改（內部用，不顯示） |
 | `voice name` | 品名（日語、英語版本分成不同列，可以分開勾） |
 | `price` | 日圓定價，只填數字。只用來算頁首的「花費」，品項上不顯示 |
 | `project website link` | 官方商店網址 |
 | `picture link` | 企劃封面圖網址（同一個企劃每列填同一張即可）。官方商店（shop.hololivepro.com/cdn/）的圖會自動縮成寬 600px |
 
-- 「已入手」用「`project code`｜`voice name`」辨識，改了代號或品名，大家勾過的紀錄就會對不上。
+- `index`：企劃內的品項編號，從 0 開始（音聲每列都是品項，所以 0 就是第一個品項），**填了之後不要改**。「已入手」用「企劃代號#index」記錄（例 `startingvoice_achichimela#1`），品名改了紀錄也不會不見；沒填 index 的才用舊的「`project code`｜`voice name`」。代號和 index 只在內部使用，頁面上不顯示。
 - 音聲只需要買一份，所以沒有數量加減。
 - 「Voice」分頁要「檔案 → 共用 → 發佈到網路」發佈成 CSV，網址填在 `voicegoods.html` 的 `VOICE_CSV_URL`。訪客的瀏覽器會快取 5 分鐘。
 - 周邊頁（goods.html）的試算表不要再放ボイス，各自記各自的。
@@ -314,7 +315,20 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 兩頁的「已入手」除了 .json 備份，也能做成**代碼／匯入連結／QR code**搬到其他裝置（`assets/share.js`，QR 用 `assets/qrcode.min.js`＝qrcode-generator 1.4.4，MIT）。
 
-- 一組代碼同時包含周邊和音聲兩頁的紀錄，格式 `MELA1.`＋base64url：版本、周邊（品項雜湊＋數量）、音聲（品項雜湊）、2 bytes 檢查碼。品項雜湊＝品項 id（周邊：「企劃代號#good index」，沒有 index 的用「企劃代號|品名」；音聲：「企劃代號|品名」）的 32 位元 FNV-1a，代碼裡看不出品名。舊的（用「代號|品名」做的）周邊代碼也還能匯入。
+- 一組代碼同時包含周邊和音聲兩頁的紀錄，格式 `MELA1.`＋base64url：版本、周邊（品項雜湊＋數量）、音聲（品項雜湊）、2 bytes 檢查碼。品項雜湊＝品項 id（周邊：「企劃代號#good index」，沒有 index 的用「企劃代號|品名」；音聲：「企劃代號#index」，沒有 index 的用「企劃代號|品名」）的 32 位元 FNV-1a，代碼裡看不出品名。舊的（用「代號|品名」做的）代碼也還能匯入。
 - 匯入連結＝頁面網址＋`#r=代碼`（# 後面不會送到伺服器）；QR code 的內容就是這個連結，手機相機掃了會開站並詢問是否匯入。
 - 一律「合併」：不會取消原本勾的，周邊數量取較多的。在其中一頁匯入時，另一頁的部分暫存在 localStorage `mela-share-pending`，下次開那一頁時自動套用。
 - 已下架的品項、或沒有 good index 而品名改過的品項，匯入時會對不上（會提示幾項找不到）。
+
+## 雲端同步（Google 登入，周邊頁／音聲頁）
+
+`assets/sync.js`（`MelaSync`）：用 Supabase 的 Google 登入，把「已入手」存到雲端，跨裝置同步。沒登入時跟以前一樣只存在瀏覽器。supabase-js 放在 `assets/supabase.min.js`（2.118.0，MIT），需要時才載入。
+
+- 設定在 `assets/sync.js` 開頭：Supabase Project URL、publishable key（公開的，安全性靠資料表的 RLS）、`LOGIN_PUBLIC`。
+- **測試期間** `LOGIN_PUBLIC = false`：網址加 `?login=1` 才會出現「雲端」那一列（會記住，`?login=0` 取消）；已經登入的人一直看得到。正式公開時改成 `true`。
+- 資料表 `public.collection`：`user_id`、`kind`（goods／voice）、`item_id`（周邊「代號#good index」、音聲「代號#index」）、`qty`（1–999，音聲固定 1）、`updated_at`；每人只能讀寫自己的列（RLS）。
+- 同步規則：這台第一次跟某個帳號同步、而且兩邊不一樣時，讓使用者選「合併（數量取較多的）／用雲端的／用這台的」。之後每次改動只傳有變的部分；開頁面時先補傳這台離線時改的，再用雲端的更新這台。連不上雲端時照常存在這台。
+- 「刪除雲端紀錄」：呼叫資料庫函式 `delete_me()`（連登入帳號一起刪）；沒有這個函式時只刪紀錄。
+- Supabase 免費方案一週沒有使用會暫停，要到 Supabase 後台恢復（資料不會不見）；暫停期間網站照常運作，只是不能同步。
+- 隱私權政策 `privacy.html`、服務條款 `terms.html`（Google 登入的同意畫面需要這兩個網址）：中日英三語在同一頁，內容寫在 `scripts/mklegal.py`，改文字後在 repo 根目錄跑 `python scripts/mklegal.py` 重新產生。頁尾和「雲端」說明都有連結。
+- `.github/workflows/supabase-keepalive.yml`：每週一、週四對資料庫發一個很小的查詢（用公開的 publishable key，只會拿到空陣列），避免免費方案因為一週沒使用而暫停。失敗時 Actions 會顯示紅色並寄信通知。

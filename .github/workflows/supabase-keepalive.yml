@@ -1,0 +1,28 @@
+# Supabase 免費方案一週沒有使用就會暫停。這個排程每週兩次（週一、週四 台灣時間 11:17）
+# 對資料庫發一個很小的查詢，讓專案保持「有在使用」。
+# 查詢用的是公開的 publishable key（跟網頁裡的一樣），因為 RLS 的關係只會回傳空陣列 []，不會讀到任何人的資料。
+# 如果失敗（例如專案已經被暫停），這個 workflow 會顯示紅色失敗，GitHub 會寄信通知 → 到 Supabase 後台按 Restore。
+# 也可以到 Actions 分頁 → Supabase keepalive → Run workflow 手動執行。
+name: Supabase keepalive
+
+on:
+  schedule:
+    - cron: "17 3 * * 1,4"   # UTC 03:17＝台灣時間 11:17，每週一、週四
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query Supabase
+        env:
+          SB_URL: https://qmpmejxmsfidilszqqkk.supabase.co
+          SB_KEY: sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH
+        run: |
+          code=$(curl -sS -o body.txt -w "%{http_code}" --max-time 30 \
+            "$SB_URL/rest/v1/collection?select=item_id&limit=1" -H "apikey: $SB_KEY")
+          echo "HTTP $code"; head -c 300 body.txt; echo
+          test "$code" = "200"

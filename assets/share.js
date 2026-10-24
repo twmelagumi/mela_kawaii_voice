@@ -6,13 +6,13 @@
  *   周邊：uvarint 數量 n，接 n 筆［4 bytes 雜湊（大端）＋ uvarint 入手數量］
  *   音聲：uvarint 數量 m，接 m 筆［4 bytes 雜湊］
  *   最後 2 bytes = 檢查碼（前面所有 bytes 的 FNV-1a 折成 16 位元）
- *   雜湊 = 品項 id（跟 localStorage 裡的 id 一樣；周邊是「企劃代號#good index」，音聲和沒有 index 的周邊是「企劃代號|品名」）的 UTF-8 bytes 做 32 位元 FNV-1a。
+ *   雜湊 = 品項 id（跟 localStorage 裡的 id 一樣；周邊「企劃代號#good index」、音聲「企劃代號#index」；沒有 index 的是「企劃代號|品名」）的 UTF-8 bytes 做 32 位元 FNV-1a。
  *   代碼裡看不出品名；匯入時用目前清單的 id 算雜湊來比對，所以品名改過／已下架的品項會對不上。
  * 匯入連結＝頁面網址＋「#r=代碼」（# 後面的內容不會送到伺服器）；QR code 的內容就是這個連結，用手機相機掃就會開站。
  * 兩頁的紀錄都放在同一個代碼裡：在其中一頁匯入，另一頁的部分先存在 localStorage（mela-share-pending），下次開那一頁時自動套用。
  */
 const MelaShare=(()=>{
-  const GK="mela-goods-have", VK="mela-voice-have", PK="mela-share-pending", PREFIX="MELA1.", QR_SRC="assets/qrcode.min.js?v=202610250101";
+  const GK="mela-goods-have", VK="mela-voice-have", PK="mela-share-pending", PREFIX="MELA1.", QR_SRC="assets/qrcode.min.js?v=202610250131";
   addStrings({
    zh:{shOpen:"轉移到其他裝置",recLabel:"紀錄",shTitle:"轉移紀錄",shCopyCode:"複製代碼",shCopyLink:"複製連結",shLinkL:"匯入連結",shCodeL:"代碼",shPasteL:"在這台裝置匯入：貼上代碼或匯入連結",shClose:"關閉",shQrNote2:"在另一台裝置用相機掃描 QR code，或開啟匯入連結，確認後即可匯入。",shImport:"匯入",shCancel:"取消",shDownload:"下載圖片",shDesc:"代碼包含「周邊」和「音聲」兩頁已入手的紀錄，在任一頁匯入，兩頁都會套用。匯入是「合併」：不會取消你原本勾的，周邊數量取較多的。代碼裡只存每個品項的指紋（由企劃代號＋品名算出），看不出品名；匯入時會拿去對照目前網站上的清單。如果某個品項的品名或企劃代號後來被改過、或已從清單移除，就對不到、不會匯入，匯入後會告訴你有幾項沒對上。",
      shPlaceholder:"把代碼或匯入連結貼在這裡",shQrDense:"紀錄比較多，QR code 很密；如果掃不到，請改用匯入連結或代碼。",shQrBig:"紀錄太多，QR code 放不下，請改用匯入連結或代碼。",

@@ -499,3 +499,19 @@ body.has-player:not(.player-mini) .totop{display:none} /* 底部整排播放器�
 .g-spend-note{flex-basis:100%;margin:-4px 0 0;font-size:11px;line-height:1.6;color:var(--muted);text-align:right}
 @media (max-width:600px){.g-spend-note{text-align:left}}
 body.scrolled .g-spend-note{display:none}
+/* 雲端同步（assets/sync.js）：「雲端」列＋選擇對話框 */
+.g-sync-in{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.g-sync-d{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.g-sync-st{margin:0;font-size:12px;line-height:1.6}
+.g-sync-st.ok{color:var(--accent-text)}
+.g-sync-st.err{color:#d93d42}
+.g-sync-who{align-self:center;font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.g-sync-btns{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.g-sync-btns button{justify-content:center;white-space:normal;text-align:center}
+.g-tools.g-sync{align-items:flex-start}
+.g-sync .chips-label{align-self:flex-start}
+/* 頁尾的隱私權政策／服務條款連結 */
+footer .legal{font-size:12px;color:var(--muted)}
+footer .legal a{color:inherit}
+footer .legal .sep{margin:0 8px}
+.g-sync-d a{color:var(--accent-text)}
