@@ -325,7 +325,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 `assets/sync.js`（`MelaSync`）：用 Supabase 的 Google 登入，把「已入手」存到雲端，跨裝置同步。沒登入時跟以前一樣只存在瀏覽器。supabase-js 放在 `assets/supabase.min.js`（2.118.0，MIT），需要時才載入。
 
 - 設定在 `assets/sync.js` 開頭：Supabase Project URL、publishable key（公開的，安全性靠資料表的 RLS）、`LOGIN_PUBLIC`。
-- **測試期間** `LOGIN_PUBLIC = false`：網址加 `?login=1` 才會出現標題列的「Google 登入」按鈕（會記住，`?login=0` 取消）；已經登入的人一直看得到。正式公開時改成 `true`。
+- `LOGIN_PUBLIC = true`：標題列的「Google 登入」按鈕對所有訪客公開顯示。
 - 畫面：標題列語言切換左邊。沒登入＝「Google 登入」按鈕（點了先看說明再登入）；登入後＝頭像（右下角小圓點：綠＝已同步、黃＝同步中、紅＝連不上），點頭像打開選單：名稱、email、同步狀態、立即同步、登出、刪除雲端紀錄。
 - 資料表 `public.collection`：`user_id`、`kind`（goods／voice）、`item_id`（周邊「代號#good index」、音聲「代號#index」）、`qty`（1–999，音聲固定 1）、`updated_at`；每人只能讀寫自己的列（RLS）。
 - 同步規則：這台第一次跟某個帳號同步、而且兩邊不一樣時，讓使用者選「合併（數量取較多的）／用雲端的／用這台的」。之後每次改動只傳有變的部分；開頁面時先補傳這台離線時改的，再用雲端的更新這台。連不上雲端時照常存在這台。

@@ -9,13 +9,13 @@
  *   - 每次勾選／加減數量／匯入，頁面呼叫 MelaSync.push()：跟「上次同步的內容」比對，只傳有變的（0＝刪掉那列）
  *   - 連不上雲端（例如免費方案暫停）時，紀錄照樣存在這台，下次開頁面會再補傳
  * 畫面：標題列語言切換左邊的「Google 登入」按鈕；登入後變成頭像（右下角小圓點＝同步狀態），點了打開選單：名稱、email、狀態、立即同步、登出、刪除雲端紀錄。
- * 測試期間：LOGIN_PUBLIC=false 時，網址加 ?login=1 才會出現登入按鈕（記在 localStorage，?login=0 取消）；已經登入的人一直看得到。
+ * Google 登入按鈕目前對所有訪客公開顯示。
  */
 const MelaSync=(()=>{
   const SB_URL="https://qmpmejxmsfidilszqqkk.supabase.co";
   const SB_KEY="sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH"; // publishable key：本來就是公開的，安全性靠資料表的 RLS
-  const LOGIN_PUBLIC=false; // 正式公開登入時改成 true
-  const SB_SRC="assets/supabase.min.js?v=202610250224"; // supabase-js 2.118.0（MIT），需要時才載入
+  const LOGIN_PUBLIC=true; // 公開顯示 Google 登入
+  const SB_SRC="assets/supabase.min.js?v=202610250244"; // supabase-js 2.118.0（MIT），需要時才載入
   const TOKEN_KEY="sb-qmpmejxmsfidilszqqkk-auth-token", TEST_KEY="mela-login-test", LINK_KEY="mela-sync-link";
 
   addStrings({
