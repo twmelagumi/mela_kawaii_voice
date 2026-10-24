@@ -334,5 +334,5 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 隱私權政策 `privacy.html`、服務條款 `terms.html`（Google 登入的同意畫面需要這兩個網址）：中日英三語在同一頁，內容寫在 `scripts/mklegal.py`，改文字後在 repo 根目錄跑 `python scripts/mklegal.py` 重新產生。頁尾和「雲端」說明都有連結。
 - `.github/workflows/supabase-keepalive.yml`：每週一、週四對資料庫發一個很小的查詢（用公開的 publishable key，只會拿到空陣列），避免免費方案因為一週沒使用而暫停。失敗時 Actions 會顯示紅色並寄信通知。
 - 每一頁的標題列都有登入按鈕（`assets/sync.js` 每頁都載入；收藏頁之外只有帳號功能，不同步）。
-- 個人設定（帳號選單 →「個人設定」）：暱稱（最多 24 字）和頭像。頭像在瀏覽器裡先裁成正方形、縮成 256×256 的 webp（100KB 以內）才上傳到 Supabase Storage 的 `avatars` bucket（`使用者ID/avatar.webp`，公開讀取）；資料存在 `public.profiles`（`nickname`、`avatar_url`、`upload_banned`）。
-- 停用某人的頭像上傳：在 Supabase 的 Table Editor 把他 `profiles` 那列的 `upload_banned` 改成 true、`avatar_url` 清空，再到 Storage 的 `avatars` 刪掉他的資料夾。使用者自己不能改 `upload_banned`。
+- 個人設定（帳號選單 →「個人設定」）：暱稱（最多 24 字）和頭像。頭像在瀏覽器裡先裁成正方形、縮成 256×256 的 webp（100KB 以內）才上傳到 Supabase Storage 的 `avatars` bucket（`使用者ID/avatar.webp`，公開讀取）；資料存在 `public.profiles`（`nickname`、`avatar_url`、`upload_banned`、`nickname_banned`）。
+- 管理後台：先登入網站一次，再把 `supabase/admin-setup.sql` 貼到 Supabase SQL Editor 執行；將 SQL 最後的 `REPLACE-WITH-ADMIN-GOOGLE-EMAIL` 換成管理員 Google email。之後開啟 `admin.html` 可搜尋使用者、移除暱稱／頭像，或停用／恢復該使用者的暱稱設定與頭像上傳。管理員帳號清單只能由 Supabase SQL Editor 維護；後台資料存取由資料庫 RPC 驗證，頭像上傳限制也由 Storage RLS 強制執行。

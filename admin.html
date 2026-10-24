@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>管理後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=202610250224">
+<style>
+.admin-login,.admin-board{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.admin-login{max-width:600px;margin:auto}
+.admin-login p,.admin-note{color:var(--muted)}
+.admin-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.admin-search{flex:1 1 260px;min-width:0;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink);font:inherit}
+.admin-count{color:var(--muted);font-family:var(--f-code);font-size:13px}
+.admin-status{min-height:1.5em;margin:10px 0;color:var(--muted)}
+.admin-status.err{color:#d93d42}
+.admin-table-wrap{overflow-x:auto;margin-top:12px}
+.admin-table{width:100%;border-collapse:collapse;min-width:850px}
+.admin-table th,.admin-table td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.admin-table th{font-size:12px;color:var(--muted);white-space:nowrap}
+.admin-user{display:flex;align-items:center;gap:10px;min-width:220px}
+.admin-avatar{width:44px;height:44px;flex:none;border-radius:50%;object-fit:cover;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent-text);font-weight:700}
+.admin-name{font-weight:700;overflow-wrap:anywhere}
+.admin-email,.admin-id{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.admin-flags{display:flex;flex-wrap:wrap;gap:5px}
+.admin-flag{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);white-space:nowrap}
+.admin-flag.warn{background:#fff0d9;color:#965b00}
+@media(prefers-color-scheme:dark){.admin-flag.warn{background:#3a2b17;color:#ffcc78}}
+.admin-actions{display:flex;flex-wrap:wrap;gap:6px;min-width:235px}
+.admin-actions button{font-size:12px;padding:6px 10px}
+.admin-actions .danger{color:#b4232a;border-color:#e7a8ab}
+.admin-disabled{color:var(--muted);text-align:center;padding:28px}
+.admin-board[hidden],.admin-login[hidden]{display:none}
+</style>
+</head>
+<body data-title-key="adminTitle">
+<div class="wrap">
+  <div class="topbar">
+    <header>
+      <div><span class="unofficial" data-i18n="unofficial"></span><h1><span class="jp">熱千めら</span> <span data-i18n="adminTitle"></span></h1><p class="sub" data-i18n="adminSub"></p></div>
+      <div class="right"><div class="lang" role="group" aria-label="Language"><button type="button" data-lang="zh">中文</button><button type="button" data-lang="ja">日本語</button><button type="button" data-lang="en">EN</button></div></div>
+    </header>
+    <nav class="views"><a href="./" data-i18n="tabVoices"></a><a href="goods.html" data-i18n="tabGoods"></a><a href="admin.html" aria-current="page" data-i18n="adminTitle"></a></nav>
+  </div>
+
+  <section class="view">
+    <div class="admin-login" id="loginBox" hidden>
+      <h2 data-i18n="adminSignIn"></h2><p data-i18n="adminSignInText"></p>
+      <button type="button" class="primary" id="signIn" data-i18n="adminGoogle"></button>
+    </div>
+    <div class="admin-board" id="adminBoard" hidden>
+      <div class="admin-tools"><input class="admin-search" type="search" id="search" data-i18n-ph="adminSearch" autocomplete="off"><span class="admin-count" id="resultCount"></span><button type="button" id="refresh" data-i18n="adminRefresh"></button><button type="button" id="signOut" data-i18n="syLogout"></button></div>
+      <p class="admin-note" data-i18n="adminNote"></p>
+      <p class="admin-status" id="status" role="status" aria-live="polite"></p>
+      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th data-i18n="adminUser"></th><th data-i18n="adminFlags"></th><th data-i18n="adminActions"></th></tr></thead><tbody id="users"></tbody></table></div>
+    </div>
+    <div class="admin-disabled" id="denied" hidden><h2 data-i18n="adminDenied"></h2><p data-i18n="adminDeniedText"></p><button type="button" id="deniedOut" data-i18n="syLogout"></button></div>
+  </section>
+</div>
+<script src="assets/common.js?v=202610250224"></script>
+<script src="assets/admin.js?v=202610250224"></script>
+</body>
+</html>

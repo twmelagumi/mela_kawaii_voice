@@ -14,7 +14,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了 assets/ 裡的檔案，要把所有 html 的 ?v= 版本號一起改（scripts/bump_version.py 會同時更新這裡和 ?v=）。
-const LAST_UPDATED = "2026-10-25 01:31";
+const LAST_UPDATED = "2026-10-25 02:24";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
