@@ -1,7 +1,7 @@
 /* 管理後台。真正的權限與資料存取限制由 supabase/admin-setup.sql 的 RPC/RLS 保護。 */
 const ADMIN_SB_URL="https://qmpmejxmsfidilszqqkk.supabase.co";
 const ADMIN_SB_KEY="sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH";
-const ADMIN_SB_SRC="assets/supabase.min.js?v=202610250401";
+const ADMIN_SB_SRC="assets/supabase.min.js?v=202610250835";
 
 addStrings({
  zh:{adminTitle:"管理後台",adminSub:"使用者暱稱與頭像審核",adminSignIn:"管理員登入",adminSignInText:"請使用已加入管理員名單的 Google 帳號。",adminGoogle:"以 Google 登入",adminDenied:"沒有管理權限",adminDeniedText:"此 Google 帳號不在管理員名單中。",adminSearch:"搜尋 email、暱稱或使用者 ID…",adminRefresh:"重新整理",adminNote:"移除內容會刪除雲端頭像檔案或暱稱。停用設定功能後，使用者仍可登入與同步收藏，但不能再修改對應資料。",adminUser:"使用者",adminFlags:"限制狀態",adminActions:"管理操作",adminNoUsers:"目前沒有使用者。",adminLoading:"正在載入…",adminLoadErr:"無法載入使用者清單。",adminRemoveAvatar:"移除頭像",adminRemoveNick:"移除暱稱",adminBanAvatar:"停用頭像上傳",adminAllowAvatar:"允許頭像上傳",adminBanNick:"停用暱稱設定",adminAllowNick:"允許暱稱設定",adminAvatarBanned:"已停用頭像上傳",adminNickBanned:"已停用暱稱設定",adminConfirmAvatar:"確定移除此使用者的頭像檔案與頭像網址？",adminConfirmNick:"確定清除此使用者的暱稱？",adminConfirmBan:"確定變更此使用者的設定權限？",adminApplied:"已更新使用者設定。",adminActionErr:"操作失敗。請確認資料庫已套用 admin-setup.sql。",adminNeedsSetup:"管理員權限尚未設定。請先套用管理員 SQL。"},
