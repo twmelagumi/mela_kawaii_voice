@@ -249,6 +249,103 @@
       ],
       "answer": 2,
       "shuffle": false
+    },
+    {
+      "id": "fav-ponde",
+      "type": "choice",
+      "q": {
+        "zh": "めら最喜歡的波堤圈（ポン・デ・リング）口味是？",
+        "ja": "めらが一番好きなポン・デ・リングの味は？",
+        "en": "What is Mela's favorite Pon de Ring flavor?"
+      },
+      "options": [
+        "巧克力",
+        "草莓",
+        "黑糖",
+        "抹茶"
+      ],
+      "answer": 1,
+      "source": "https://www.youtube.com/live/bB5HkHSQWkI?t=4840"
+    },
+    {
+      "id": "kirby-socks",
+      "type": "tf",
+      "q": {
+        "zh": "めら有一雙襪子的圖案是卡比。",
+        "ja": "めらには、カービィ柄の靴下がある。",
+        "en": "Mela has a pair of socks with a Kirby design."
+      },
+      "answer": true
+    },
+    {
+      "id": "membership-anzen",
+      "type": "tf",
+      "q": {
+        "zh": "めら的會員（メンバーシップ）名稱是「安全地帯」。",
+        "ja": "めらのメンバーシップの名前は「安全地帯」である。",
+        "en": "The name of Mela's channel membership is \"安全地帯\" (Safe Zone)."
+      },
+      "answer": true
+    },
+    {
+      "id": "membership-shobo",
+      "type": "tf",
+      "q": {
+        "zh": "めら的會員（メンバーシップ）名稱是「消防安全」。",
+        "ja": "めらのメンバーシップの名前は「消防安全」である。",
+        "en": "The name of Mela's channel membership is \"消防安全\" (Fire Safety)."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "正確是「安全地帯」。",
+        "ja": "正しくは「安全地帯」です。",
+        "en": "It's \"安全地帯\" (Safe Zone)."
+      }
+    },
+    {
+      "id": "hairpin-colors",
+      "type": "tf",
+      "q": {
+        "zh": "以めら本人的左右為準，她頭上的髮飾，右邊是綠色，左邊是粉紅色。",
+        "ja": "めら本人から見て、頭の髪飾りは右が緑、左がピンクである。",
+        "en": "From Mela's own point of view, her hair ornament on the right is green and the one on the left is pink."
+      },
+      "answer": true
+    },
+    {
+      "id": "edo-riverhut",
+      "type": "tf",
+      "q": {
+        "zh": "めら在江戶時代、和人類一起生活之前，住在河邊的小屋。",
+        "ja": "めらは江戸時代、人間と暮らす前は川辺の小屋に住んでいた。",
+        "en": "In the Edo period, before living with humans, Mela lived in a riverside hut."
+      },
+      "answer": false,
+      "explain": {
+        "zh": "她住的是山洞。",
+        "ja": "住んでいたのは山の洞窟です。",
+        "en": "She lived in a mountain cave."
+      }
+    },
+    {
+      "id": "edo-cave",
+      "type": "tf",
+      "q": {
+        "zh": "めら在江戶時代、和人類一起生活之前，住在山洞。",
+        "ja": "めらは江戸時代、人間と暮らす前は山の洞窟に住んでいた。",
+        "en": "In the Edo period, before living with humans, Mela lived in a mountain cave."
+      },
+      "answer": true
+    },
+    {
+      "id": "pet-bottle",
+      "type": "tf",
+      "q": {
+        "zh": "めら房間裡放著的 2 公升寶特瓶，是失火時的消防用水。",
+        "ja": "めらの部屋に置いてある2リットルのペットボトルは、火事のときの消火用の水である。",
+        "en": "The 2-liter PET bottles in Mela's room are water for putting out fires."
+      },
+      "answer": true
     }
   ]
 }
