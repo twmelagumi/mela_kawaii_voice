@@ -157,6 +157,7 @@ const MelaSync=(()=>{
   async function askDelete(){ const ok=await dialog(t("syDelTitle"),t("syDelBody"),[{label:t("syDelGo"),value:1,primary:true},{label:t("syCancel"),value:null}]); if(!ok) return;
     setState("sync");
     try{ await sb.storage.from("avatars").remove(AV_FILES()).catch(()=>{}); // 頭像檔（Storage 不會跟著帳號一起刪）
+      await sb.from("oshi_results").delete().eq("user_id",user.id).then(()=>{},()=>{}); // 推し診斷的結果（delete_me 沒刪到的話也不會留下）
       const r=await sb.rpc("delete_me"); if(r.error){ const d=await sb.from("collection").delete().eq("user_id",user.id); if(d.error) throw d.error; await sb.from("quiz_scores").delete().eq("user_id",user.id); } // delete_me＝連帳號一起刪；沒建這個函式就只刪紀錄
       for(const k of ["goods","voice"]) lsSet(`mela-sync-last-${k}`,null);
       await logout(); notice=t("syDeleted"); open=true; paint(); }catch(e){ fail("delete failed",e,"off"); } }

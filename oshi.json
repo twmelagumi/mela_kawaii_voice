@@ -1,0 +1,203 @@
+{
+  "_說明": "推し診斷（oshi.html）的流程圖。rows 由上到下 4 列，每列 4 個問題由左到右：答 YES 往右、答 NO 往下。某一列 4 題都答 YES → 那一列的 result；最下面一列再答 NO → results.box（箱推し）。result 的代號（kyoko／mela／tsuzuri／sopia／box）也是資料庫統計用的值，不要改。",
+  "source": "https://x.com/achichi_mela/status/2104115001351192716",
+  "rows": [
+    {
+      "result": "kyoko",
+      "questions": [
+        {
+          "ja": "エネルギッシュな女の子が好き",
+          "zh": "喜歡充滿活力的女孩",
+          "en": "You like energetic girls"
+        },
+        {
+          "ja": "カードゲームに興味がある",
+          "zh": "對卡牌遊戲有興趣",
+          "en": "You're interested in card games"
+        },
+        {
+          "ja": "縛りプレイ実況が好き",
+          "zh": "喜歡看限制玩法（縛りプレイ）的遊戲實況",
+          "en": "You enjoy challenge-run (self-imposed rules) gameplay streams"
+        },
+        {
+          "ja": "英語配信もたくさん見たい",
+          "zh": "也想看很多英文直播",
+          "en": "You'd love lots of English streams too"
+        }
+      ]
+    },
+    {
+      "result": "mela",
+      "questions": [
+        {
+          "ja": "女の子からたくさんおねだりされたい",
+          "zh": "想被女孩子撒嬌、討很多東西",
+          "en": "You want a girl to sweetly beg you for lots of things"
+        },
+        {
+          "ja": "ネットリテラシーを勉強したい",
+          "zh": "想學習網路素養",
+          "en": "You want to learn about internet literacy"
+        },
+        {
+          "ja": "デカい尻尾や牙が生えている子が好き",
+          "zh": "喜歡長著大尾巴或尖牙的女孩",
+          "en": "You like girls with a big tail or fangs"
+        },
+        {
+          "ja": "語尾が特徴的な女の子が好き",
+          "zh": "喜歡說話語尾很有特色的女孩",
+          "en": "You like girls who end their sentences in a distinctive way"
+        }
+      ]
+    },
+    {
+      "result": "tsuzuri",
+      "questions": [
+        {
+          "ja": "ド天然の癒やし系が好き",
+          "zh": "喜歡超級天然呆的療癒系",
+          "en": "You like a totally airheaded, soothing type"
+        },
+        {
+          "ja": "ケモ耳がすき",
+          "zh": "喜歡獸耳",
+          "en": "You love animal ears"
+        },
+        {
+          "ja": "FPS配信が好き",
+          "zh": "喜歡 FPS 遊戲直播",
+          "en": "You like FPS streams"
+        },
+        {
+          "ja": "画伯キャラに惹かれてしまう",
+          "zh": "忍不住被「畫伯」（畫得很有個性）型的角色吸引",
+          "en": "You can't resist a \"画伯\" type (a charmingly hopeless artist)"
+        }
+      ]
+    },
+    {
+      "result": "sopia",
+      "questions": [
+        {
+          "ja": "科学に興味がある",
+          "zh": "對科學有興趣",
+          "en": "You're interested in science"
+        },
+        {
+          "ja": "根性とパワーで解決する子が好き",
+          "zh": "喜歡靠毅力和蠻力解決問題的女孩",
+          "en": "You like girls who solve things with guts and power"
+        },
+        {
+          "ja": "好奇心旺盛な女の子を見ていたい",
+          "zh": "想一直看著好奇心旺盛的女孩",
+          "en": "You want to watch a girl who's bursting with curiosity"
+        },
+        {
+          "ja": "少し不思議なおねえさんが好き",
+          "zh": "喜歡有點不可思議的大姊姊",
+          "en": "You like a slightly mysterious older-sister type"
+        }
+      ]
+    }
+  ],
+  "results": {
+    "kyoko": {
+      "name": {
+        "ja": "百灯キョーコ",
+        "zh": "百灯キョーコ",
+        "en": "Hyakuto Kyoko"
+      },
+      "img": "assets/oshi/kyoko.webp",
+      "color": "#ff6a1a",
+      "links": [
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@HyakutoKyoko"
+        },
+        {
+          "label": "X",
+          "url": "https://x.com/hyakuto_kyoko"
+        }
+      ]
+    },
+    "mela": {
+      "name": {
+        "ja": "熱千めら",
+        "zh": "熱千めら",
+        "en": "Achichi Mela"
+      },
+      "img": "assets/oshi/mela.webp",
+      "color": "#3d8bff",
+      "links": [
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@AchichiMela"
+        },
+        {
+          "label": "X",
+          "url": "https://x.com/achichi_mela"
+        }
+      ]
+    },
+    "tsuzuri": {
+      "name": {
+        "ja": "鈴鳴つづり",
+        "zh": "鈴鳴つづり",
+        "en": "Suzuna Tsuzuri"
+      },
+      "img": "assets/oshi/tsuzuri.webp",
+      "color": "#d62b3a",
+      "links": [
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@SuzunaTsuzuri"
+        },
+        {
+          "label": "X",
+          "url": "https://x.com/suzuna_tsuzuri"
+        }
+      ]
+    },
+    "sopia": {
+      "name": {
+        "ja": "宙科そぴあ",
+        "zh": "宙科そぴあ",
+        "en": "Sorashina Sopia"
+      },
+      "img": "assets/oshi/sopia.webp",
+      "color": "#6f7cff",
+      "links": [
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@SorashinaSopia"
+        },
+        {
+          "label": "X",
+          "url": "https://x.com/sorashina_sopia"
+        }
+      ]
+    },
+    "box": {
+      "name": {
+        "ja": "アソビ★まわり隊！箱推し",
+        "zh": "アソビ★まわり隊！箱推（全員都推）",
+        "en": "Asobi★Mawari-tai! — box oshi (all four!)"
+      },
+      "img": "assets/oshi/box.webp",
+      "color": "#e2559f",
+      "links": [
+        {
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@hololive_ASOBIMAWARITAI"
+        },
+        {
+          "label": "hololive",
+          "url": "https://hololive.hololivepro.com/special/22482/"
+        }
+      ]
+    }
+  }
+}

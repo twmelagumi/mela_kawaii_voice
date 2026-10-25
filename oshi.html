@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>推し診斷｜熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="アソビ★まわり隊！推し診斷：回答 YES／NO，找出最適合你的成員（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=42465201">
+<style>
+/* ===== 小遊戲：推し診斷 ===== */
+.view{gap:14px}
+.os-card{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:22px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.os-top{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.os-top .sp{flex:1}
+.os-q{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(20px,5vw,26px);line-height:1.5;text-wrap:pretty}
+.os-orig{margin:-8px 0 0;font-size:13px;color:var(--muted)}
+.os-yn{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.os-yn button{justify-content:center;padding:16px;font-size:20px;font-weight:800;letter-spacing:.06em;border-radius:14px;border-width:2px}
+.os-yes{background:color-mix(in srgb,#ff3b5c 12%,var(--surface));border-color:#ff3b5c;color:#e0284a}
+.os-no{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:var(--accent);color:var(--accent-text)}
+.os-back{align-self:flex-start;font-size:13px;padding:5px 12px}
+/* 路線圖（4×4＋結果欄） */
+.os-map{max-width:640px;width:100%;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr) 1.15fr;gap:5px}
+.os-cell{aspect-ratio:1.6;border-radius:7px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative}
+.os-cell.v{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-text)}
+.os-cell.cur{outline:2px solid var(--accent);outline-offset:1px}
+.os-cell.y::after,.os-cell.n::after{position:absolute;right:3px;bottom:1px;font-size:9px}
+.os-cell.y::after{content:"YES";color:#e0284a}
+.os-cell.n::after{content:"NO";color:var(--accent-text)}
+.os-end{aspect-ratio:1.6;border-radius:7px;overflow:hidden;position:relative;border:2px solid transparent;background:var(--bg);opacity:.55}
+.os-end img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.os-end.hit{opacity:1;border-color:var(--c)}
+.os-box{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:6px;padding:4px;border-radius:7px;border:1px dashed var(--line);font-size:11px;color:var(--muted)}
+.os-box.hit{border:2px solid var(--c);color:var(--ink);font-weight:700}
+/* 結果 */
+.os-lead{margin:0;text-align:center;font-weight:700;color:var(--muted)}
+.os-res{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;opacity:0;transform:translateY(8px) scale(.97);transition:opacity .5s,transform .5s}
+.os-res.show{opacity:1;transform:none}
+.os-res img{width:min(220px,62vw);aspect-ratio:1;border-radius:24px;border:4px solid var(--c);background:var(--c);object-fit:cover}
+.os-name{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(24px,7vw,34px);color:var(--c);line-height:1.2}
+.os-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.os-links a{font-size:13px;padding:6px 14px}
+.os-act{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.os-act button,.os-act a{padding:9px 20px;font-size:15px}
+.os-x{background:#000;color:#fff;border-color:#000}
+.os-up{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.os-up .g-links{justify-content:center;margin-top:6px}
+.os-note{max-width:640px;margin:0 auto;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+/* 統計 */
+.os-stats{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.os-stats h2{margin:0;font-size:16px}
+.os-stats p{margin:0;font-size:12px;color:var(--muted)}
+.os-bar{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;font-size:13px}
+.os-bar img{width:34px;height:34px;border-radius:8px;object-fit:cover;background:var(--c)}
+.os-bar .nm{font-weight:700;display:block;margin-bottom:3px}
+.os-bar .tr{display:block;height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.os-bar .tr b{display:block;height:100%;background:var(--c);border-radius:99px;transition:width .6s}
+.os-bar .pc{font-family:var(--f-code);font-size:12px;color:var(--muted);text-align:right;min-width:4.5em}
+.os-bar.me .nm::after{content:" ★";color:var(--c)}
+@media (prefers-reduced-motion:reduce){.os-res{transition:none}}
+</style>
+</head>
+<body data-title-key="titleOshi">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleOshi"></span></h1>
+      <p class="sub" data-i18n="subOshi"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabShift"></a>
+    <a href="goods.html" data-i18n="tabTax"></a>
+    <a href="quiz.html" aria-current="page" data-i18n="tabGames"></a>
+  </nav>
+  <nav class="views sub-views" data-i18n-aria="tabGames">
+    <a href="quiz.html" data-i18n="tabQuiz"></a>
+    <a href="oshi.html" aria-current="page" data-i18n="tabOshi"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="os-card" id="os" aria-live="polite"></div>
+    <div class="os-map" id="osMap" aria-hidden="true"></div>
+    <section class="os-stats" id="osStats" aria-live="polite" hidden></section>
+    <p class="os-note" id="osNote"></p>
+  </section>
+
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
+</div>
+
+<script src="assets/common.js?v=d720630f"></script>
+<script src="assets/sync.js?v=1c93ec78"></script><!-- 標題列的登入按鈕（每頁都有）；這頁也用它上傳結果、讀統計 -->
+<script>
+/* ===== 小遊戲：推し診斷 =====
+ * 流程圖：oshi.json（熱千めら X 貼文的「おぬしにぴったりなメンバー」路線圖）。4×4 的格子，從左上開始，YES 往右、NO 往下：
+ *   某一列 4 題都 YES → 那一列的成員；最下面一列再答 NO → アソビ★まわり隊！箱推し。
+ * 最近一次的結果存在瀏覽器（mela-oshi-last），再打開會先顯示上次的結果。
+ * 統計：有登入 Google 的人，最近一次的結果用 Supabase 的 submit_oshi_result() 上傳（每人只算一次、會被新的覆蓋）；
+ *   沒登入可以按「Google 登入並加入統計」，登入回來後自動補傳（7 天內，mela-oshi-pending）。
+ *   分布用 oshi_stats() 讀（只有各結果的人數）。資料表和函式在 supabase/oshi-setup.sql。
+ */
+addStrings({
+ zh:{titleOshi:"めらめら推し診斷",subOshi:"回答 YES／NO，找出アソビ★まわり隊！裡最適合你的成員！",
+   osQ:"第 {n} 題",osYes:"YES",osNo:"NO",osBack:"← 上一題",osOrig:"原文：{s}",
+   osLead:"最適合你的成員是……",osAgain:"再測一次",osShare:"分享到 X",osShareText:"アソビ★まわり隊！推し診斷：最適合我的是「{m}」！",
+   osUpWait:"正在確認登入狀態…",osUpSending:"結果上傳中…",osUpOk:"已加入統計 ✓（只會保留你最近一次的結果）",osUpLogin:"用 Google 登入，就能把這次的結果加入大家的統計。",osUpLoginBtn:"Google 登入並加入統計",osUpErr:"結果上傳失敗，請稍後再試。",osUpRetry:"重新上傳",
+   osStatsTitle:"大家的診斷結果",osStatsDesc:"統計登入 Google 的人最近一次的結果，共 {n} 人。",osStatsEmpty:"還沒有人加入統計，成為第一個吧！",osStatsFail:"統計暫時無法顯示，請稍後再試。",osStatsLoading:"讀取中…",
+   osFail:"診斷資料讀取失敗，請稍後重新整理。",osNote:"診斷流程出自熱千めら的 X 貼文（{src}）。圖片 Ⓒ COVER。",osSrc:"原始貼文"},
+ ja:{titleOshi:"めらめら推し診断",subOshi:"YES／NO で答えて、アソビ★まわり隊！であなたにぴったりなメンバーを見つけよう！",
+   osQ:"第 {n} 問",osYes:"YES",osNo:"NO",osBack:"← ひとつ戻る",osOrig:"",
+   osLead:"おぬしにぴったりなメンバーは…",osAgain:"もう一度診断する",osShare:"X でシェア",osShareText:"アソビ★まわり隊！推し診断：わたしにぴったりなメンバーは「{m}」！",
+   osUpWait:"ログイン状態を確認中…",osUpSending:"結果を送信中…",osUpOk:"集計に追加しました ✓（最新の結果だけが残ります）",osUpLogin:"Google でログインすると、今回の結果をみんなの集計に追加できます。",osUpLoginBtn:"Google でログインして集計に追加",osUpErr:"送信に失敗しました。しばらくしてからもう一度お試しください。",osUpRetry:"もう一度送信",
+   osStatsTitle:"みんなの診断結果",osStatsDesc:"Google でログインした人の最新の結果を集計しています（{n} 人）。",osStatsEmpty:"まだ集計がありません。最初のひとりになろう！",osStatsFail:"集計を表示できません。しばらくしてからもう一度お試しください。",osStatsLoading:"読み込み中…",
+   osFail:"診断データを読み込めませんでした。しばらくしてから再読み込みしてください。",osNote:"診断チャートは熱千めらの X ポスト（{src}）より。画像 Ⓒ COVER",osSrc:"元のポスト"},
+ en:{titleOshi:"Mela Mela Oshi Finder",subOshi:"Answer YES / NO to find the Asobi★Mawari-tai! member who suits you best!",
+   osQ:"Question {n}",osYes:"YES",osNo:"NO",osBack:"← Back",osOrig:"Original: {s}",
+   osLead:"The member who suits you best is…",osAgain:"Try again",osShare:"Share on X",osShareText:"Asobi★Mawari-tai! Oshi Finder: my perfect match is \"{m}\"!",
+   osUpWait:"Checking sign-in…",osUpSending:"Sending your result…",osUpOk:"Added to the stats ✓ (only your latest result is kept)",osUpLogin:"Sign in with Google to add this result to everyone's stats.",osUpLoginBtn:"Sign in with Google & add",osUpErr:"Couldn't send your result. Please try again in a moment.",osUpRetry:"Try again",
+   osStatsTitle:"Everyone's results",osStatsDesc:"Latest results of players signed in with Google ({n} in total).",osStatsEmpty:"No results yet — be the first!",osStatsFail:"The stats can't be shown right now. Please try again later.",osStatsLoading:"Loading…",
+   osFail:"Couldn't load the chart. Please reload in a moment.",osNote:"The chart comes from Achichi Mela's post on X ({src}). Images Ⓒ COVER.",osSrc:"original post"}
+});
+const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const L=v=>v==null?"":typeof v==="string"?v:(v[lang]||v.zh||v.ja||Object.values(v).find(Boolean)||"");
+const webSafe=u=>{ try{ const x=new URL(u,location.href); return /^https?:$/.test(x.protocol)?x.href:"#"; }catch(e){ return "#"; } };
+const S=typeof MelaSync!=="undefined"?MelaSync:null; // assets/sync.js（const 宣告，不在 window 上）
+const LAST_KEY="mela-oshi-last", PEND_KEY="mela-oshi-pending", PEND_DAYS=7, ORDER=["kyoko","mela","tsuzuri","sopia","box"];
+const lsGet=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
+const lsSet=(k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+
+let D=null, failed=false, path=[], result=null, reveal=false, up="", stats=null, statsErr=false;
+
+// 走路線：YES 往右（最右邊再 YES＝那一列的成員）、NO 往下（最下面再 NO＝箱推し）
+function walk(p){ let r=0,c=0;
+  for(const a of p){ if(a){ if(c===3) return {r,c,result:D.rows[r].result}; c++; } else { if(r===3) return {r,c,result:"box"}; r++; } }
+  return {r,c,result:null}; }
+
+function render(){
+  const box=$("os");
+  if(failed||!D){ box.innerHTML=failed?`<p class="os-q">${t("osFail")}</p>`:""; return; }
+  const src=D.source;
+  $("osNote").innerHTML=esc(t("osNote")).replace("{src}",`<a href="${esc(webSafe(src))}" target="_blank" rel="noopener">${esc(t("osSrc"))} ↗</a>`);
+  if(result) renderResult(); else renderQuestion();
+  renderMap(); renderStats(); }
+
+function renderQuestion(){ const w=walk(path), q=D.rows[w.r].questions[w.c], txt=L(q), orig=lang!=="ja"&&q.ja&&t("osOrig")?tq("osOrig",{s:q.ja}):"";
+  $("os").innerHTML=`<div class="os-top"><span>${tq("osQ",{n:path.length+1})}</span><span class="sp"></span></div>
+    <p class="os-q">${esc(txt)}</p>${orig?`<p class="os-orig">${esc(orig)}</p>`:""}
+    <div class="os-yn"><button type="button" class="os-yes" data-a="1">${t("osYes")}</button><button type="button" class="os-no" data-a="0">${t("osNo")}</button></div>
+    ${path.length?`<button type="button" class="os-back" id="osBack">${t("osBack")}</button>`:""}`; }
+
+function renderResult(){ const R=D.results[result]; if(!R) return; const name=L(R.name);
+  const share=`https://x.com/intent/tweet?text=${encodeURIComponent(tq("osShareText",{m:name}))}&url=${encodeURIComponent(location.origin+location.pathname)}`;
+  const upMsg={wait:`<p class="os-up">${t("osUpWait")}</p>`,sending:`<p class="os-up">${t("osUpSending")}</p>`,ok:`<p class="os-up">${t("osUpOk")}</p>`,
+    login:`<div class="os-up">${t("osUpLogin")}<div class="g-links"><button type="button" class="primary" id="osLogin">${t("osUpLoginBtn")}</button></div></div>`,
+    err:`<div class="os-up">${t("osUpErr")}<div class="g-links"><button type="button" id="osRetry">${t("osUpRetry")}</button></div></div>`}[up]||"";
+  $("os").innerHTML=`<p class="os-lead">${t("osLead")}</p>
+    <div class="os-res${reveal?" show":""}" style="--c:${esc(R.color||"var(--accent)")}">
+      <img src="${esc(R.img)}" alt="${esc(name)}" width="220" height="220">
+      <h2 class="os-name">${esc(name)}</h2>
+      <div class="os-links">${(R.links||[]).map(l=>`<a class="btn" href="${esc(webSafe(l.url))}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div>
+    </div>
+    <div class="os-act"><button type="button" class="primary" id="osAgain">${t("osAgain")}</button><a class="btn os-x" href="${esc(share)}" target="_blank" rel="noopener">${t("osShare")}</a></div>
+    ${upMsg}`;
+  if(!reveal) setTimeout(()=>{ reveal=true; document.querySelector(".os-res")?.classList.add("show"); },matchMedia("(prefers-reduced-motion: reduce)").matches?0:700); }
+
+function renderMap(){ const w=walk(path), seen=new Map(); let r=0,c=0;
+  for(const a of path){ seen.set(`${r},${c}`,a); if(a){ if(c<3) c++; } else { if(r<3) r++; } }
+  let h="";
+  for(let i=0;i<4;i++){ for(let j=0;j<4;j++){ const k=`${i},${j}`, v=seen.has(k), cur=!result&&w.r===i&&w.c===j;
+      h+=`<span class="os-cell${v?" v "+(seen.get(k)?"y":"n"):""}${cur?" cur":""}">${i*4+j+1}</span>`; }
+    const id=D.rows[i].result, R=D.results[id]; h+=`<span class="os-end${result===id?" hit":""}" style="--c:${esc(R.color)}"><img src="${esc(R.img)}" alt=""></span>`; }
+  const B=D.results.box; h+=`<span class="os-box${result==="box"?" hit":""}" style="--c:${esc(B.color)}">⬇ ${esc(L(B.name))}</span>`;
+  $("osMap").innerHTML=h; }
+
+function renderStats(){ const el=$("osStats"); el.hidden=!result; if(!result) return;
+  let body;
+  if(statsErr) body=`<p>${t("osStatsFail")}</p>`;
+  else if(!stats) body=`<p>${t("osStatsLoading")}</p>`;
+  else{ const total=ORDER.reduce((s,k)=>s+(stats[k]||0),0);
+    body=total?`<p>${tq("osStatsDesc",{n:total})}</p>`+ORDER.map(k=>{ const R=D.results[k], n=stats[k]||0, pc=total?Math.round(n/total*1000)/10:0;
+      return `<div class="os-bar${k===result?" me":""}" style="--c:${esc(R.color)}"><img src="${esc(R.img)}" alt=""><span><span class="nm">${esc(L(R.name))}</span><span class="tr"><b style="width:${pc}%"></b></span></span><span class="pc">${pc}%<br>${n}</span></div>`; }).join("")
+      :`<p>${t("osStatsEmpty")}</p>`; }
+  el.innerHTML=`<h2>${t("osStatsTitle")}</h2>${body}`; }
+
+function answer(a){ if(result) return; path.push(a); const w=walk(path);
+  if(w.result){ result=w.result; reveal=false; lsSet(LAST_KEY,{result,path,at:Date.now()}); lsSet(PEND_KEY,{result,at:Date.now()}); up="wait"; render(); upload(); loadStats(); }
+  else render(); }
+function restart(){ path=[]; result=null; reveal=false; up=""; render(); window.scrollTo({top:$("os").getBoundingClientRect().top+scrollY-120,behavior:"smooth"}); }
+
+// ---- 上傳結果（同時只跑一次） ----
+let upP=null;
+const upload=()=>upP||(upP=doUpload().catch(e=>{ console.warn("oshi upload failed",e); up="err"; render(); }).finally(()=>{ upP=null; }));
+async function doUpload(){ const p=lsGet(PEND_KEY); if(!p) return;
+  if(!(Date.now()-p.at<PEND_DAYS*864e5)){ lsSet(PEND_KEY,null); if(up==="wait"){ up=""; render(); } return; }
+  if(!S){ up=""; return render(); }
+  await S.whenReady(); const sb=S.client(), u=S.user();
+  if(!sb){ up=""; return render(); }
+  if(!u){ up="login"; return render(); }
+  up="sending"; render();
+  const {error}=await sb.rpc("submit_oshi_result",{p_result:p.result}); if(error) throw error;
+  const now=lsGet(PEND_KEY); if(now&&now.at===p.at) lsSet(PEND_KEY,null);
+  up="ok"; render(); loadStats(); }
+
+// ---- 統計 ----
+let stP=null;
+const loadStats=()=>stP||(stP=(async()=>{
+  try{ if(!S) throw new Error("no MelaSync"); await S.whenReady(); const sb=S.client(); if(!sb) throw new Error("no client");
+    const {data,error}=await sb.rpc("oshi_stats"); if(error) throw error;
+    stats={}; for(const r of data||[]) stats[r.result]=Number(r.n)||0; statsErr=false; }
+  catch(e){ console.warn("oshi stats failed",e); statsErr=true; }
+  renderStats(); })().finally(()=>{ stP=null; }));
+
+document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.a!=null&&b.closest("#os")) return answer(b.dataset.a==="1");
+  if(b.id==="osBack"){ path.pop(); return render(); }
+  if(b.id==="osAgain") return restart();
+  if(b.id==="osLogin") return S?.login();
+  if(b.id==="osRetry"){ up="wait"; render(); return upload(); } });
+document.addEventListener("keydown",e=>{ if(result||e.target.closest("input,textarea,select")||e.altKey||e.ctrlKey||e.metaKey) return;
+  const k=e.key.toLowerCase(); if(k==="y") answer(true); else if(k==="n") answer(false); else if(k==="backspace"&&path.length){ e.preventDefault(); path.pop(); render(); } });
+window.onLangChange=()=>{ if(D) render(); };
+
+(async()=>{
+  try{ const r=await fetch("oshi.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status); D=await r.json();
+    if(!Array.isArray(D.rows)||D.rows.length!==4||D.rows.some(x=>!Array.isArray(x.questions)||x.questions.length!==4)||!D.results) throw new Error("bad oshi.json");
+  }catch(e){ console.warn("oshi load failed",e); failed=true; D=null; }
+  // 上次的結果：直接顯示（按「再測一次」重新開始）
+  const last=lsGet(LAST_KEY); if(D&&last&&D.results[last.result]&&Array.isArray(last.path)&&walk(last.path).result===last.result){ path=last.path; result=last.result; reveal=true; }
+  setLang(pickLang());
+  if(D&&result){ loadStats(); if(lsGet(PEND_KEY)){ up="wait"; render(); upload(); } }
+})();
+</script>
+</body>
+</html>

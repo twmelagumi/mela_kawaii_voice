@@ -16,6 +16,7 @@
 | `assets/collect.js` | 周邊頁和音聲頁共用的程式（試算表讀取、花費、.json 備份） |
 | `assets/share.js`、`assets/qrcode.min.js` | 周邊／音聲「已入手」的轉移代碼、匯入連結、QR code（見最後「收藏代碼」） |
 | `quiz.html` | 小遊戲「今日問答」（讀 `quiz.json`；成績和全對排行榜存在 Supabase，見最後「小遊戲」） |
+| `oshi.html` | 小遊戲「推し診斷」（讀 `oshi.json`；圖片在 `assets/oshi/`；結果統計存在 Supabase，見最後「推し診斷」） |
 | `subs.html` | 隱藏頁（不給搜尋引擎收錄，導覽列不會連到） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |
 | `songs.json` | 「歌曲」分頁的歌單，由管理者自己編輯後上傳 |
@@ -346,3 +347,11 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 全對排行榜：全對過的人，以暱稱和頭像顯示（沒設暱稱顯示「匿名」）。預設收起，訪客按「顯示排行榜」才向資料庫讀取。題庫越新（題目越多）的全對排越前面，同樣題數依達成時間先後；之後加題目，以前全對的人仍留在榜上，排在新題庫全對的人後面。
 - 資料庫：先執行過 profiles 的 SQL，再把 `supabase/quiz-setup.sql` 貼到 Supabase SQL Editor 執行一次。內容：`public.quiz_scores`（每人一列：最近一次的 `correct`／`total`、全對過的最大題數 `perfect_total`、第一次達成時間 `perfect_at`、`plays`）、上傳函式 `submit_quiz_score(p_correct, p_total)`、排行榜函式 `quiz_leaderboard(p_limit)`（只回傳名次、暱稱、頭像、題數、時間，不回傳 email 和使用者 ID）。
 - 注意：題目和答案都在公開的 `quiz.json` 裡，成績也是瀏覽器自己回報的，想作弊的人可以直接送出全對。排行榜只是好玩用；有不當的暱稱／頭像可以用管理後台處理，要從排行榜移除某人可以在 SQL Editor 刪掉他在 `quiz_scores` 的那一列。
+
+## 小遊戲「推し診斷」（oshi.html）
+
+- 流程圖出自熱千めら的 X 貼文（https://x.com/achichi_mela/status/2104115001351192716）。`oshi.json` 的 `rows` 是 4 列 × 4 題：從左上開始，YES 往右、NO 往下；某一列 4 題都 YES → 那一列的成員，最下面一列再答 NO → 箱推し。問題有日文原文和中文、英文翻譯。
+- 成員圖片（官方圖，Ⓒ COVER）在 `assets/oshi/`（340×340 webp）；結果頁有官方 YouTube、X 連結和「分享到 X」。
+- 最近一次的結果存在瀏覽器（`mela-oshi-last`），再打開會先顯示上次的結果。
+- 統計：只收登入 Google 的人，每人只存最近一次的結果。資料庫要先把 `supabase/oshi-setup.sql` 貼到 Supabase SQL Editor 執行一次：`public.oshi_results`（每人一列）、`submit_oshi_result(p_result)`（登入的人寫入）、`oshi_stats()`（任何人都能讀，只有各結果的人數）。沒登入的人可以按「Google 登入並加入統計」，登入回來後自動補傳（7 天內）。
+- 「刪除雲端紀錄」也會刪掉推し診斷的結果。
