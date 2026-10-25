@@ -15,6 +15,7 @@
 | `assets/common.js` | 各頁共用的程式（語言切換、共用文字、頁內播放器、頁尾、浮動選單、回到頁面上方、深色／淺色切換） |
 | `assets/collect.js` | 周邊頁和音聲頁共用的程式（試算表讀取、花費、.json 備份） |
 | `assets/share.js`、`assets/qrcode.min.js` | 周邊／音聲「已入手」的轉移代碼、匯入連結、QR code（見最後「收藏代碼」） |
+| `quiz.html` | 小遊戲「今日問答」（讀 `quiz.json`；成績和全對排行榜存在 Supabase，見最後「小遊戲」） |
 | `subs.html` | 隱藏頁（不給搜尋引擎收錄，導覽列不會連到） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |
 | `songs.json` | 「歌曲」分頁的歌單，由管理者自己編輯後上傳 |
@@ -336,3 +337,11 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 每一頁的標題列都有登入按鈕（`assets/sync.js` 每頁都載入；收藏頁之外只有帳號功能，不同步）。
 - 個人設定（帳號選單 →「個人設定」）：暱稱（最多 24 字）和頭像。頭像在瀏覽器裡先裁成正方形、縮成 256×256 的 webp（100KB 以內）才上傳到 Supabase Storage 的 `avatars` bucket（`使用者ID/avatar.webp`，公開讀取）；資料存在 `public.profiles`（`nickname`、`avatar_url`、`upload_banned`、`nickname_banned`）。
 - 管理後台：先登入網站一次，再把 `supabase/admin-setup.sql` 貼到 Supabase SQL Editor 執行；將 SQL 最後的 `lower(NULL)` 換成 `lower('管理員 Google email')`（只在 SQL Editor 裡改，不要 commit 進 git）。之後開啟 `admin.html` 可搜尋使用者、移除暱稱／頭像，或停用／恢復該使用者的暱稱設定與頭像上傳。管理員帳號清單只能由 Supabase SQL Editor 維護；後台資料存取由資料庫 RPC 驗證，頭像上傳限制也由 Storage RLS 強制執行。
+
+## 小遊戲「今日問答」（quiz.html）
+
+- 題庫 `quiz.json`（格式寫在檔案開頭的 `_說明`）。每次把整套題庫打亂順序出題，全部答完才顯示成績；答到一半離開，下次從同一題繼續（題庫有增減時重新開始）。
+- 答完後：有登入就上傳成績（答對題數／題庫題數），沒登入會顯示「Google 登入並上傳」，登入回來後自動補傳（7 天內）。
+- 全對排行榜：全對過的人，以暱稱和頭像顯示（沒設暱稱顯示「匿名」）。預設收起，訪客按「顯示排行榜」才向資料庫讀取。題庫越新（題目越多）的全對排越前面，同樣題數依達成時間先後；之後加題目，以前全對的人仍留在榜上，排在新題庫全對的人後面。
+- 資料庫：先執行過 profiles 的 SQL，再把 `supabase/quiz-setup.sql` 貼到 Supabase SQL Editor 執行一次。內容：`public.quiz_scores`（每人一列：最近一次的 `correct`／`total`、全對過的最大題數 `perfect_total`、第一次達成時間 `perfect_at`、`plays`）、上傳函式 `submit_quiz_score(p_correct, p_total)`、排行榜函式 `quiz_leaderboard(p_limit)`（只回傳名次、暱稱、頭像、題數、時間，不回傳 email 和使用者 ID）。
+- 注意：題目和答案都在公開的 `quiz.json` 裡，成績也是瀏覽器自己回報的，想作弊的人可以直接送出全對。排行榜只是好玩用；有不當的暱稱／頭像可以用管理後台處理，要從排行榜移除某人可以在 SQL Editor 刪掉他在 `quiz_scores` 的那一列。

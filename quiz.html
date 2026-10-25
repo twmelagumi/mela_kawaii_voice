@@ -3,19 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow">
 <title>今日問答｜熱千めら めらめら出勤紀錄</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250835">
+<link rel="stylesheet" href="assets/style.css?v=202610250950">
 <style>
-/* ===== 小遊戲：今日問答（隱藏頁，導覽列不連過來） ===== */
+/* ===== 小遊戲：今日問答 ===== */
 .view{gap:14px}
 .qz-card{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:22px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.qz-bar{height:6px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.qz-bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
 .qz-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .qz-top .sp{flex:1}
+.qz-top b{font-family:var(--f-code);color:var(--ink)}
 .qz-tag{font-weight:700;padding:2px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text)}
 .qz-q{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(19px,4.6vw,24px);line-height:1.5;text-wrap:pretty}
 .qz-opts{display:grid;gap:10px}
@@ -34,11 +36,34 @@
 .qz-res.ng h3{color:#d93d42}
 .qz-res p{margin:0;font-size:14px;line-height:1.7;white-space:pre-line}
 .qz-res .g-links{display:flex;gap:8px;flex-wrap:wrap}
+.qz-res .up-ok{color:#2fa84f;font-weight:700}
+.qz-res .up-ng{color:#d93d42;font-weight:700}
+.qz-res .up-sm{font-size:12px;color:var(--muted)}
 .qz-act{display:flex;justify-content:flex-end}
 .qz-act .primary{padding:9px 22px;font-size:15px}
-.qz-score{max-width:640px;width:100%;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:13px;color:var(--muted)}
-.qz-score b{font-family:var(--f-code);color:var(--ink);font-size:15px}
-.qz-note{max-width:640px;margin:0 auto;font-size:12px;color:var(--muted);text-align:center}
+.qz-end{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.qz-end h2{margin:0;font-family:var(--f-display);font-size:22px}
+.qz-big{margin:0;font-size:18px}
+.qz-big b{font-family:var(--f-code);font-size:40px;color:var(--accent-text)}
+.qz-end p{margin:0}
+.qz-note{max-width:640px;margin:0 auto;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+/* 全對排行榜 */
+.qz-lb{max-width:640px;width:100%;margin:8px auto 0;display:flex;flex-direction:column;gap:10px}
+.qz-lb h2{margin:0;font-family:var(--f-display);font-size:19px}
+.lb-head{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap}
+.lb-head button{font-size:13px;padding:6px 14px}
+.lb-d{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.lb-empty{margin:0;padding:18px;text-align:center;font-size:14px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+.lb-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.lb-row.me{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.lb-n{flex:none;min-width:2ch;text-align:right;font-family:var(--f-code);font-weight:600;color:var(--muted)}
+.lb-row:nth-child(-n+3) .lb-n{color:var(--accent-text)}
+.lb-av{flex:none;position:relative;width:38px;height:38px;border-radius:50%;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;background:var(--accent-soft);color:var(--accent-text);font-weight:700}
+.lb-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lb-name{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-you{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--accent);color:#fff;vertical-align:1px}
+.lb-meta{flex:none;text-align:right;font-size:11px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body data-title-key="titleQuiz">
@@ -73,42 +98,75 @@
 
   <section class="view">
     <div class="qz-card" id="qz" aria-live="polite"></div>
-    <div class="qz-score" id="qzScore"></div>
     <p class="qz-note" data-i18n="qzNote"></p>
+    <section class="qz-lb" id="qzLb" aria-live="polite"></section>
   </section>
 
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=202610250835"></script>
-<script src="assets/sync.js?v=202610250835"></script><!-- 標題列的登入按鈕（每頁都有） -->
+<script src="assets/common.js?v=202610250950"></script>
+<script src="assets/sync.js?v=202610250950"></script><!-- 標題列的登入按鈕（每頁都有）；這頁也用它上傳成績、讀排行榜 -->
 <script>
-/* ===== 小遊戲：今日問答（隱藏頁）=====
- * 題庫：quiz.json（格式寫在檔案開頭的「_說明」）。每次隨機出一題；看過的題目記在瀏覽器裡（mela-quiz-seen），
- * 全部出過一輪才會重複。答完顯示對錯、解說、出處，按「下一題」繼續。
- * 成績只存在這個瀏覽器（mela-quiz-stats：答過幾題、答對幾題、目前連續答對、最多連續答對）。
+/* ===== 小遊戲：今日問答 =====
+ * 題庫：quiz.json（格式寫在檔案開頭的「_說明」）。每次把整套題庫打亂順序，一題一題答，全部答完才顯示成績。
+ * 進度存在瀏覽器（mela-quiz-run）：答到一半關掉，下次打開從同一題繼續；題庫有增減就重新開始。
+ * 答完：成績（答對題數／題庫題數）先存在 mela-quiz-pending，有登入就用 Supabase 的 submit_quiz_score() 上傳；
+ *       沒登入可以按「Google 登入並上傳」，登入回來後自動補傳（7 天內）。
+ * 全對排行榜：quiz_leaderboard()，顯示全對的人的暱稱、頭像（資料表和函式在 supabase/quiz-setup.sql）。
+ *   預設收起，按「顯示排行榜」才向資料庫讀取（每次打開都重新讀）。
  */
 addStrings({
- zh:{titleQuiz:"めらめら今日問答",subQuiz:"關於熱千めら的小問答，隨機出題，看看你答得出幾題！",tabGames:"小遊戲",tabQuiz:"今日問答",
+ zh:{titleQuiz:"めらめら今日問答",subQuiz:"關於熱千めら的小問答。題目會打亂順序，全部答完看看你能不能全對！",
    qzTF:"是非題",qzChoice:"選擇題",qzTrue:"⭕ 是",qzFalse:"❌ 否",qzRight:"答對了！",qzWrong:"可惜，答錯了",qzAnswerIs:"正確答案：{a}",
-   qzNext:"下一題",qzSource:"看出處 ↗",qzNo:"第 {n} 題",qzTotal:"題庫 {n} 題",qzSession:"這次答對 {c} / {a}",qzStreak:"連續答對 {s}",qzBest:"最多連續 {b}",
-   qzEmpty:"題庫還沒有題目。",qzFail:"題庫讀取失敗，請稍後重新整理。",qzNote:"成績只記在這台裝置的這個瀏覽器裡。題目有錯誤歡迎從頁尾「問題回報」告訴我們。",qzKeys:"可用鍵盤 1～4 作答、Enter 下一題"},
- ja:{titleQuiz:"めらめら今日のクイズ",subQuiz:"熱千めらにまつわるミニクイズ。ランダムに出題、何問わかるかな？",tabGames:"ミニゲーム",tabQuiz:"今日のクイズ",
+   qzNext:"下一題",qzSeeResult:"看結果",qzSource:"看出處 ↗",qzNo:"第 {n} / {t} 題",qzGot:"答對 {c} 題",
+   qzEmpty:"題庫還沒有題目。",qzFail:"題庫讀取失敗，請稍後重新整理。",qzKeys:"可用鍵盤 1～4 作答、Enter 下一題",
+   qzNote:"題目每次都會打亂順序，全部答完才會顯示成績；答到一半離開，下次打開會從同一題繼續。登入 Google 的話成績會上傳，全對的人會登上排行榜。題目有錯誤歡迎從頁尾「問題回報」告訴我們。",
+   endTitle:"全部答完！",endScore:"答對 {c} / {t} 題",endAll:"全對！太厲害了 🎉",endNot:"全對就能登上排行榜，再挑戰一次吧！",
+   upWait:"正在確認登入狀態…",upSending:"成績上傳中…",upOk:"成績已上傳 ✓",upOkAll:"成績已上傳，你已經登上下面的全對排行榜！",
+   upNick:"排行榜會顯示你在帳號選單「個人設定」裡設定的暱稱和頭像（沒設定就顯示「匿名」）。",
+   upLogin:"用 Google 登入就能上傳這次的成績，全對的話會登上排行榜。",upLoginBtn:"Google 登入並上傳",upErr:"成績上傳失敗，請稍後再試。",upRetry:"重新上傳",upOff:"目前無法上傳成績。",
+   again:"再挑戰一次（重新打亂題目）",
+   lbTitle:"全對排行榜",lbDesc:"答對所有題目的人。題庫越新（題目越多）排越前面，同樣題數的依達成時間先後。",lbLoading:"讀取中…",lbEmpty:"還沒有人全對，來當第一個吧！",
+   lbFail:"排行榜暫時無法顯示，請稍後再試。",lbAnon:"匿名",lbYou:"你",lbShow:"顯示排行榜",lbHide:"收起排行榜",lbScore:"全對 {n} 題",lbCount:"共 {n} 人"},
+ ja:{titleQuiz:"めらめら今日のクイズ",subQuiz:"熱千めらにまつわるミニクイズ。問題はシャッフルして出題、全問正解を目指そう！",
    qzTF:"○×クイズ",qzChoice:"選択問題",qzTrue:"⭕ はい",qzFalse:"❌ いいえ",qzRight:"正解！",qzWrong:"残念、不正解",qzAnswerIs:"正解：{a}",
-   qzNext:"次の問題",qzSource:"出典を見る ↗",qzNo:"第 {n} 問",qzTotal:"全 {n} 問",qzSession:"今回の正解 {c} / {a}",qzStreak:"連続正解 {s}",qzBest:"最高連続 {b}",
-   qzEmpty:"まだ問題がありません。",qzFail:"問題を読み込めませんでした。しばらくしてから再読み込みしてください。",qzNote:"成績はこの端末のこのブラウザにだけ保存されます。問題の誤りはページ下の「問題を報告」からお知らせください。",qzKeys:"キーボードの 1～4 で回答、Enter で次へ"},
- en:{titleQuiz:"Mela Mela Daily Quiz",subQuiz:"A little quiz about Achichi Mela — random questions, how many can you get right?",tabGames:"Games",tabQuiz:"Daily Quiz",
+   qzNext:"次の問題",qzSeeResult:"結果を見る",qzSource:"出典を見る ↗",qzNo:"第 {n} / {t} 問",qzGot:"正解 {c} 問",
+   qzEmpty:"まだ問題がありません。",qzFail:"問題を読み込めませんでした。しばらくしてから再読み込みしてください。",qzKeys:"キーボードの 1～4 で回答、Enter で次へ",
+   qzNote:"問題は毎回シャッフルされ、全問答えると成績が表示されます。途中でページを閉じても、次に開いたときに続きから再開できます。Google でログインすると成績がアップロードされ、全問正解の人はランキングに載ります。問題の誤りはページ下の「問題を報告」からお知らせください。",
+   endTitle:"全問終了！",endScore:"{t} 問中 {c} 問正解",endAll:"全問正解！すごい！🎉",endNot:"全問正解でランキング入り！もう一度挑戦してみよう。",
+   upWait:"ログイン状態を確認中…",upSending:"成績をアップロード中…",upOk:"成績をアップロードしました ✓",upOkAll:"成績をアップロードしました。下の全問正解ランキングに載りました！",
+   upNick:"ランキングには、アカウントメニューの「個人設定」で設定したニックネームとアイコンが表示されます（未設定の場合は「匿名」）。",
+   upLogin:"Google でログインすると今回の成績をアップロードできます。全問正解ならランキングに載ります。",upLoginBtn:"Google でログインしてアップロード",upErr:"アップロードに失敗しました。しばらくしてからもう一度お試しください。",upRetry:"もう一度アップロード",upOff:"現在、成績をアップロードできません。",
+   again:"もう一度挑戦（問題をシャッフル）",
+   lbTitle:"全問正解ランキング",lbDesc:"全問正解した人。新しい（問題数の多い）問題集で全問正解した人が上、同じ問題数なら達成が早い順です。",lbLoading:"読み込み中…",lbEmpty:"まだ全問正解の人はいません。一番乗りを目指そう！",
+   lbFail:"ランキングを表示できません。しばらくしてからもう一度お試しください。",lbAnon:"匿名",lbYou:"あなた",lbShow:"ランキングを表示",lbHide:"ランキングを閉じる",lbScore:"全 {n} 問正解",lbCount:"{n} 人"},
+ en:{titleQuiz:"Mela Mela Daily Quiz",subQuiz:"A little quiz about Achichi Mela — the questions come in a shuffled order. Can you get them all right?",
    qzTF:"True or false",qzChoice:"Multiple choice",qzTrue:"⭕ True",qzFalse:"❌ False",qzRight:"Correct!",qzWrong:"Not quite",qzAnswerIs:"Answer: {a}",
-   qzNext:"Next question",qzSource:"See the source ↗",qzNo:"Question {n}",qzTotal:"{n} in the pool",qzSession:"This session {c} / {a}",qzStreak:"Streak {s}",qzBest:"Best streak {b}",
-   qzEmpty:"No questions yet.",qzFail:"Couldn't load the questions. Please reload in a moment.",qzNote:"Your score is stored only in this browser on this device. Spotted a mistake? Let us know via \"Report it\" at the bottom of the page.",qzKeys:"Keys 1–4 to answer, Enter for next"}
+   qzNext:"Next question",qzSeeResult:"See results",qzSource:"See the source ↗",qzNo:"Question {n} / {t}",qzGot:"{c} correct",
+   qzEmpty:"No questions yet.",qzFail:"Couldn't load the questions. Please reload in a moment.",qzKeys:"Keys 1–4 to answer, Enter for next",
+   qzNote:"The questions are shuffled every time, and your score appears once you've answered them all. If you leave midway, you'll pick up where you left off. Sign in with Google to upload your score — perfect scores make the leaderboard. Spotted a mistake? Let us know via \"Report it\" at the bottom of the page.",
+   endTitle:"All done!",endScore:"{c} / {t} correct",endAll:"A perfect score! Amazing 🎉",endNot:"Get them all right to make the leaderboard — give it another go!",
+   upWait:"Checking sign-in…",upSending:"Uploading your score…",upOk:"Score uploaded ✓",upOkAll:"Score uploaded — you're on the perfect-score leaderboard below!",
+   upNick:"The leaderboard shows the nickname and avatar you set in \"Profile settings\" in the account menu (or \"Anonymous\" if you haven't set them).",
+   upLogin:"Sign in with Google to upload this score. Perfect scores make the leaderboard.",upLoginBtn:"Sign in with Google & upload",upErr:"Couldn't upload your score. Please try again in a moment.",upRetry:"Try again",upOff:"Scores can't be uploaded right now.",
+   again:"Play again (reshuffle)",
+   lbTitle:"Perfect-score leaderboard",lbDesc:"Everyone who got every question right. Perfect runs on a newer (bigger) question pool rank higher; ties go to whoever did it first.",lbLoading:"Loading…",lbEmpty:"No perfect scores yet — be the first!",
+   lbFail:"The leaderboard can't be shown right now. Please try again later.",lbAnon:"Anonymous",lbYou:"you",lbShow:"Show leaderboard",lbHide:"Hide leaderboard",lbScore:"{n}/{n} correct",lbCount:"{n} players"}
 });
 const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
 const L=v=>v==null?"":typeof v==="string"?v:(v[lang]||v.zh||Object.values(v).find(Boolean)||""); // 題目文字：目前語言 → 中文 → 任何一個
-const SEEN_KEY="mela-quiz-seen", STATS_KEY="mela-quiz-stats";
-let pool=[], cur=null, picked=null, session={a:0,c:0}, no=0, failed=false;
-let stats={a:0,c:0,streak:0,best:0};
-try{ stats={...stats,...JSON.parse(localStorage.getItem(STATS_KEY)||"{}")}; }catch(e){}
-const saveStats=()=>{ try{ localStorage.setItem(STATS_KEY,JSON.stringify(stats)); }catch(e){} };
+const RUN_KEY="mela-quiz-run", PEND_KEY="mela-quiz-pending", PEND_DAYS=7;
+const qGet=k=>{ try{ return JSON.parse(localStorage.getItem(k)||"null"); }catch(e){ return null; } };
+const qSet=(k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+try{ localStorage.removeItem("mela-quiz-seen"); localStorage.removeItem("mela-quiz-stats"); }catch(e){} // 舊版（每次隨機一題）的紀錄，已不使用
+const S=typeof MelaSync!=="undefined"?MelaSync:null; // assets/sync.js：登入狀態、supabase client（sync.js 用 const 宣告，不在 window 上）
+
+let pool=[], byId=new Map(), failed=false;
+let run=null;  // {order:[題目 id…], i:目前第幾題（從 0 開始，＝題數時代表答完）, c:答對幾題, picked:目前這題選的答案（還沒答是 null）, sent:答完的成績已上傳}
+let cur=null;  // 目前這題（加上 opt：選項的顯示順序）
+let up="";     // 上傳狀態：wait／sending／ok／login／err／off
+let board=null, boardErr=false, boardOpen=false; // 排行榜（預設收起，按「顯示排行榜」才讀資料庫）
 
 // 題目檢查：格式不對的題目略過（console 會列出來，方便改題庫）
 function valid(q){
@@ -116,59 +174,126 @@ function valid(q){
   if(q.type==="tf") return typeof q.answer==="boolean";
   if(q.type==="choice") return Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=1&&q.answer<=q.options.length;
   return false; }
-// 隨機挑一題：先從還沒看過的挑；全部看過就重新一輪（避免連續出同一題）
-function pick(){
-  let seen=[]; try{ seen=JSON.parse(localStorage.getItem(SEEN_KEY)||"[]"); }catch(e){}
-  const ids=new Set(pool.map(q=>q.id)); seen=seen.filter(id=>ids.has(id));
-  let left=pool.filter(q=>!seen.includes(q.id));
-  if(!left.length){ seen=cur?[cur.id]:[]; left=pool.filter(q=>!seen.includes(q.id)); if(!left.length) left=pool; }
-  const q=left[Math.floor(Math.random()*left.length)];
-  seen.push(q.id); try{ localStorage.setItem(SEEN_KEY,JSON.stringify(seen)); }catch(e){}
-  // 選項順序：選擇題預設打亂（shuffle:false 就照原本順序）；是非題固定「是／否」
-  let order;
-  if(q.type==="tf") order=[true,false];
-  else{ order=q.options.map((_,i)=>i+1); if(q.shuffle!==false) for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; } }
-  cur={...q,order}; picked=null; no++; render(); }
+const shuffle=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const saveRun=()=>qSet(RUN_KEY,run);
+const finished=()=>!!run&&run.i>=run.order.length;
+// 上次沒答完的進度：題庫的題目跟當時一樣才接著答，不一樣就重新開始
+function loadRun(){ const r=qGet(RUN_KEY); if(!r||!Array.isArray(r.order)) return null;
+  const ids=pool.map(q=>q.id); if(r.order.length!==ids.length||new Set(r.order).size!==ids.length||!r.order.every(id=>byId.has(id))) return null;
+  const answered=r.picked!=null?1:0;
+  if(!Number.isInteger(r.i)||r.i<0||r.i>r.order.length||!Number.isInteger(r.c)||r.c<0||r.c>r.i+answered) return null;
+  return {order:r.order,i:r.i,c:r.c,picked:r.i<r.order.length?(r.picked??null):null,sent:!!r.sent}; }
+function newRun(){ run={order:shuffle(pool.map(q=>q.id)),i:0,c:0,picked:null,sent:false}; up=""; saveRun(); setCur(); }
+// 目前這題：選擇題預設打亂選項（shuffle:false 就照原本順序）；是非題固定「是／否」
+function setCur(){ if(finished()){ cur=null; return; } const q=byId.get(run.order[run.i]);
+  const opt=q.type==="tf"?[true,false]:(q.shuffle===false?q.options.map((_,i)=>i+1):shuffle(q.options.map((_,i)=>i+1)));
+  cur={...q,opt}; }
 
 const optText=(q,v)=>q.type==="tf"?t(v?"qzTrue":"qzFalse"):L(q.options[v-1]);
+const webSafe=u=>{ try{ const x=new URL(u); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
 function render(){
   const box=$("qz");
-  if(failed||!pool.length){ box.innerHTML=`<p class="qz-q">${t(failed?"qzFail":"qzEmpty")}</p>`; $("qzScore").innerHTML=""; return; }
-  if(!cur) return; // 還沒出題（setLang 會先呼叫一次）
-  const q=cur, done=picked!==null, right=done&&picked===q.answer;
-  const opts=q.order.map((v,i)=>{ const cls=done?(v===q.answer?" ok":v===picked?" ng":" dim"):"";
+  if(failed||!pool.length){ box.innerHTML=`<p class="qz-q">${t(failed?"qzFail":"qzEmpty")}</p>`; return; }
+  if(!run) return; // 還沒準備好（setLang 會先呼叫一次）
+  const T=run.order.length, doneN=Math.min(T,run.i+(run.picked!==null?1:0));
+  const bar=`<div class="qz-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${T}" aria-valuenow="${doneN}"><i style="width:${(100*doneN/T).toFixed(2)}%"></i></div>`;
+  if(finished()){ box.innerHTML=bar+resultHTML(); return; }
+  const q=cur, done=run.picked!==null, right=done&&run.picked===q.answer, last=run.i===T-1;
+  const opts=q.opt.map((v,i)=>{ const cls=done?(v===q.answer?" ok":v===run.picked?" ng":" dim"):"";
     return `<button type="button" class="qz-opt${cls}" data-v="${String(v)}"${done?" disabled":""}>${q.type==="choice"?`<span class="k">${i+1}</span>`:""}<span>${esc(optText(q,v))}</span></button>`; }).join("");
   const res=done?`<div class="qz-res ${right?"ok":"ng"}"><h3>${t(right?"qzRight":"qzWrong")}</h3>
       ${right?"":`<p>${esc(tq("qzAnswerIs",{a:optText(q,q.answer)}))}</p>`}
       ${q.explain?`<p>${esc(L(q.explain))}</p>`:""}
-      ${q.source?`<div class="g-links"><a class="btn" href="${esc(webSafe(q.source))}" target="_blank" rel="noopener">${t("qzSource")}</a></div>`:""}</div>
-    <div class="qz-act"><button type="button" class="primary" id="qzNext">${t("qzNext")}</button></div>`:"";
-  box.innerHTML=`<div class="qz-top"><span>${tq("qzNo",{n:no})}</span><span class="qz-tag">${t(q.type==="tf"?"qzTF":"qzChoice")}</span><span class="sp"></span><span>${tq("qzTotal",{n:pool.length})}</span></div>
+      ${q.source&&webSafe(q.source)?`<div class="g-links"><a class="btn" href="${esc(webSafe(q.source))}" target="_blank" rel="noopener">${t("qzSource")}</a></div>`:""}</div>
+    <div class="qz-act"><button type="button" class="primary" id="qzNext">${t(last?"qzSeeResult":"qzNext")}</button></div>`:"";
+  box.innerHTML=`${bar}<div class="qz-top" title="${esc(t("qzKeys"))}"><span>${tq("qzNo",{n:run.i+1,t:T})}</span><span class="qz-tag">${t(q.type==="tf"?"qzTF":"qzChoice")}</span><span class="sp"></span><span>${tq("qzGot",{c:`<b>${run.c}</b>`})}</span></div>
     <p class="qz-q">${esc(L(q.q))}</p>
     <div class="qz-opts${q.type==="tf"?" tf":""}">${opts}</div>${res}`;
-  $("qzScore").innerHTML=`<span>${tq("qzSession",{c:`<b>${session.c}</b>`,a:`<b>${session.a}</b>`})}</span><span>${tq("qzStreak",{s:`<b>${stats.streak}</b>`})}</span><span>${tq("qzBest",{b:`<b>${stats.best}</b>`})}</span>`;
-  $("qzScore").title=t("qzKeys");
 }
-const webSafe=u=>{ try{ const x=new URL(u); return /^https?:$/.test(x.protocol)?x.href:"#"; }catch(e){ return "#"; } };
+// 答完的畫面：成績＋上傳狀態＋再挑戰
+function resultHTML(){ const T=run.order.length, c=run.c, all=c===T, st=up||(run.sent?"ok":"");
+  const stHtml={
+    wait:`<p>${t("upWait")}</p>`,
+    sending:`<p>${t("upSending")}</p>`,
+    ok:`<p class="up-ok">${t(all?"upOkAll":"upOk")}</p>${all?`<p class="up-sm">${t("upNick")}</p>`:""}`,
+    login:`<p>${t("upLogin")}</p><div class="g-links"><button type="button" class="primary" id="qzLogin">${t("upLoginBtn")}</button></div>`,
+    err:`<p class="up-ng">${t("upErr")}</p><div class="g-links"><button type="button" id="qzRetry">${t("upRetry")}</button></div>`,
+    off:`<p>${t("upOff")}</p>`}[st]||"";
+  return `<div class="qz-end"><h2>${t("endTitle")}</h2>
+      <p class="qz-big">${tq("endScore",{c:`<b>${c}</b>`,t:`<b>${T}</b>`})}</p>
+      <p>${t(all?"endAll":"endNot")}</p></div>
+    ${stHtml?`<div class="qz-res">${stHtml}</div>`:""}
+    <div class="qz-act"><button type="button" class="primary" id="qzAgain">${t("again")}</button></div>`; }
 
-function answer(v){ if(!cur||picked!==null) return;
-  picked=cur.type==="tf"?v==="true":+v; const ok=picked===cur.answer;
-  session.a++; stats.a++; if(ok){ session.c++; stats.c++; stats.streak++; stats.best=Math.max(stats.best,stats.streak); } else stats.streak=0;
-  saveStats(); render(); $("qzNext")?.focus({preventScroll:true}); }
+function answer(v){ if(!cur||run.picked!==null) return;
+  run.picked=cur.type==="tf"?v==="true":+v; if(run.picked===cur.answer) run.c++;
+  saveRun(); render(); $("qzNext")?.focus({preventScroll:true}); }
+function next(){ if(!run||finished()||run.picked===null) return;
+  run.i++; run.picked=null; saveRun(); setCur();
+  if(finished()){ qSet(PEND_KEY,{c:run.c,t:run.order.length,at:Date.now()}); up="wait"; render(); upload(); $("qzAgain")?.focus({preventScroll:true}); }
+  else render(); }
+
+// ---- 上傳成績（同時只跑一次） ----
+let upP=null;
+const upload=()=>upP||(upP=doUpload().catch(e=>{ console.warn("quiz upload failed",e); up="err"; render(); }).finally(()=>{ upP=null; }));
+async function doUpload(){ const p=qGet(PEND_KEY); if(!p) return;
+  if(!(Date.now()-p.at<PEND_DAYS*864e5)){ qSet(PEND_KEY,null); if(finished()&&!run.sent){ up=""; render(); } return; } // 太久以前的成績就不上傳了
+  if(!S){ up="off"; return render(); }
+  await S.whenReady(); const sb=S.client(), u=S.user();
+  if(!sb){ up="off"; return render(); }
+  if(!u){ up="login"; return render(); }
+  up="sending"; render();
+  const {error}=await sb.rpc("submit_quiz_score",{p_correct:p.c,p_total:p.t});
+  if(error) throw error;
+  const now=qGet(PEND_KEY); if(now&&now.at===p.at) qSet(PEND_KEY,null); // 上傳中又答完一輪的話，留著新的
+  if(finished()&&run.c===p.c&&run.order.length===p.t){ run.sent=true; saveRun(); }
+  up="ok"; render(); if(boardOpen) loadBoard(); }
+
+// ---- 全對排行榜 ----
+const fmtD=s=>{ const d=new Date(s); return isNaN(d)?"":`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`; };
+let boardP=null;
+const loadBoard=()=>boardP||(boardP=(async()=>{
+  try{ if(!S) throw new Error("no MelaSync"); await S.whenReady(); const sb=S.client(); if(!sb) throw new Error("no client");
+    const {data,error}=await sb.rpc("quiz_leaderboard",{p_limit:100}); if(error) throw error;
+    board=Array.isArray(data)?data:[]; boardErr=false; }
+  catch(e){ console.warn("leaderboard failed",e); boardErr=true; }
+  renderBoard(); })().finally(()=>{ boardP=null; }));
+function renderBoard(){ const el=$("qzLb"); if(!el) return; const hadFocus=document.activeElement?.id==="qzLbBtn"; // 重畫後把焦點放回按鈕
+  const head=`<div class="lb-head"><h2>${t("lbTitle")}</h2><button type="button" id="qzLbBtn" aria-expanded="${boardOpen}">${t(boardOpen?"lbHide":"lbShow")}</button></div><p class="lb-d">${t("lbDesc")}</p>`;
+  if(!boardOpen){ el.innerHTML=head; if(hadFocus) $("qzLbBtn")?.focus({preventScroll:true}); return; }
+  let body;
+  if(boardErr&&!board) body=`<p class="lb-empty">${t("lbFail")}</p>`;
+  else if(!board) body=`<p class="lb-empty">${t("lbLoading")}</p>`;
+  else if(!board.length) body=`<p class="lb-empty">${t("lbEmpty")}</p>`;
+  else body=`<ol class="lb-list">${board.map(r=>{ const name=r.nickname||t("lbAnon"), pic=r.avatar_url?webSafe(r.avatar_url):"";
+      return `<li class="lb-row${r.is_me?" me":""}"><span class="lb-n">${esc(String(r.pos))}</span>
+        <span class="lb-av"><span aria-hidden="true">${esc(Array.from(name)[0]||"?")}</span>${pic?`<img src="${esc(pic)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</span>
+        <span class="lb-name">${esc(name)}${r.is_me?` <small class="lb-you">${t("lbYou")}</small>`:""}</span>
+        <span class="lb-meta">${esc(tq("lbScore",{n:r.total}))}<br>${esc(fmtD(r.perfect_at))}</span></li>`; }).join("")}</ol>
+      <p class="lb-d">${esc(tq("lbCount",{n:board.length}))}</p>`;
+  el.innerHTML=head+body; if(hadFocus) $("qzLbBtn")?.focus({preventScroll:true}); }
 
 document.addEventListener("click",e=>{ const b=e.target.closest(".qz-opt"); if(b&&!b.disabled) return answer(b.dataset.v);
-  if(e.target.closest("#qzNext")) pick(); });
-document.addEventListener("keydown",e=>{ if(e.target.closest("input,textarea,select")||e.altKey||e.ctrlKey||e.metaKey) return;
-  if(picked===null&&cur&&/^[1-9]$/.test(e.key)){ const v=cur.order[+e.key-1]; if(v!==undefined) answer(String(v)); }
-  else if(picked!==null&&e.key==="Enter"&&!e.target.closest("button,a")){ e.preventDefault(); pick(); } });
-window.onLangChange=render;
+  if(e.target.closest("#qzNext")) return next();
+  if(e.target.closest("#qzAgain")){ newRun(); render(); return; }
+  if(e.target.closest("#qzLogin")) return S?.login();
+  if(e.target.closest("#qzRetry")) return upload();
+  if(e.target.closest("#qzLbBtn")){ boardOpen=!boardOpen; if(boardOpen){ board=null; boardErr=false; } renderBoard(); $("qzLbBtn")?.focus({preventScroll:true}); if(boardOpen) loadBoard(); } });
+document.addEventListener("keydown",e=>{ if(e.target.closest("input,textarea,select,dialog")||e.altKey||e.ctrlKey||e.metaKey||!run) return;
+  if(cur&&run.picked===null&&/^[1-9]$/.test(e.key)){ const v=cur.opt[+e.key-1]; if(v!==undefined) answer(String(v)); }
+  else if(cur&&run.picked!==null&&e.key==="Enter"&&!e.target.closest("button,a")){ e.preventDefault(); next(); } });
+window.onLangChange=()=>{ render(); renderBoard(); };
 
 (async()=>{
   try{ const r=await fetch("quiz.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status); const d=await r.json();
-    const list=Array.isArray(d)?d:d.questions||[]; pool=list.filter(q=>{ const ok=valid(q); if(!ok) console.warn("quiz: 格式不對，略過",q); return ok; });
-    const dup=pool.map(q=>q.id).filter((id,i,a)=>a.indexOf(id)!==i); if(dup.length) console.warn("quiz: id 重複",dup);
+    const list=Array.isArray(d)?d:d.questions||[];
+    for(const q of list){ if(!valid(q)){ console.warn("quiz: 格式不對，略過",q); continue; } if(byId.has(q.id)){ console.warn("quiz: id 重複，略過",q.id); continue; } byId.set(q.id,q); pool.push(q); }
   }catch(e){ console.warn("quiz load failed",e); failed=true; }
-  setLang(pickLang()); if(pool.length) pick(); else render();
+  if(pool.length){ run=loadRun(); if(run) setCur(); else newRun(); }
+  setLang(pickLang()); render(); renderBoard();
+  // 有還沒上傳的成績（例如沒登入時答完、按了登入回來）就補傳
+  if(qGet(PEND_KEY)){ if(finished()&&!run.sent) up="wait"; render(); upload(); }
+  S?.onAuth(()=>{ if(qGet(PEND_KEY)) upload(); if(boardOpen) loadBoard(); }); // 登出時：狀態改成「登入並上傳」、排行榜（打開時）的「你」拿掉
 })();
 </script>
 </body>

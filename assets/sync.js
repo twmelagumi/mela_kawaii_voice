@@ -15,30 +15,32 @@ const MelaSync=(()=>{
   const SB_URL="https://qmpmejxmsfidilszqqkk.supabase.co";
   const SB_KEY="sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH"; // publishable key：本來就是公開的，安全性靠資料表的 RLS
   const LOGIN_PUBLIC=true; // 公開顯示 Google 登入
-  const SB_SRC="assets/supabase.min.js?v=202610250835"; // supabase-js 2.118.0（MIT），需要時才載入
+  const SB_SRC="assets/supabase.min.js?v=202610250950"; // supabase-js 2.118.0（MIT），需要時才載入
   const TOKEN_KEY="sb-qmpmejxmsfidilszqqkk-auth-token", TEST_KEY="mela-login-test", LINK_KEY="mela-sync-link";
 
   addStrings({
    zh:{sySettings:"個人設定",setAvatar:"頭像（排行榜上顯示）",setPick:"選擇圖片",setRemove:"移除頭像",setNoteA:"會自動裁成正方形並縮小。上傳不當圖片會被移除並停用上傳。",setNick:"暱稱（排行榜上顯示，最多 24 字）",setNickPh:"沒填寫時顯示為「匿名」",setSave:"儲存",setSaving:"儲存中…",setSaved:"已儲存。",setFail:"儲存失敗，請再試一次。",setBig:"圖片太大了（上限 10MB）。",setType:"請選擇圖片檔（JPG、PNG、WebP…）。",setBad:"這張圖片讀不出來，請換一張。",setBanned:"你的頭像上傳功能已被停用。",setNickBanned:"你的暱稱設定功能已被停用。",setClose:"關閉",setPending:"按「儲存」後才會更新。",syBtn:"Google 登入",syMenu:"帳號與同步",sySyncNow:"立即同步",syOutNote:"登出後，紀錄仍會保留在這台裝置。",syGo:"用 Google 登入",syLabel:"雲端",syLogin:"用 Google 登入同步",syLoginD:"登入後，「已入手」會存到雲端，換手機或電腦也看得到。",syAs:"已登入：{n}",syLogout:"登出",syDelete:"刪除雲端紀錄",
      syOk:"已同步",sySyncing:"同步中…",syOff:"連不上雲端，紀錄先存在這台，下次開頁面會再同步。",syNotLinked:"還沒同步：按「立即同步」可以再選一次。",syErr:"登入失敗，請再試一次。",
-     syPrivacy:"登入後會在本站的資料庫（Supabase）保存：你的 Google 帳號名稱與 email、你標記的已入手紀錄，以及你在「個人設定」填的暱稱和頭像。品項的入手人數只顯示人數；暱稱和頭像只有你設定了才會顯示在排行榜上。可以隨時用「刪除雲端紀錄」刪掉。",
+     syPrivacy:"登入後會在本站的資料庫（Supabase）保存：你的 Google 帳號名稱與 email、你標記的已入手紀錄、小遊戲的成績（答對題數），以及你在「個人設定」填的暱稱和頭像。品項的入手人數只顯示人數；暱稱和頭像只有你設定了才會顯示在排行榜上。可以隨時用「刪除雲端紀錄」刪掉。",
      syChTitle:"這台的紀錄和雲端不一樣",syChBody:"這台瀏覽器有 {a} 項已入手，雲端有 {b} 項。要怎麼處理？",syMerge:"合併兩邊（數量取較多的）",syUseCloud:"用雲端的紀錄（取代這台的）",syUseLocal:"用這台的紀錄（取代雲端的）",syLater:"先不要同步",
-     syDelTitle:"刪除雲端紀錄",syDelBody:"會刪除你存在雲端的所有已入手紀錄（周邊和音聲）、暱稱、頭像和登入帳號，並登出。這台瀏覽器裡的紀錄會保留。",syDelGo:"刪除",syCancel:"取消",syDeleted:"已刪除雲端紀錄並登出。"},
+     syDelTitle:"刪除雲端紀錄",syDelBody:"會刪除你存在雲端的所有已入手紀錄（周邊和音聲）、小遊戲成績、暱稱、頭像和登入帳號，並登出。這台瀏覽器裡的紀錄會保留。",syDelGo:"刪除",syCancel:"取消",syDeleted:"已刪除雲端紀錄並登出。"},
    ja:{sySettings:"個人設定",setAvatar:"アイコン（ランキングに表示）",setPick:"画像を選ぶ",setRemove:"アイコンを削除",setNoteA:"自動で正方形に切り抜いて縮小します。不適切な画像は削除され、アップロードが停止されます。",setNick:"ニックネーム（ランキングに表示、24 文字まで）",setNickPh:"未入力のときは「匿名」と表示",setSave:"保存",setSaving:"保存中…",setSaved:"保存しました。",setFail:"保存できませんでした。もう一度お試しください。",setBig:"画像が大きすぎます（上限 10MB）。",setType:"画像ファイル（JPG、PNG、WebP など）を選んでください。",setBad:"この画像は読み込めません。別の画像を選んでください。",setBanned:"アイコンのアップロードは停止されています。",setNickBanned:"ニックネームの設定は停止されています。",setClose:"閉じる",setPending:"「保存」を押すと反映されます。",syBtn:"Google ログイン",syMenu:"アカウントと同期",sySyncNow:"今すぐ同期",syOutNote:"ログアウトしても、記録はこの端末に残ります。",syGo:"Google でログイン",syLabel:"クラウド",syLogin:"Google でログインして同期",syLoginD:"ログインすると「入手済み」がクラウドに保存され、スマホやパソコンを変えても見られます。",syAs:"ログイン中：{n}",syLogout:"ログアウト",syDelete:"クラウドの記録を削除",
      syOk:"同期済み",sySyncing:"同期中…",syOff:"クラウドにつながりません。記録はこの端末に保存し、次にページを開いたときに同期します。",syNotLinked:"まだ同期していません。「今すぐ同期」で選び直せます。",syErr:"ログインに失敗しました。もう一度お試しください。",
-     syPrivacy:"ログインすると、当サイトのデータベース（Supabase）に Google アカウントの名前とメールアドレス、入手済みの記録、「個人設定」で入力したニックネームとアイコンが保存されます。品目の入手人数は人数だけを表示し、ニックネームとアイコンは設定した場合にだけランキングに表示されます。「クラウドの記録を削除」でいつでも削除できます。",
+     syPrivacy:"ログインすると、当サイトのデータベース（Supabase）に Google アカウントの名前とメールアドレス、入手済みの記録、ミニゲームの成績（正解数）、「個人設定」で入力したニックネームとアイコンが保存されます。品目の入手人数は人数だけを表示し、ニックネームとアイコンは設定した場合にだけランキングに表示されます。「クラウドの記録を削除」でいつでも削除できます。",
      syChTitle:"この端末とクラウドの記録が違います",syChBody:"このブラウザには {a} 件、クラウドには {b} 件の入手済みがあります。どうしますか？",syMerge:"両方を合わせる（個数は多いほう）",syUseCloud:"クラウドの記録を使う（この端末の記録を置き換え）",syUseLocal:"この端末の記録を使う（クラウドの記録を置き換え）",syLater:"今は同期しない",
-     syDelTitle:"クラウドの記録を削除",syDelBody:"クラウドに保存した入手済みの記録（グッズとボイス）、ニックネーム、アイコン、ログイン用アカウントをすべて削除し、ログアウトします。このブラウザの記録は残ります。",syDelGo:"削除する",syCancel:"キャンセル",syDeleted:"クラウドの記録を削除してログアウトしました。"},
+     syDelTitle:"クラウドの記録を削除",syDelBody:"クラウドに保存した入手済みの記録（グッズとボイス）、ミニゲームの成績、ニックネーム、アイコン、ログイン用アカウントをすべて削除し、ログアウトします。このブラウザの記録は残ります。",syDelGo:"削除する",syCancel:"キャンセル",syDeleted:"クラウドの記録を削除してログアウトしました。"},
    en:{sySettings:"Profile settings",setAvatar:"Avatar (shown on rankings)",setPick:"Choose image",setRemove:"Remove avatar",setNoteA:"Images are cropped to a square and shrunk automatically. Inappropriate images will be removed and uploading disabled.",setNick:"Nickname (shown on rankings, up to 24 characters)",setNickPh:"Shown as \"Anonymous\" if empty",setSave:"Save",setSaving:"Saving…",setSaved:"Saved.",setFail:"Couldn't save. Please try again.",setBig:"That image is too large (10MB max).",setType:"Please choose an image file (JPG, PNG, WebP…).",setBad:"This image can't be read. Please choose another one.",setBanned:"Avatar uploads are disabled for your account.",setNickBanned:"Nickname settings are disabled for your account.",setClose:"Close",setPending:"Changes apply when you press \"Save\".",syBtn:"Sign in",syMenu:"Account and sync",sySyncNow:"Sync now",syOutNote:"Your list stays on this device after you sign out.",syGo:"Sign in with Google",syLabel:"Cloud",syLogin:"Sign in with Google to sync",syLoginD:"Sign in to save your \"owned\" list to the cloud and see it on any phone or computer.",syAs:"Signed in: {n}",syLogout:"Sign out",syDelete:"Delete cloud data",
      syOk:"Synced",sySyncing:"Syncing…",syOff:"Can't reach the cloud. Your list is saved on this device and will sync next time you open the page.",syNotLinked:"Not synced yet — press \"Sync now\" to choose again.",syErr:"Sign-in failed. Please try again.",
-     syPrivacy:"Signing in stores your Google account name and email, your \"owned\" list, and the nickname and avatar you set in \"Profile settings\" in this site's database (Supabase). Item rankings only show how many people own each item; your nickname and avatar appear on rankings only if you set them. You can delete it any time with \"Delete cloud data\".",
+     syPrivacy:"Signing in stores your Google account name and email, your \"owned\" list, your mini-game scores (number of correct answers), and the nickname and avatar you set in \"Profile settings\" in this site's database (Supabase). Item rankings only show how many people own each item; your nickname and avatar appear on rankings only if you set them. You can delete it any time with \"Delete cloud data\".",
      syChTitle:"This device and the cloud don't match",syChBody:"This browser has {a} owned items and the cloud has {b}. What should we do?",syMerge:"Merge both (the larger count wins)",syUseCloud:"Use the cloud list (replaces this device)",syUseLocal:"Use this device's list (replaces the cloud)",syLater:"Don't sync for now",
-     syDelTitle:"Delete cloud data",syDelBody:"This deletes everything you saved in the cloud (merch and voice lists, nickname and avatar) and your sign-in account, then signs you out. The list in this browser is kept.",syDelGo:"Delete",syCancel:"Cancel",syDeleted:"Cloud data deleted and signed out."}
+     syDelTitle:"Delete cloud data",syDelBody:"This deletes everything you saved in the cloud (merch and voice lists, mini-game scores, nickname and avatar) and your sign-in account, then signs you out. The list in this browser is kept.",syDelGo:"Delete",syCancel:"Cancel",syDeleted:"Cloud data deleted and signed out."}
   });
 
   let lastErr=null; // 最近一次的錯誤（顯示在狀態後面，方便查原因）
   const tfx=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??""); // 文字裡的 {n}… 換成數字（不依賴 collect.js）
   let profile=null; // public.profiles 的這個人：{nickname, avatar_url, upload_banned}
+  let readyRes=null; const readyP=new Promise(r=>readyRes=r); // ready() 跑完（不管成功失敗）才 resolve，給 whenReady() 用
+  const authFns=[]; const emitAuth=()=>authFns.forEach(f=>{ try{ f(user); }catch(e){ console.warn(e); } }); // 登出時通知其他頁（登入會整頁重新載入，不用通知）
   let cfg=null, sb=null, user=null, state="out", last=null, timer=null, busy=false, box=null, open=false, notice="";
   const lsGet=(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   const lsSet=(k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
@@ -151,11 +153,11 @@ const MelaSync=(()=>{
   async function login(){ try{ await loadLib(); sb=sb||mk();
       const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}}); if(error) throw error; }
     catch(e){ fail("login failed",e,"err"); } }
-  async function logout(){ try{ await sb.auth.signOut(); }catch(e){} user=null; profile=null; last=null; lsSet(LINK_KEY,null); setState("out"); }
+  async function logout(){ try{ await sb.auth.signOut(); }catch(e){} user=null; profile=null; last=null; lsSet(LINK_KEY,null); setState("out"); emitAuth(); }
   async function askDelete(){ const ok=await dialog(t("syDelTitle"),t("syDelBody"),[{label:t("syDelGo"),value:1,primary:true},{label:t("syCancel"),value:null}]); if(!ok) return;
     setState("sync");
     try{ await sb.storage.from("avatars").remove(AV_FILES()).catch(()=>{}); // 頭像檔（Storage 不會跟著帳號一起刪）
-      const r=await sb.rpc("delete_me"); if(r.error){ const d=await sb.from("collection").delete().eq("user_id",user.id); if(d.error) throw d.error; } // delete_me＝連帳號一起刪；沒建這個函式就只刪紀錄
+      const r=await sb.rpc("delete_me"); if(r.error){ const d=await sb.from("collection").delete().eq("user_id",user.id); if(d.error) throw d.error; await sb.from("quiz_scores").delete().eq("user_id",user.id); } // delete_me＝連帳號一起刪；沒建這個函式就只刪紀錄
       for(const k of ["goods","voice"]) lsSet(`mela-sync-last-${k}`,null);
       await logout(); notice=t("syDeleted"); open=true; paint(); }catch(e){ fail("delete failed",e,"off"); } }
   // ---- 個人設定：暱稱＋頭像 ----
@@ -227,15 +229,19 @@ const MelaSync=(()=>{
   function init(c){ cfg=c||{}; if(!enabled()) return; const lang=document.querySelector("header .lang"); if(!lang) return;
     const top=document.createElement("div"); top.className="h-top"; lang.parentNode.insertBefore(top,lang);
     box=document.createElement("div"); box.className="acct"; top.append(box,lang); paint(); }
-  async function ready(){ if(!box) return;
+  async function ready(){ if(!box) return readyRes();
     try{ await loadLib(); sb=mk();
       const {data}=await sb.auth.getSession(); user=data.session?.user||null;
       if(/[?&]code=/.test(location.search)) history.replaceState(null,"",location.pathname+location.hash); // 登入回來後把網址上的 code 拿掉
-      sb.auth.onAuthStateChange((ev,s)=>{ if(ev==="SIGNED_OUT"){ user=null; paint(); } });
-      if(user){ await loadProfile(); paint(); if(syncing()) await start(); else setState("in"); } else paint(); }
-    catch(e){ fail("sync init failed",e,localStorage.getItem(TOKEN_KEY)?"off":"err"); } }
+      sb.auth.onAuthStateChange((ev,s)=>{ if(ev==="SIGNED_OUT"&&user){ user=null; paint(); emitAuth(); } });
+      if(user){ await loadProfile(); paint(); readyRes(); if(syncing()) await start(); else setState("in"); } else paint(); }
+    catch(e){ fail("sync init failed",e,localStorage.getItem(TOKEN_KEY)?"off":"err"); }
+    readyRes(); }
   document.addEventListener("DOMContentLoaded",()=>{ if(!cfg){ init({}); ready(); } });
   // 換語言時重畫（不用每一頁自己呼叫 paint）
   new MutationObserver(()=>paint()).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
-  return {init,ready,push,paint};
+  /* 給其他頁用（quiz.html 上傳成績、排行榜）：
+   *   whenReady()：Promise，登入狀態確定後 resolve；client()：supabase client（載入失敗是 null）；user()：登入的人（沒登入是 null）
+   *   login()：Google 登入（會跳轉，回來後整頁重新載入）；onAuth(fn)：登出時呼叫 fn(null) */
+  return {init,ready,push,paint,login,whenReady:()=>readyP,client:()=>sb,user:()=>user,onAuth:f=>{ authFns.push(f); }};
 })();

@@ -14,7 +14,7 @@
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
 // 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
 // 注意：改了 assets/ 裡的檔案，要把所有 html 的 ?v= 版本號一起改（scripts/bump_version.py 會同時更新這裡和 ?v=）。
-const LAST_UPDATED = "2026-10-25 08:35";
+const LAST_UPDATED = "2026-10-25 09:50";
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";
@@ -24,7 +24,7 @@ if(GOATCOUNTER_URL&&/^https?:$/.test(location.protocol)){ // 本機預覽（file
 /* ===== 共用翻譯 ===== */
 const I18N={
  zh:{replay:"重播",openOriginal:"在 YouTube 開啟",openX:"在 X 開啟",close:"關閉",copy:"複製連結",copied:"已複製",sec:"秒",fromStart:"從頭",play:"播放",
-   siteName:"めらめら出勤紀錄",menuBtn:"選單",toTop:"回到頁面上方",themeToggle:"切換深色／淺色模式",tabTax:"繳稅簿",tabShift:"出勤紀錄",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"非官方粉絲網站",tabVoices:"回音",tabSongs:"歌單",tabVoiceGoods:"音聲",tabGoods:"周邊",artist:"原唱",pMinimize:"縮小播放器",
+   siteName:"めらめら出勤紀錄",menuBtn:"選單",toTop:"回到頁面上方",themeToggle:"切換深色／淺色模式",tabTax:"繳稅簿",tabGames:"小遊戲",tabQuiz:"今日問答",tabShift:"出勤紀錄",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"非官方粉絲網站",tabVoices:"回音",tabSongs:"歌單",tabVoiceGoods:"音聲",tabGoods:"周邊",artist:"原唱",pMinimize:"縮小播放器",
    playerNote:"ⓘ 本頁使用 YouTube 嵌入式播放，可能不會列入你的 YouTube 觀看紀錄。",pExpand:"展開播放器",pPause:"暫停",pPlay:"播放",
    footer:"非官方粉絲整理。所有聲音都來自原直播／推文，請多去看本人的直播。",
    officialLinks:"官方相關連結",unofficialLinks:"非官方連結",holoOfficial:"hololive 官方介紹",
@@ -33,7 +33,7 @@ const I18N={
    updatedLabel:"最後更新：",madeWith:"本網站使用 Claude 協助製作",
    rights:"本站為志工維護的非官方粉絲網站。影片由 hololive production 與熱千めら製作，影片的權利歸原創作者所有。"},
  ja:{replay:"もう一度",openOriginal:"YouTubeで開く",openX:"Xで開く",close:"閉じる",copy:"リンクをコピー",copied:"コピーしました",sec:"秒",fromStart:"最初から",play:"再生",
-   siteName:"めらめら出勤記録",menuBtn:"メニュー",toTop:"ページの先頭へ",themeToggle:"ダーク／ライトモードを切り替え",tabTax:"コレクション",tabShift:"出勤記録",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"非公式ファンサイト",tabVoices:"こだま",tabSongs:"歌リスト",tabVoiceGoods:"ボイス",tabGoods:"グッズ",artist:"原曲",pMinimize:"プレーヤーを小さくする",
+   siteName:"めらめら出勤記録",menuBtn:"メニュー",toTop:"ページの先頭へ",themeToggle:"ダーク／ライトモードを切り替え",tabTax:"コレクション",tabGames:"ミニゲーム",tabQuiz:"今日のクイズ",tabShift:"出勤記録",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"非公式ファンサイト",tabVoices:"こだま",tabSongs:"歌リスト",tabVoiceGoods:"ボイス",tabGoods:"グッズ",artist:"原曲",pMinimize:"プレーヤーを小さくする",
    playerNote:"ⓘ このページは YouTube の埋め込みプレーヤーで再生するため、ご自身の視聴履歴に残らない場合があります。",pExpand:"プレーヤーを開く",pPause:"一時停止",pPlay:"再生",
    footer:"非公式ファンまとめです。音声はすべて元の配信・ポストから。ぜひ本人の配信を見に行ってください。",
    officialLinks:"公式リンク",unofficialLinks:"非公式リンク",holoOfficial:"ホロライブ公式",
@@ -42,7 +42,7 @@ const I18N={
    updatedLabel:"最終更新：",madeWith:"このサイトは Claude の協力で制作しました",
    rights:"当サイトは有志が運営する非公式ファンサイトです。動画はホロライブプロダクションおよび熱千めらが制作したもので、動画の権利は各制作者に帰属します。"},
  en:{replay:"Replay",openOriginal:"Open on YouTube",openX:"Open on X",close:"Close",copy:"Copy link",copied:"Copied",sec:"s",fromStart:"From start",play:"Play",
-   siteName:"Mela Mela Shift Log",menuBtn:"Menu",toTop:"Back to top",themeToggle:"Toggle dark / light mode",tabTax:"Collection",tabShift:"Shift Log",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"Unofficial fan site",tabVoices:"Echoes",tabSongs:"Songs",tabVoiceGoods:"Voice",tabGoods:"Merch",artist:"Original",pMinimize:"Minimize player",
+   siteName:"Mela Mela Shift Log",menuBtn:"Menu",toTop:"Back to top",themeToggle:"Toggle dark / light mode",tabTax:"Collection",tabGames:"Games",tabQuiz:"Daily Quiz",tabShift:"Shift Log",tabShiftLog:"History",tabShiftCal:"Calendar",unofficial:"Unofficial fan site",tabVoices:"Echoes",tabSongs:"Songs",tabVoiceGoods:"Voice",tabGoods:"Merch",artist:"Original",pMinimize:"Minimize player",
    playerNote:"ⓘ Videos play in YouTube's embedded player, so they may not show up in your YouTube watch history.",pExpand:"Expand player",pPause:"Pause",pPlay:"Play",
    footer:"Unofficial fan collection. Every sound links back to the original stream or post — go watch her streams!",
    officialLinks:"Official links",unofficialLinks:"Unofficial links",holoOfficial:"hololive official page",
@@ -74,6 +74,7 @@ function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===l));
   showUpdated();
   window.melaFitHeader?.();
+  window.melaFitViews?.();
   if(typeof window.onLangChange==="function") window.onLangChange();
   if(current) fillInfo(current);
 }
@@ -250,6 +251,15 @@ function showUpdated(){ const el=$("updatedAt"); if(!el||!LAST_UPDATED) return; 
 /* ===== 頁內跳轉時預留固定標題列的高度（標題列高度會隨語言、螢幕寬度變） ===== */
 (function(){ const f=()=>{ const hd=document.querySelector(".topbar>header"); if(hd) document.documentElement.style.scrollPaddingTop=(hd.offsetHeight+12)+"px"; };
   window.addEventListener("resize",f); window.addEventListener("load",f); document.addEventListener("DOMContentLoaded",f); window.melaFitHeader=f; })();
+
+/* ===== 分頁列放不下（手機、日文／英文）時：把目前所在的分頁捲進畫面，左右邊緣淡出提示還可以滑 ===== */
+(function(){ const edge=n=>{ n.classList.toggle("more-l",n.scrollLeft>2); n.classList.toggle("more-r",n.scrollLeft+n.clientWidth<n.scrollWidth-2); };
+  const f=()=>document.querySelectorAll(".views").forEach(n=>{
+    if(!n.dataset.fit){ n.dataset.fit="1"; n.addEventListener("scroll",()=>edge(n),{passive:true}); }
+    const a=n.querySelector('[aria-current="page"]');
+    if(a){ const nr=n.getBoundingClientRect(), ar=a.getBoundingClientRect(); if(ar.right>nr.right) n.scrollLeft+=ar.right-nr.right+24; else if(ar.left<nr.left) n.scrollLeft-=nr.left-ar.left+24; }
+    edge(n); });
+  window.addEventListener("resize",f); window.addEventListener("load",f); document.addEventListener("DOMContentLoaded",f); window.melaFitViews=f; })();
 
 /* ===== 共用事件 ===== */
 document.addEventListener("click",e=>{ const b=e.target.closest("button[data-lang]"); if(b) setLang(b.dataset.lang); });
