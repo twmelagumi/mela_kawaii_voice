@@ -12,9 +12,10 @@
 /* ===== 共用設定 ===== */
 // 問題回報用 Google 表單的連結（例如 https://forms.gle/xxxx）。留空就不顯示頁尾的「問題回報」。
 const REPORT_URL = "https://forms.gle/FqPYsz1eSLLuJKFM7";
-// 頁尾的「最後更新」時間（台灣時間），每次 commit／push 前更新。留空就不顯示。
-// 注意：改了 assets/ 裡的檔案，要把所有 html 的 ?v= 版本號一起改（scripts/bump_version.py 會同時更新這裡和 ?v=）。
-const LAST_UPDATED = "2026-10-25 10:08";
+// 頁尾的「最後更新」時間（台灣時間）放在 updated.json（{"updated":"YYYY-MM-DD HH:MM"}），commit 前由 scripts/bump_version.py 更新。
+// 改了 assets/ 裡的檔案時，同一支腳本也會把各頁引用它的 ?v= 換成新的版本號（＝檔案內容的雜湊）。
+let LAST_UPDATED = "";
+fetch("updated.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(d=>{ if(d&&d.updated){ LAST_UPDATED=String(d.updated); showUpdated(); } }).catch(()=>{});
 
 // GoatCounter 瀏覽統計（不用 Cookie）。換帳號時改這裡；留空就不統計。
 const GOATCOUNTER_URL = "https://twmelagumi.goatcounter.com/count";

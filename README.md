@@ -25,7 +25,8 @@
 | `scripts/update_timeline.py` | 自動抓 YouTube 的程式 |
 | `.github/workflows/update-timeline.yml` | 每天早上 9 點（台灣時間）執行上面的程式 |
 | `scripts/update_song_stats.py`、`.github/workflows/update-song-stats.yml` | 每兩天更新 `song_stats.json` |
-| `scripts/bump_version.py` | 改了網站程式後、commit 前執行：更新頁尾「最後更新」時間和各頁的 `?v=` 版本號 |
+| `scripts/bump_version.py` | 改了網站程式後、commit 前執行：更新 `updated.json`（頁尾「最後更新」時間）並對齊各頁的 `?v=` 版本號 |
+| `updated.json` | 頁尾「最後更新」的時間（由上面的腳本更新） |
 
 網站片段有兩個來源，會自動合併、去掉重複：
 
@@ -122,7 +123,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 - 直接雙擊 `index.html` 會讀不到片段、YouTube 也會出錯。請用 GitHub Pages 的網址看，或在資料夾執行 `python -m http.server` 後開 http://localhost:8000 。
 - 換到其他網路空間時，一樣把 `index.html` 和 `clips.json` 放在同一個資料夾就好。
-- 改了 html 或 `assets/` 裡的程式，commit 前在 repo 根目錄執行 `python scripts/bump_version.py`：會把頁尾的「最後更新」改成現在時間，並更新所有頁面引用 `assets/` 的 `?v=` 版本號，讓訪客的瀏覽器抓新版。只改資料檔（例如 `songs.json`）時不用執行。
+- 改了 html 或 `assets/` 裡的程式，commit 前在 repo 根目錄執行 `python scripts/bump_version.py`：會把 `updated.json`（頁尾的「最後更新」）改成現在時間，並把各頁引用 `assets/` 的 `?v=` 換成該檔案內容的版本號（雜湊），讓訪客的瀏覽器抓新版。只有內容真的改了的 assets 檔，引用它的頁面才會換版本號，所以只改某一頁的頁內程式時，commit 只會動到那一頁和 `updated.json`。`--no-time` 只對齊版本號、不改時間；`--check` 只檢查。只改資料檔（例如 `songs.json`）時不用執行。
 
 ## 網站共用的版面
 

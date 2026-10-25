@@ -1,7 +1,7 @@
 # 產生 privacy.html（隱私權政策）和 terms.html（服務條款）。在 repo 根目錄執行：python scripts/mklegal.py
 # 三種語言放在同一頁，依網站語言切換（article[data-doc-lang]）。
 import os
-V = "202610250101"
+V = "0"  # 版本號由 scripts/bump_version.py 填（下面產生完會自動對齊）
 FORM = "https://forms.gle/FqPYsz1eSLLuJKFM7"
 DATE = {"zh": "2026 年 10 月 25 日", "ja": "2026年10月25日", "en": "October 25, 2026"}
 
@@ -259,3 +259,7 @@ setLang(pickLang());
 open("privacy.html", "w", encoding="utf-8", newline="").write(page("privacy.html", "titlePrivacy", PRIVACY, "めらめら出勤紀錄 隱私權政策（非官方粉絲網站）"))
 open("terms.html", "w", encoding="utf-8", newline="").write(page("terms.html", "titleTerms", TERMS, "めらめら出勤紀錄 服務條款（非官方粉絲網站）"))
 print("ok")
+
+# 產生的頁面裡 ?v= 換成各 assets 檔案目前內容的版本號
+import bump_version
+bump_version.sync_refs()
