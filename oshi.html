@@ -24,18 +24,6 @@
 .os-no{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:var(--accent);color:var(--accent-text)}
 .os-back{align-self:flex-start;font-size:13px;padding:5px 12px}
 /* 路線圖（4×4＋結果欄） */
-.os-map{max-width:640px;width:100%;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr) 1.15fr;gap:5px}
-.os-cell{aspect-ratio:1.6;border-radius:7px;background:var(--bg);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);position:relative}
-.os-cell.v{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-text)}
-.os-cell.cur{outline:2px solid var(--accent);outline-offset:1px}
-.os-cell.y::after,.os-cell.n::after{position:absolute;right:3px;bottom:1px;font-size:9px}
-.os-cell.y::after{content:"YES";color:#e0284a}
-.os-cell.n::after{content:"NO";color:var(--accent-text)}
-.os-end{aspect-ratio:1.6;border-radius:7px;overflow:hidden;position:relative;border:2px solid transparent;background:var(--bg);opacity:.55}
-.os-end img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.os-end.hit{opacity:1;border-color:var(--c)}
-.os-box{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:6px;padding:4px;border-radius:7px;border:1px dashed var(--line);font-size:11px;color:var(--muted)}
-.os-box.hit{border:2px solid var(--c);color:var(--ink);font-weight:700}
 /* 結果 */
 .os-lead{margin:0;text-align:center;font-weight:700;color:var(--muted)}
 .os-res{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;opacity:0;transform:translateY(8px) scale(.97);transition:opacity .5s,transform .5s}
@@ -97,7 +85,6 @@
 
   <section class="view">
     <div class="os-card" id="os" aria-live="polite"></div>
-    <div class="os-map" id="osMap" aria-hidden="true"></div>
     <section class="os-stats" id="osStats" aria-live="polite" hidden></section>
     <p class="os-note" id="osNote"></p>
   </section>
@@ -157,7 +144,7 @@ function render(){
   const src=D.source;
   $("osNote").innerHTML=esc(t("osNote")).replace("{src}",`<a href="${esc(webSafe(src))}" target="_blank" rel="noopener">${esc(t("osSrc"))} ↗</a>`);
   if(result) renderResult(); else renderQuestion();
-  renderMap(); renderStats(); }
+  renderStats(); }
 
 function renderQuestion(){ const w=walk(path), q=D.rows[w.r].questions[w.c], txt=L(q), orig=lang!=="ja"&&q.ja&&t("osOrig")?tq("osOrig",{s:q.ja}):"";
   $("os").innerHTML=`<div class="os-top"><span>${tq("osQ",{n:path.length+1})}</span><span class="sp"></span></div>
@@ -180,14 +167,6 @@ function renderResult(){ const R=D.results[result]; if(!R) return; const name=L(
     ${upMsg}`;
   if(!reveal) setTimeout(()=>{ reveal=true; document.querySelector(".os-res")?.classList.add("show"); },matchMedia("(prefers-reduced-motion: reduce)").matches?0:700); }
 
-function renderMap(){ const w=walk(path), seen=new Map(); let r=0,c=0;
-  for(const a of path){ seen.set(`${r},${c}`,a); if(a){ if(c<3) c++; } else { if(r<3) r++; } }
-  let h="";
-  for(let i=0;i<4;i++){ for(let j=0;j<4;j++){ const k=`${i},${j}`, v=seen.has(k), cur=!result&&w.r===i&&w.c===j;
-      h+=`<span class="os-cell${v?" v "+(seen.get(k)?"y":"n"):""}${cur?" cur":""}">${i*4+j+1}</span>`; }
-    const id=D.rows[i].result, R=D.results[id]; h+=`<span class="os-end${result===id?" hit":""}" style="--c:${esc(R.color)}"><img src="${esc(R.img)}" alt=""></span>`; }
-  const B=D.results.box; h+=`<span class="os-box${result==="box"?" hit":""}" style="--c:${esc(B.color)}">⬇ ${esc(L(B.name))}</span>`;
-  $("osMap").innerHTML=h; }
 
 function renderStats(){ const el=$("osStats"); el.hidden=!result; if(!result) return;
   let body;
