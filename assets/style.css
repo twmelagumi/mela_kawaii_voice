@@ -432,7 +432,7 @@ footer a{color:var(--accent-text);font-weight:700;overflow-wrap:anywhere}
 .g-dlg h2{margin:0;padding-right:44px;font-size:18px;color:var(--accent-text)}
 .g-dlg>*{flex-shrink:0}
 .g-dlg p{margin:0}
-.g-dlg-x{position:absolute;top:14px;right:14px;width:34px;height:34px;padding:0;border-radius:50%;background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-size:16px;line-height:1}
+.g-dlg-x{position:absolute;top:14px;right:14px;width:34px;height:34px;padding:0;justify-content:center;border-radius:50%;background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-size:16px;line-height:1}
 .g-share-d{font-size:12px;color:var(--muted);line-height:1.6}
 #shMine{display:flex;flex-direction:column;gap:8px}
 .g-share-qr{display:flex;flex-direction:column;align-items:center;gap:8px;margin:2px 0 6px;text-align:center}
