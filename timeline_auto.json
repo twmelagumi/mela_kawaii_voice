@@ -1,11 +1,23 @@
 [
   {
+    "date": "2026-10-28",
+    "type": "stream",
+    "title": "【歌枠】ボカロオタクはじめての…",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "upcoming": true,
+    "start": "2026-10-28T10:00:00Z"
+  },
+  {
+    "date": "2026-10-26",
+    "type": "short",
+    "title": "デビュー前の炎上経験を語るホロライブの新人Vtuber",
+    "url": "https://www.youtube.com/watch?v=MiLyVyEHCeA"
+  },
+  {
     "date": "2026-10-26",
     "type": "stream",
     "title": "電柱ソムリエの一歩も動かないGeoGuessr",
-    "url": "https://www.youtube.com/watch?v=0PgUff6IQ-Y",
-    "upcoming": true,
-    "start": "2026-10-26T10:00:00Z"
+    "url": "https://www.youtube.com/watch?v=0PgUff6IQ-Y"
   },
   {
     "date": "2026-10-25",
