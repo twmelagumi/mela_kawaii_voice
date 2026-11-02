@@ -1,11 +1,15 @@
 [
   {
     "date": "2026-11-01",
+    "type": "short",
+    "title": "ホロライブの新人が「UNDEAD」歌ってみた #YOASOBI #cover #熱千めら",
+    "url": "https://www.youtube.com/watch?v=sZjAhVlOHP4"
+  },
+  {
+    "date": "2026-11-01",
     "type": "stream",
     "title": "チラズの異変探しホラー「新幹線０号」をかっこよくプレイのじゃ！",
-    "url": "https://www.youtube.com/watch?v=oIgWCd0kIZc",
-    "upcoming": true,
-    "start": "2026-11-01T10:00:00Z"
+    "url": "https://www.youtube.com/watch?v=oIgWCd0kIZc"
   },
   {
     "date": "2026-10-31",
