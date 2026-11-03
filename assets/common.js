@@ -186,7 +186,7 @@ const FOOTER_HTML=`<p class="official-label" data-i18n="officialLinks"></p>
   <span class="dc-label" data-i18n="dcLabel"></span>
   <ul>
     <li><span lang="zh-Hant">中文</span> <b class="dc-name" lang="zh-Hant">火蜥蜴救火隊</b> <a href="https://discord.gg/qbEFfzASZJ" target="_blank" rel="noopener">discord.gg/qbEFfzASZJ</a></li>
-    <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/MdXnazUU6" target="_blank" rel="noopener">discord.gg/MdXnazUU6</a></li>
+    <li><span lang="ja">日本語</span> <b class="dc-name" lang="ja">めら組でいすこーど分団</b> <a href="https://discord.gg/2UjGQWUXdG" target="_blank" rel="noopener">discord.gg/2UjGQWUXdG</a></li>
     <li><span lang="en">English</span> <b class="dc-name" lang="en">Achichi's Mela-Gumi's</b> <a href="https://discord.gg/Achichimela" target="_blank" rel="noopener">discord.gg/Achichimela</a></li>
   </ul>
   <span class="dc-join" data-i18n="dcJoin"></span>
