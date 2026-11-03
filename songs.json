@@ -1,5 +1,78 @@
 [
   {
+    "title": "Happy Halloween",
+    "artist": "Junky feat. 鏡音リン",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:11:01",
+    "end": "00:15:07",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "ずんだパーリナイ",
+    "artist": "なみぐる feat. ずんだもん",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:19:44",
+    "end": "00:22:42",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "メルト",
+    "artist": "ryo（supercell） feat. 初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:26:24",
+    "end": "00:30:43",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "チェリーポップ",
+    "artist": "DECO*27 feat. 初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:33:06",
+    "end": "00:35:37",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "君が飛び降りるのならば",
+    "artist": "Omoi feat. 初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:38:49",
+    "end": "00:41:43",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "きゅうくらりん",
+    "artist": "いよわ feat. 可不",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:49:25",
+    "end": "00:52:59",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "転生林檎",
+    "artist": "ピノキオピー feat. 初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "00:56:47",
+    "end": "01:00:30",
+    "streamDate": "2026-10-28"
+  },
+  {
+    "title": "ヒバナ",
+    "artist": "DECO*27 feat. 初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
+    "start": "01:04:28",
+    "end": "01:07:53",
+    "streamDate": "2026-10-28",
+    "pick": true
+  },
+  {
     "title": "オリオンをなぞる",
     "artist": "UNISON SQUARE GARDEN",
     "category": "cover",
@@ -10,7 +83,8 @@
       "宙科そぴあ",
       "鈴鳴つづり",
       "百灯キョーコ"
-    ]
+    ],
+    "pick": true
   },
   {
     "title": "め組のひと",
@@ -156,8 +230,7 @@
     "start": "00:09:33",
     "end": "00:13:10",
     "note": "はじめての歌枠",
-    "streamDate": "2026-10-01",
-    "pick": true
+    "streamDate": "2026-10-01"
   },
   {
     "title": "モニタリング",
@@ -207,8 +280,7 @@
     "start": "00:52:00",
     "end": "00:55:15",
     "note": "はじめての歌枠",
-    "streamDate": "2026-10-01",
-    "pick": true
+    "streamDate": "2026-10-01"
   },
   {
     "title": "Our Bright Parade",
