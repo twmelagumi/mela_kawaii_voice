@@ -47,7 +47,7 @@
 .ck-bar .tr{display:block;height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
 .ck-bar .tr b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .6s}
 .ck-bar .pc{font-family:var(--f-code);font-size:12px;color:var(--muted);text-align:right;min-width:6em;line-height:1.5}
-.ck-bar.me .nm::after{content:" ★";color:var(--accent-text)}
+.ck-bar.me .nm{color:var(--accent-text)}
 @media (max-width:520px){.ck-icons{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:reduce){.ck-ic,.ck-bar .tr b{transition:none}}
 </style>
@@ -108,8 +108,8 @@ addStrings({
  zh:{titleCheckin:"每日簽到",subCheckin:"登入 Google 後，每天選一個圖案簽到，累積連續天數！",
    ckLoading:"讀取中…",ckLoginTitle:"登入後才能簽到",ckLoginBody:"用 Google 登入，就能每天簽到、累積連續天數，也能看到大家選了哪個圖案。",ckLoginBtn:"Google 登入",
    ckErr:"讀取失敗，請稍後再試。",ckRetry:"重試",
-   ckDay:"今天的簽到日：{d}",ckPickHint:"選一個圖案簽到。每天只能選一次，選了就不能改。",ckConfirm:"就選「{i}」簽到！",ckCancel:"重選",ckSending:"簽到中…",
-   ckDone:"今天已簽到 ✓",ckDoneWith:"今天選的是「{i}」，明天再來！",ckAlready:"今天已經簽到過了。",ckFail:"簽到失敗，請稍後再試。",
+   ckDay:"今天的簽到日：{d}",ckPickHint:"選一個圖案簽到。每天只能選一次，選了就不能改。",ckConfirm:"就選這個簽到！",ckCancel:"重選",ckSending:"簽到中…",
+   ckDone:"今天已簽到 ✓",ckDoneWith:"明天再來！",ckAlready:"今天已經簽到過了。",ckFail:"簽到失敗，請稍後再試。",
    ckStreak:"連續簽到",ckBest:"最長紀錄",ckTotal:"累計天數",ckDays:"{n} 天",
    ckStatsTitle:"大家簽到的圖案",ckStatsDesc:"今天共 {n} 人次簽到。長條是累計人次的比例。",ckStatsEmpty:"今天還沒有人簽到，你是第一個！",ckStatsFail:"統計暫時無法顯示。",ckToday:"今日",ckAll:"累計",
    ckSongTitle:"♪ 今天推薦你聽",ckSongOpen:"在 YouTube 聽",ckSongFrom:"從 {s} 開始",ckSongList:"看完整歌單",
@@ -118,8 +118,8 @@ addStrings({
  ja:{titleCheckin:"毎日チェックイン",subCheckin:"Google でログインして、毎日ひとつアイコンを選んでチェックイン！連続日数を伸ばそう！",
    ckLoading:"読み込み中…",ckLoginTitle:"ログインするとチェックインできます",ckLoginBody:"Google でログインすると、毎日チェックインして連続日数を記録でき、みんなが選んだアイコンも見られます。",ckLoginBtn:"Google でログイン",
    ckErr:"読み込めませんでした。しばらくしてからもう一度お試しください。",ckRetry:"再読み込み",
-   ckDay:"今日のチェックイン日：{d}",ckPickHint:"アイコンをひとつ選んでチェックイン。1日1回だけ、選んだあとは変更できません。",ckConfirm:"「{i}」でチェックイン！",ckCancel:"選び直す",ckSending:"チェックイン中…",
-   ckDone:"今日はチェックイン済み ✓",ckDoneWith:"今日は「{i}」を選びました。また明日！",ckAlready:"今日はもうチェックイン済みです。",ckFail:"チェックインに失敗しました。しばらくしてからもう一度お試しください。",
+   ckDay:"今日のチェックイン日：{d}",ckPickHint:"アイコンをひとつ選んでチェックイン。1日1回だけ、選んだあとは変更できません。",ckConfirm:"これでチェックイン！",ckCancel:"選び直す",ckSending:"チェックイン中…",
+   ckDone:"今日はチェックイン済み ✓",ckDoneWith:"また明日！",ckAlready:"今日はもうチェックイン済みです。",ckFail:"チェックインに失敗しました。しばらくしてからもう一度お試しください。",
    ckStreak:"連続日数",ckBest:"最長記録",ckTotal:"累計日数",ckDays:"{n} 日",
    ckStatsTitle:"みんなが選んだアイコン",ckStatsDesc:"今日のチェックインは合計 {n} 件。バーは累計の割合です。",ckStatsEmpty:"今日はまだ誰もチェックインしていません。いちばん乗りになろう！",ckStatsFail:"集計を表示できません。",ckToday:"今日",ckAll:"累計",
    ckSongTitle:"♪ 今日のおすすめ曲",ckSongOpen:"YouTube で聴く",ckSongFrom:"{s} から再生",ckSongList:"歌リストを見る",
@@ -128,8 +128,8 @@ addStrings({
  en:{titleCheckin:"Daily Check-in",subCheckin:"Sign in with Google and pick an icon once a day to build your streak!",
    ckLoading:"Loading…",ckLoginTitle:"Sign in to check in",ckLoginBody:"Sign in with Google to check in every day, build a streak, and see which icons everyone picked.",ckLoginBtn:"Sign in with Google",
    ckErr:"Couldn't load. Please try again in a moment.",ckRetry:"Retry",
-   ckDay:"Today's check-in day: {d}",ckPickHint:"Pick one icon to check in. Once a day only, and you can't change it afterwards.",ckConfirm:"Check in with \"{i}\"!",ckCancel:"Pick again",ckSending:"Checking in…",
-   ckDone:"Checked in today ✓",ckDoneWith:"You picked \"{i}\" today. See you tomorrow!",ckAlready:"You've already checked in today.",ckFail:"Check-in failed. Please try again in a moment.",
+   ckDay:"Today's check-in day: {d}",ckPickHint:"Pick one icon to check in. Once a day only, and you can't change it afterwards.",ckConfirm:"Check in with this one!",ckCancel:"Pick again",ckSending:"Checking in…",
+   ckDone:"Checked in today ✓",ckDoneWith:"See you tomorrow!",ckAlready:"You've already checked in today.",ckFail:"Check-in failed. Please try again in a moment.",
    ckStreak:"Current streak",ckBest:"Best streak",ckTotal:"Total days",ckDays:"{n} d",
    ckStatsTitle:"Icons everyone picked",ckStatsDesc:"{n} check-ins today. Bars show each icon's share of all-time picks.",ckStatsEmpty:"Nobody has checked in yet today — be the first!",ckStatsFail:"The stats can't be shown right now.",ckToday:"Today",ckAll:"All-time",
    ckSongTitle:"♪ Today's song for you",ckSongOpen:"Listen on YouTube",ckSongFrom:"starts at {s}",ckSongList:"Full song list",
@@ -152,7 +152,7 @@ function render(){ const box=$("ck");
     const head=done?`<p class="ck-done ck-center">${t("ckDone")}</p><p class="ck-sub ck-center">${tq("ckDoneWith",{i:name(me.icon)})}</p>`
       :`<p class="ck-sub">${tq("ckDay",{d:me.today})}<br>${t("ckPickHint")}</p>`;
     const icons=`<div class="ck-icons">`+ICONS.map(x=>{ const cls=done?(x.id===me.icon?" mine":" dim"):(x.id===pick?" sel":"");
-      return `<button type="button" class="ck-ic${cls}" data-i="${x.id}"${done||busy?" disabled":""}${x.id===pick?' aria-pressed="true"':""}><img src="${x.img}" alt="" width="88" height="88"><span>${esc(t(x.k))}</span></button>`; }).join("")+`</div>`;
+      return `<button type="button" class="ck-ic${cls}" data-i="${x.id}" aria-label="${esc(t(x.k))}"${done||busy?" disabled":""}${x.id===pick?' aria-pressed="true"':""}><img src="${x.img}" alt="" width="88" height="88"></button>`; }).join("")+`</div>`;
     const go=!done&&pick?`<div class="ck-go"><button type="button" class="primary" id="ckGo"${busy?" disabled":""}>${busy?t("ckSending"):tq("ckConfirm",{i:name(pick)})}</button>${busy?"":`<button type="button" id="ckCancel">${t("ckCancel")}</button>`}</div>`:"";
     const m=msg?`<p class="ck-msg">${esc(msg)}</p>`:"";
     const nums=`<div class="ck-nums"><div><b>${tq("ckDays",{n:me.streak})}</b><span>${t("ckStreak")}</span></div><div><b>${tq("ckDays",{n:me.best})}</b><span>${t("ckBest")}</span></div><div><b>${tq("ckDays",{n:me.total})}</b><span>${t("ckTotal")}</span></div></div>`;
@@ -179,7 +179,7 @@ function renderStats(){ const el=$("ckStats"); el.hidden=!(st==="ready"&&me&&me.
   else if(!stats) body=`<p class="ck-sub">${t("ckLoading")}</p>`;
   else{ const allT=ICONS.reduce((s,x)=>s+(stats[x.id]?.total||0),0), todayT=ICONS.reduce((s,x)=>s+(stats[x.id]?.today||0),0);
     body=`<p class="ck-sub">${todayT?tq("ckStatsDesc",{n:todayT}):t("ckStatsEmpty")}</p>`+ICONS.map(x=>{ const s=stats[x.id]||{today:0,total:0}, pc=allT?Math.round(s.total/allT*1000)/10:0;
-      return `<div class="ck-bar${x.id===me.icon?" me":""}"><img src="${x.img}" alt=""><span><span class="nm">${esc(t(x.k))}</span><span class="tr"><b style="width:${pc}%"></b></span></span><span class="pc">${t("ckToday")} ${s.today}<br>${t("ckAll")} ${s.total}</span></div>`; }).join(""); }
+      return `<div class="ck-bar${x.id===me.icon?" me":""}"><img src="${x.img}" alt="${esc(t(x.k))}"><span><span class="nm">${x.id===me.icon?"★":"&nbsp;"}</span><span class="tr"><b style="width:${pc}%"></b></span></span><span class="pc">${t("ckToday")} ${s.today}<br>${t("ckAll")} ${s.total}</span></div>`; }).join(""); }
   el.innerHTML=`<h2>${t("ckStatsTitle")}</h2>${body}`; }
 
 async function loadMe(){ const sb=S.client(); const {data,error}=await sb.rpc("checkin_me"); if(error) throw error;
