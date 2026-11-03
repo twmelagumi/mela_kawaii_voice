@@ -16,6 +16,7 @@
 | `assets/collect.js` | 周邊頁和音聲頁共用的程式（試算表讀取、花費、.json 備份） |
 | `assets/share.js`、`assets/qrcode.min.js` | 周邊／音聲「已入手」的轉移代碼、匯入連結、QR code（見最後「收藏代碼」） |
 | `quiz.html` | 小遊戲「今日問答」（讀 `quiz.json`；成績和全對排行榜存在 Supabase，見最後「小遊戲」） |
+| `checkin.html` | 小遊戲「每日簽到」（需 Google 登入；圖案在 `assets/checkin/`；資料在 Supabase，見最後「每日簽到」） |
 | `oshi.html` | 小遊戲「推し診斷」（讀 `oshi.json`；圖片在 `assets/oshi/`；結果統計存在 Supabase，見最後「推し診斷」） |
 | `subs.html` | 隱藏頁（不給搜尋引擎收錄，導覽列不會連到） |
 | `clips.json` | 固定收錄的片段（可以一直保留，網站會和 Google 試算表的片段合併顯示） |
@@ -355,3 +356,13 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 最近一次的結果存在瀏覽器（`mela-oshi-last`），再打開會先顯示上次的結果。
 - 統計：只收登入 Google 的人，每人只存最近一次的結果。資料庫要先把 `supabase/oshi-setup.sql` 貼到 Supabase SQL Editor 執行一次：`public.oshi_results`（每人一列）、`submit_oshi_result(p_result)`（登入的人寫入）、`oshi_stats()`（任何人都能讀，只有各結果的人數）。沒登入的人可以按「Google 登入並加入統計」，登入回來後自動補傳（7 天內）。
 - 「刪除雲端紀錄」也會刪掉推し診斷的結果。
+
+## 小遊戲「每日簽到」（checkin.html）
+
+- 要登入 Google 才能用。每人每天選一個圖案簽到一次（選了不能改），圖案有 4 個：`assets/checkin/` 的 noja／egg／glass／face（webp）。
+- 「今天」由 Supabase 伺服器決定，日本時間早上 5:00 換日（台灣時間 4:00），不吃手機的時間。每人每天一筆由資料表主鍵（user_id + day）保證。
+- 連續天數、最長紀錄、總天數都在資料庫算（`checkin_me()`）；斷一天歸零；今天還沒簽到時，只要昨天有簽，連續天數仍保留。
+- 各圖案的「今日」與「累計」人次用 `checkin_stats()` 讀（沒登入也讀得到，只有數字）。頁面是簽到之後才顯示統計。
+- 資料庫要先把 `supabase/checkin-setup.sql` 貼到 Supabase SQL Editor 執行一次：`public.checkins`、`checkin_today()`、`checkin(p_icon)`、`checkin_me()`、`checkin_stats()`。
+- 想增減圖案：改 `checkin.html` 的 `ICONS`，同時改 `checkin-setup.sql` 的 `check (icon in (...))` 和 `checkin()` 的清單，再重新執行該 SQL。
+- 「刪除雲端紀錄」（sync.js）會一併刪掉 `checkins`；隱私權政策與使用條款（`scripts/mklegal.py`）已加上這一項。

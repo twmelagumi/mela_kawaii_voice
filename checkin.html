@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>每日簽到｜熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="每日簽到：登入 Google 後，每天選一個圖案簽到，累積連續天數，也能看大家選了哪個圖案（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=42465201">
+<style>
+/* ===== 小遊戲：每日簽到 ===== */
+.view{gap:14px}
+.ck-card,.ck-stats{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:22px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.ck-card h2,.ck-stats h2{margin:0;font-family:var(--f-display);font-size:18px}
+.ck-card p,.ck-stats p{margin:0}
+.ck-sub{font-size:13px;color:var(--muted);line-height:1.7}
+.ck-center{text-align:center;align-items:center}
+.ck-icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ck-ic{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px 6px;border-radius:16px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;transition:transform .15s,border-color .15s,background .15s,opacity .2s}
+.ck-ic img{width:min(88px,100%);aspect-ratio:1;object-fit:contain;border-radius:14px;pointer-events:none}
+.ck-ic:not(:disabled):hover{border-color:var(--accent);transform:translateY(-2px)}
+.ck-ic.sel{border-color:var(--accent);background:var(--accent-soft);transform:translateY(-2px)}
+.ck-ic:disabled{cursor:default}
+.ck-ic.dim{opacity:.35}
+.ck-ic.mine{border-color:var(--accent);background:var(--accent-soft)}
+.ck-go{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+.ck-go button{padding:9px 20px;font-size:15px}
+.ck-done{font-family:var(--f-display);font-weight:900;font-size:20px;color:var(--accent-text)}
+.ck-msg{font-size:13px;color:var(--muted);text-align:center}
+.ck-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.ck-nums div{padding:12px 6px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.ck-nums b{display:block;font-family:var(--f-display);font-size:clamp(22px,6vw,30px);line-height:1.2;color:var(--accent-text)}
+.ck-nums span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.ck-song{max-width:640px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:6px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.ck-song h2{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
+.ck-song .st{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(20px,5.5vw,26px);line-height:1.4;text-wrap:pretty}
+.ck-song .sa,.ck-song .sn{margin:0;font-size:13px;color:var(--muted)}
+.ck-song .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ck-song .links a{font-size:13px;padding:6px 14px}
+.ck-note{max-width:640px;margin:0 auto;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+.ck-bar{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;font-size:13px}
+.ck-bar img{width:38px;height:38px;object-fit:contain;border-radius:8px}
+.ck-bar .nm{font-weight:700;display:block;margin-bottom:3px}
+.ck-bar .tr{display:block;height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.ck-bar .tr b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .6s}
+.ck-bar .pc{font-family:var(--f-code);font-size:12px;color:var(--muted);text-align:right;min-width:6em;line-height:1.5}
+.ck-bar.me .nm::after{content:" ★";color:var(--accent-text)}
+@media (max-width:520px){.ck-icons{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.ck-ic,.ck-bar .tr b{transition:none}}
+</style>
+</head>
+<body data-title-key="titleCheckin">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="titleCheckin"></span></h1>
+      <p class="sub" data-i18n="subCheckin"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="./" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabShift"></a>
+    <a href="goods.html" data-i18n="tabTax"></a>
+    <a href="quiz.html" aria-current="page" data-i18n="tabGames"></a>
+  </nav>
+  <nav class="views sub-views" data-i18n-aria="tabGames">
+    <a href="quiz.html" data-i18n="tabQuiz"></a>
+    <a href="oshi.html" data-i18n="tabOshi"></a>
+    <a href="checkin.html" aria-current="page" data-i18n="tabCheckin"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="ck-card" id="ck" aria-live="polite"></div>
+    <section class="ck-song" id="ckSong" aria-live="polite" hidden></section>
+    <section class="ck-stats" id="ckStats" aria-live="polite" hidden></section>
+    <p class="ck-note" data-i18n="ckReset"></p>
+  </section>
+
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
+</div>
+
+<script src="assets/common.js?v=31998aa3"></script>
+<script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有）；這頁也用它確認登入、簽到、讀統計 -->
+<script>
+/* ===== 小遊戲：每日簽到 =====
+ * 要登入 Google 才能用。每人每天選一個圖案簽到一次（選了不能改）。
+ * 「今天」由 Supabase 伺服器決定（日本時間早上 5:00 換日），不吃手機的時間：
+ *   checkin(p_icon)＝簽到（今天簽過就不會再寫入）、checkin_me()＝今天的簽到日／今天選的圖案／連續天數／最長／總天數、
+ *   checkin_stats()＝各圖案今日與累計人次（沒登入也能讀，只有數字）。資料表和函式在 supabase/checkin-setup.sql。
+ * 圖案：assets/checkin/*.webp。要增減圖案：改這裡的 ICONS，同時改 checkin-setup.sql 裡 check (icon in (...)) 和 checkin() 的清單。
+ */
+addStrings({
+ zh:{titleCheckin:"每日簽到",subCheckin:"登入 Google 後，每天選一個圖案簽到，累積連續天數！",
+   ckLoading:"讀取中…",ckLoginTitle:"登入後才能簽到",ckLoginBody:"用 Google 登入，就能每天簽到、累積連續天數，也能看到大家選了哪個圖案。",ckLoginBtn:"Google 登入",
+   ckErr:"讀取失敗，請稍後再試。",ckRetry:"重試",
+   ckDay:"今天的簽到日：{d}",ckPickHint:"選一個圖案簽到。每天只能選一次，選了就不能改。",ckConfirm:"就選「{i}」簽到！",ckCancel:"重選",ckSending:"簽到中…",
+   ckDone:"今天已簽到 ✓",ckDoneWith:"今天選的是「{i}」，明天再來！",ckAlready:"今天已經簽到過了。",ckFail:"簽到失敗，請稍後再試。",
+   ckStreak:"連續簽到",ckBest:"最長紀錄",ckTotal:"累計天數",ckDays:"{n} 天",
+   ckStatsTitle:"大家簽到的圖案",ckStatsDesc:"今天共 {n} 人次簽到。長條是累計人次的比例。",ckStatsEmpty:"今天還沒有人簽到，你是第一個！",ckStatsFail:"統計暫時無法顯示。",ckToday:"今日",ckAll:"累計",
+   ckSongTitle:"♪ 今天推薦你聽",ckSongOpen:"在 YouTube 聽",ckSongFrom:"從 {s} 開始",ckSongList:"看完整歌單",
+   ckReset:"每天日本時間 5:00（台灣時間 4:00）換日。登入的人才能簽到，簽到後才會看到大家的統計。",
+   icNoja:"のじゃ",icEgg:"蛋",icGlass:"杯子",icFace:"笑臉"},
+ ja:{titleCheckin:"毎日チェックイン",subCheckin:"Google でログインして、毎日ひとつアイコンを選んでチェックイン！連続日数を伸ばそう！",
+   ckLoading:"読み込み中…",ckLoginTitle:"ログインするとチェックインできます",ckLoginBody:"Google でログインすると、毎日チェックインして連続日数を記録でき、みんなが選んだアイコンも見られます。",ckLoginBtn:"Google でログイン",
+   ckErr:"読み込めませんでした。しばらくしてからもう一度お試しください。",ckRetry:"再読み込み",
+   ckDay:"今日のチェックイン日：{d}",ckPickHint:"アイコンをひとつ選んでチェックイン。1日1回だけ、選んだあとは変更できません。",ckConfirm:"「{i}」でチェックイン！",ckCancel:"選び直す",ckSending:"チェックイン中…",
+   ckDone:"今日はチェックイン済み ✓",ckDoneWith:"今日は「{i}」を選びました。また明日！",ckAlready:"今日はもうチェックイン済みです。",ckFail:"チェックインに失敗しました。しばらくしてからもう一度お試しください。",
+   ckStreak:"連続日数",ckBest:"最長記録",ckTotal:"累計日数",ckDays:"{n} 日",
+   ckStatsTitle:"みんなが選んだアイコン",ckStatsDesc:"今日のチェックインは合計 {n} 件。バーは累計の割合です。",ckStatsEmpty:"今日はまだ誰もチェックインしていません。いちばん乗りになろう！",ckStatsFail:"集計を表示できません。",ckToday:"今日",ckAll:"累計",
+   ckSongTitle:"♪ 今日のおすすめ曲",ckSongOpen:"YouTube で聴く",ckSongFrom:"{s} から再生",ckSongList:"歌リストを見る",
+   ckReset:"毎日、日本時間 5:00 に日付が切り替わります。チェックインにはログインが必要で、チェックイン後にみんなの集計が見られます。",
+   icNoja:"のじゃ",icEgg:"たまご",icGlass:"グラス",icFace:"えがお"},
+ en:{titleCheckin:"Daily Check-in",subCheckin:"Sign in with Google and pick an icon once a day to build your streak!",
+   ckLoading:"Loading…",ckLoginTitle:"Sign in to check in",ckLoginBody:"Sign in with Google to check in every day, build a streak, and see which icons everyone picked.",ckLoginBtn:"Sign in with Google",
+   ckErr:"Couldn't load. Please try again in a moment.",ckRetry:"Retry",
+   ckDay:"Today's check-in day: {d}",ckPickHint:"Pick one icon to check in. Once a day only, and you can't change it afterwards.",ckConfirm:"Check in with \"{i}\"!",ckCancel:"Pick again",ckSending:"Checking in…",
+   ckDone:"Checked in today ✓",ckDoneWith:"You picked \"{i}\" today. See you tomorrow!",ckAlready:"You've already checked in today.",ckFail:"Check-in failed. Please try again in a moment.",
+   ckStreak:"Current streak",ckBest:"Best streak",ckTotal:"Total days",ckDays:"{n} d",
+   ckStatsTitle:"Icons everyone picked",ckStatsDesc:"{n} check-ins today. Bars show each icon's share of all-time picks.",ckStatsEmpty:"Nobody has checked in yet today — be the first!",ckStatsFail:"The stats can't be shown right now.",ckToday:"Today",ckAll:"All-time",
+   ckSongTitle:"♪ Today's song for you",ckSongOpen:"Listen on YouTube",ckSongFrom:"starts at {s}",ckSongList:"Full song list",
+   ckReset:"The day changes at 5:00 AM Japan time (4:00 AM in Taiwan). You need to sign in to check in, and the stats appear after you check in.",
+   icNoja:"Noja",icEgg:"Egg",icGlass:"Glass",icFace:"Smile"}
+});
+const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const S=typeof MelaSync!=="undefined"?MelaSync:null; // assets/sync.js（const 宣告，不在 window 上）
+const ICONS=[{id:"noja",img:"assets/checkin/noja.webp",k:"icNoja"},{id:"egg",img:"assets/checkin/egg.webp",k:"icEgg"},{id:"glass",img:"assets/checkin/glass.webp",k:"icGlass"},{id:"face",img:"assets/checkin/face.webp",k:"icFace"}];
+const num=v=>Number(v)||0;
+
+let st="load";            // load｜out（沒登入）｜err｜ready
+let me=null, stats=null, statsErr=false, pick=null, busy=false, msg="";
+
+function render(){ const box=$("ck");
+  if(st==="load"){ box.innerHTML=`<p class="ck-sub ck-center">${t("ckLoading")}</p>`; }
+  else if(st==="out"){ box.className="ck-card ck-center"; box.innerHTML=`<h2>${t("ckLoginTitle")}</h2><p class="ck-sub">${t("ckLoginBody")}</p><div class="ck-go"><button type="button" class="primary" id="ckLogin">${t("ckLoginBtn")}</button></div>`; }
+  else if(st==="err"){ box.className="ck-card ck-center"; box.innerHTML=`<p class="ck-sub">${t("ckErr")}</p><div class="ck-go"><button type="button" id="ckRetry">${t("ckRetry")}</button></div>`; }
+  else{ box.className="ck-card"; const done=me&&me.icon, name=id=>t((ICONS.find(x=>x.id===id)||{}).k||"");
+    const head=done?`<p class="ck-done ck-center">${t("ckDone")}</p><p class="ck-sub ck-center">${tq("ckDoneWith",{i:name(me.icon)})}</p>`
+      :`<p class="ck-sub">${tq("ckDay",{d:me.today})}<br>${t("ckPickHint")}</p>`;
+    const icons=`<div class="ck-icons">`+ICONS.map(x=>{ const cls=done?(x.id===me.icon?" mine":" dim"):(x.id===pick?" sel":"");
+      return `<button type="button" class="ck-ic${cls}" data-i="${x.id}"${done||busy?" disabled":""}${x.id===pick?' aria-pressed="true"':""}><img src="${x.img}" alt="" width="88" height="88"><span>${esc(t(x.k))}</span></button>`; }).join("")+`</div>`;
+    const go=!done&&pick?`<div class="ck-go"><button type="button" class="primary" id="ckGo"${busy?" disabled":""}>${busy?t("ckSending"):tq("ckConfirm",{i:name(pick)})}</button>${busy?"":`<button type="button" id="ckCancel">${t("ckCancel")}</button>`}</div>`:"";
+    const m=msg?`<p class="ck-msg">${esc(msg)}</p>`:"";
+    const nums=`<div class="ck-nums"><div><b>${tq("ckDays",{n:me.streak})}</b><span>${t("ckStreak")}</span></div><div><b>${tq("ckDays",{n:me.best})}</b><span>${t("ckBest")}</span></div><div><b>${tq("ckDays",{n:me.total})}</b><span>${t("ckTotal")}</span></div></div>`;
+    box.innerHTML=head+icons+go+m+nums; }
+  renderStats(); renderSong(); }
+
+// 今天推薦的歌：用「使用者 id＋簽到日」當種子從 songs.json 選一首（同一天重新整理不會變，不用存進資料庫）
+let SONGS=null;
+async function loadSongs(){ if(SONGS) return; try{ const r=await fetch("songs.json",{cache:"no-cache"}); const d=r.ok?await r.json():[]; const a=Array.isArray(d)?d:(d.songs||[]);
+    SONGS=a.map(x=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null; let st=parseTime(x.start); if(st==null&&p.t!=null) st=p.t;
+      return {title:String(x.title),artist:x.artist?String(x.artist):"",note:x.note?String(x.note):"",vid:p.vid,start:st}; }).filter(Boolean); }catch(e){ console.warn("songs.json load failed",e); SONGS=[]; }
+  renderSong(); }
+function renderSong(){ const el=$("ckSong"); el.hidden=true;
+  if(st!=="ready"||!me||!me.icon){ return; } if(!SONGS){ loadSongs(); return; } if(!SONGS.length) return;
+  const s=SONGS[hash((S.user()?.id||"")+"|"+me.today)%SONGS.length];
+  const url=`https://www.youtube.com/watch?v=${encodeURIComponent(s.vid)}${s.start!=null?"&t="+Math.floor(s.start)+"s":""}`;
+  el.hidden=false;
+  el.innerHTML=`<h2>${t("ckSongTitle")}</h2><p class="st">${esc(s.title)}</p>${s.artist?`<p class="sa">${esc(s.artist)}</p>`:""}${s.note?`<p class="sn">${esc(s.note)}</p>`:""}
+    <div class="links"><a class="btn primary" href="${esc(url)}" target="_blank" rel="noopener">${t("ckSongOpen")} ↗${s.start!=null?` <small>(${esc(tq("ckSongFrom",{s:fmt(s.start)}))})</small>`:""}</a><a class="btn" href="songs.html">${t("ckSongList")}</a></div>`; }
+
+function renderStats(){ const el=$("ckStats"); el.hidden=!(st==="ready"&&me&&me.icon); if(el.hidden) return;
+  let body;
+  if(statsErr) body=`<p class="ck-sub">${t("ckStatsFail")}</p>`;
+  else if(!stats) body=`<p class="ck-sub">${t("ckLoading")}</p>`;
+  else{ const allT=ICONS.reduce((s,x)=>s+(stats[x.id]?.total||0),0), todayT=ICONS.reduce((s,x)=>s+(stats[x.id]?.today||0),0);
+    body=`<p class="ck-sub">${todayT?tq("ckStatsDesc",{n:todayT}):t("ckStatsEmpty")}</p>`+ICONS.map(x=>{ const s=stats[x.id]||{today:0,total:0}, pc=allT?Math.round(s.total/allT*1000)/10:0;
+      return `<div class="ck-bar${x.id===me.icon?" me":""}"><img src="${x.img}" alt=""><span><span class="nm">${esc(t(x.k))}</span><span class="tr"><b style="width:${pc}%"></b></span></span><span class="pc">${t("ckToday")} ${s.today}<br>${t("ckAll")} ${s.total}</span></div>`; }).join(""); }
+  el.innerHTML=`<h2>${t("ckStatsTitle")}</h2>${body}`; }
+
+async function loadMe(){ const sb=S.client(); const {data,error}=await sb.rpc("checkin_me"); if(error) throw error;
+  const r=Array.isArray(data)?data[0]:data; if(!r) throw new Error("no row");
+  me={today:r.today,icon:r.today_icon||null,streak:num(r.streak),best:num(r.best),total:num(r.total)}; }
+async function loadStats(){ try{ const sb=S.client(); const {data,error}=await sb.rpc("checkin_stats"); if(error) throw error;
+    stats={}; for(const r of data||[]) stats[r.icon]={today:num(r.today),total:num(r.total)}; statsErr=false; }
+  catch(e){ console.warn("checkin stats failed",e); statsErr=true; }
+  renderStats(); }
+
+async function refresh(){ // 登入狀態確定後（或換日回來）讀自己的簽到狀況
+  try{ if(!S) throw new Error("no MelaSync"); await S.whenReady(); const sb=S.client(); if(!sb) throw new Error("no client");
+    if(!S.user()){ st="out"; me=null; return render(); }
+    await loadMe(); st="ready"; if(me.icon) loadStats(); }
+  catch(e){ console.warn("checkin load failed",e); st="err"; }
+  render(); }
+
+async function doCheckin(){ if(!pick||busy) return; busy=true; msg=""; render();
+  try{ const sb=S.client(); const {data,error}=await sb.rpc("checkin",{p_icon:pick}); if(error) throw error;
+    msg=data===false?t("ckAlready"):""; pick=null; await loadMe(); busy=false; render(); loadStats(); }
+  catch(e){ console.warn("checkin failed",e); busy=false; msg=t("ckFail"); render(); } }
+
+document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.i&&b.closest("#ck")){ if(me&&!me.icon&&!busy){ pick=b.dataset.i; msg=""; render(); } return; }
+  if(b.id==="ckGo") return doCheckin();
+  if(b.id==="ckCancel"){ pick=null; return render(); }
+  if(b.id==="ckLogin") return S?.login();
+  if(b.id==="ckRetry"){ st="load"; render(); return refresh(); } });
+// 開著頁面過了換日時間：回到這個分頁時重新讀一次
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&st==="ready"&&!busy){ const old=me&&me.today; loadMe().then(()=>{ if(me.today!==old){ pick=null; msg=""; stats=null; if(me.icon) loadStats(); } render(); }).catch(()=>{}); } });
+window.onLangChange=()=>render();
+S?.onAuth(()=>{ if(!S.user()){ st="out"; me=null; stats=null; pick=null; render(); } });
+
+setLang(pickLang());
+refresh();
+</script>
+</body>
+</html>

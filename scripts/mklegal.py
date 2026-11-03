@@ -15,6 +15,7 @@ PRIVACY = {
 <li><b>個人設定（可自由選擇是否填寫）</b>：你設定的暱稱，以及你上傳的頭像圖片（上傳前會在你的瀏覽器裡裁成正方形並縮小）。</li>
 <li><b>小遊戲的成績（登入時）</b>：你在小遊戲答完全部題目後的答對題數、題庫題數、遊玩次數和時間。全對的人會以暱稱和頭像顯示在全對排行榜上。</li>
 <li><b>推し診斷的結果（登入時）</b>：你最近一次的診斷結果（哪一位成員）和時間，用來統計大家的結果分布。統計只公開各結果的人數，不會顯示是誰。</li>
+<li><b>每日簽到的紀錄（登入時）</b>：你每天簽到的日期和選的圖案，用來計算連續簽到天數，以及統計各圖案的點擊人次。統計只公開各圖案的人次，不會顯示是誰選的。</li>
 <li><b>沒有登入時</b>：「已入手」紀錄、語言、深淺色等設定只存在你自己的瀏覽器（localStorage），不會傳送到本站。</li>
 <li><b>瀏覽統計</b>：本站使用 GoatCounter 統計頁面瀏覽次數。GoatCounter 不使用 Cookie，也不保存可以辨識個人的資訊，只記錄瀏覽的頁面、來源網站、瀏覽器與裝置類型等統計資料。</li>
 <li><b>投稿與問題回報</b>：透過 Google 表單送出投稿或回報時，你填寫的內容由 Google 表單保存，本站營運者會看到這些內容。</li>
@@ -52,6 +53,7 @@ PRIVACY = {
 <li><b>個人設定（入力は任意です）</b>：設定したニックネームと、アップロードしたアイコン画像（アップロード前にブラウザ内で正方形に切り抜いて縮小します）。</li>
 <li><b>ミニゲームの成績（ログイン時）</b>：ミニゲームで全問に答えたときの正解数、問題数、プレイ回数と日時。全問正解した人は、ニックネームとアイコンで全問正解ランキングに表示されます。</li>
 <li><b>推し診断の結果（ログイン時）</b>：最新の診断結果（どのメンバーか）と日時。みんなの結果の集計に使います。公開されるのは結果ごとの人数だけで、誰の結果かは表示されません。</li>
+<li><b>毎日チェックインの記録（ログイン時）</b>：チェックインした日付と選んだアイコン。連続日数の計算と、アイコンごとの人数の集計に使います。公開されるのはアイコンごとの人数だけで、誰が選んだかは表示されません。</li>
 <li><b>ログインしていない場合</b>：「入手済み」の記録や言語・表示テーマなどの設定は、あなたのブラウザ（localStorage）にだけ保存され、当サイトには送信されません。</li>
 <li><b>アクセス解析</b>：ページの閲覧数を GoatCounter で集計しています。GoatCounter は Cookie を使わず、個人を特定できる情報も保存しません。閲覧したページ、参照元サイト、ブラウザ・端末の種類などの統計のみを記録します。</li>
 <li><b>投稿・不具合の報告</b>：Google フォームから送信された内容は Google フォームに保存され、当サイトの運営者が確認します。</li>
@@ -89,6 +91,7 @@ PRIVACY = {
 <li><b>Profile settings</b> (optional): the nickname you set and the avatar image you upload (cropped to a square and shrunk in your browser before upload).</li>
 <li><b>Mini-game scores</b> (when signed in): after you answer every question in a mini-game, the number you got right, the number of questions, how many times you have played and when. Players with a perfect score are shown with their nickname and avatar on the perfect-score leaderboard.</li>
 <li><b>Oshi Finder results</b> (when signed in): your latest result (which member) and when, used for the overall result stats. Only the number of people per result is shown — never who they are.</li>
+<li><b>Daily check-in records</b> (when signed in): the dates you check in and the icon you pick, used to count your streak and the number of picks per icon. Only the number of picks per icon is shown — never who picked.</li>
 <li><b>If you don't sign in</b>: your "owned" list and settings such as language and theme are stored only in your own browser (localStorage) and are never sent to this site.</li>
 <li><b>Analytics</b>: page views are counted with GoatCounter, which uses no cookies and stores no personally identifiable information — only statistics such as the page viewed, the referring site, and the browser and device type.</li>
 <li><b>Submissions and bug reports</b>: anything you send through a Google Form is stored by Google Forms and read by the site maintainer.</li>
