@@ -383,7 +383,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 ## 首頁「#あちちみて」投稿區塊
 
-- 登入 Google 的人可以貼 X（推特）貼文連結投稿；首頁顯示最近 5 則（可「顯示更多」到 20 則），每則有「在 X 開啟」、「展開貼文」（按了才載入 X 的內嵌元件，平常不連 X）、「檢舉」，自己的投稿可以刪除。顯示投稿人的暱稱（沒設定就顯示「匿名」）。
+- 登入 Google 的人可以貼 X（推特）貼文連結投稿，還可以附一句話（最多 20 字，可不填，顯示在貼文下方）；首頁顯示最近 5 則（可「顯示更多」到 20 則），每則有「在 X 開啟」、「展開貼文」（按了才載入 X 的內嵌元件，平常不連 X）、「檢舉」，自己的投稿可以刪除。顯示投稿人的暱稱（沒設定就顯示「匿名」）。
 - 規則都在資料庫檢查（`supabase/ayatsumi-setup.sql`，要貼到 Supabase SQL Editor 執行一次；需要先執行過 `admin-setup.sql`）：只收 `x.com`／`twitter.com` 的 `/帳號/status/數字` 網址（統一存成 `https://x.com/帳號/status/數字`）、同一則貼文只能投稿一次、每人每天 3 則（日本時間 5:00 換日）、每人每則只能檢舉一次且不能檢舉自己的；3 個不同的人檢舉 → 自動下架（`status = hidden`）。
 - 管理員在 `admin.html` 的「#あちちみて 貼文審核」處理：預設只列被檢舉過或已下架的；「恢復」（之後不會再被自動下架）、「下架」、「永久刪除」（同一則貼文也不能再被投稿）、「停止投稿權」（`ayatsumi_bans`）。
 - 資料表：`ayatsumi_posts`、`ayatsumi_reports`、`ayatsumi_bans`，都不直接開放寫入；函式：`ayatsumi_submit`／`ayatsumi_list`／`ayatsumi_report`／`ayatsumi_delete_mine`，管理員用 `admin_ayatsumi_list`／`admin_ayatsumi_set`／`admin_ayatsumi_ban`。

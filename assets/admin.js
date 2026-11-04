@@ -87,7 +87,7 @@ function renderPosts(){
     const stKey={visible:"adStVisible",hidden:"adStHidden",removed:"adStRemoved"}[p.status]||"adStVisible", u=xUrl(p.url);
     const flags=[`<span class="admin-flag${p.status!=="visible"?" bad":""}">${t(stKey)}</span>`,p.report_count>0?`<span class="admin-flag warn">${escAdmin(t("adReports").replace("{n}",p.report_count))}</span>`:"",p.reviewed?`<span class="admin-flag">${t("adReviewed")}</span>`:""].join(" ");
     const id=escAdmin(p.id), uid=escAdmin(p.user_id);
-    return `<tr><td>${u?`<a href="${escAdmin(u)}" target="_blank" rel="noopener noreferrer">@${escAdmin(p.handle)} ↗</a>`:escAdmin(p.handle)}<span class="admin-id">${escAdmin(String(p.created_at||"").slice(0,16).replace("T"," "))}</span></td>
+    return `<tr><td>${u?`<a href="${escAdmin(u)}" target="_blank" rel="noopener noreferrer">@${escAdmin(p.handle)} ↗</a>`:escAdmin(p.handle)}${p.comment?`<span class="admin-email">「${escAdmin(p.comment)}」</span>`:""}<span class="admin-id">${escAdmin(String(p.created_at||"").slice(0,16).replace("T"," "))}</span></td>
       <td><span class="admin-name">${escAdmin(p.nickname||"—")}</span><span class="admin-email">${escAdmin(p.email||"")}</span>${p.banned?`<span class="admin-flag warn">${t("adBannedPost")}</span>`:""}</td>
       <td><div class="admin-flags">${flags}</div></td>
       <td><div class="admin-actions">

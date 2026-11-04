@@ -3,6 +3,7 @@
 --
 -- 規則（都在伺服器檢查，前端只是介面）：
 --   * 只收 x.com／twitter.com 的貼文網址（…/帳號/status/數字），統一存成 https://x.com/帳號/status/數字；同一則貼文只能被投稿一次
+--   * 投稿時可以附一句話（最多 20 個字，可以不填）
 --   * 每人每天最多 3 則（日本時間早上 5:00 換日，和每日簽到同一個算法；下架、刪除的也算）
 --   * 檢舉：登入的人才能檢舉，每人每則只能檢舉一次、不能檢舉自己的；累積 3 個不同的人檢舉 → 先自動下架（status = hidden）
 --   * 管理員（admin_users）可以在 admin.html 恢復（之後同一則不會再被自動下架）、永久刪除（removed，同一則也不能再被投稿）、停止某人的投稿權
@@ -20,6 +21,9 @@ create table if not exists public.ayatsumi_posts (
   created_at timestamptz not null default now(),
   hidden_at timestamptz
 );
+
+-- 投稿者的一句話（最多 20 個字，可以不填）。已經建過資料表的也會補上這一欄
+alter table public.ayatsumi_posts add column if not exists comment text check (comment is null or char_length(comment) <= 20);
 
 create index if not exists ayatsumi_posts_status_created_idx on public.ayatsumi_posts (status, created_at desc);
 create index if not exists ayatsumi_posts_user_created_idx on public.ayatsumi_posts (user_id, created_at desc);
@@ -57,8 +61,9 @@ drop policy if exists ayatsumi_reports_delete_own on public.ayatsumi_reports;
 create policy ayatsumi_reports_delete_own on public.ayatsumi_reports
   for delete to authenticated using (user_id = auth.uid());
 
--- 投稿：回傳新貼文的 id。錯誤用訊息區分：bad_url／duplicate／limit／banned
-create or replace function public.ayatsumi_submit(p_url text)
+-- 投稿：回傳新貼文的 id。p_comment＝投稿者的一句話（最多 20 個字，可以不填；換行會換成空白）。錯誤用訊息區分：bad_url／comment_long／duplicate／limit／banned
+drop function if exists public.ayatsumi_submit(text);
+create or replace function public.ayatsumi_submit(p_url text, p_comment text default null)
 returns bigint
 language plpgsql
 security definer
@@ -67,6 +72,7 @@ as $$
 declare
   uid uuid := auth.uid();
   u text := btrim(coalesce(p_url, ''));
+  c text := nullif(btrim(regexp_replace(coalesce(p_comment, ''), '[\r\n\t]+', ' ', 'g')), '');
   m text[];
   n integer;
   new_id bigint;
@@ -79,6 +85,9 @@ begin
   end if;
   if length(u) > 300 then
     raise exception 'bad_url' using errcode = '22023';
+  end if;
+  if c is not null and char_length(c) > 20 then
+    raise exception 'comment_long' using errcode = '22023';
   end if;
   m := regexp_match(u, '^https?://(?:www\.|mobile\.)?(?:x|twitter)\.com/([A-Za-z0-9_]{1,15})/status/([0-9]{5,25})(?:[/?#].*)?$', 'i');
   if m is null then
@@ -93,8 +102,8 @@ begin
     raise exception 'limit' using errcode = '54000';
   end if;
 
-  insert into public.ayatsumi_posts (user_id, tweet_id, handle, url)
-  values (uid, m[2], m[1], 'https://x.com/' || m[1] || '/status/' || m[2])
+  insert into public.ayatsumi_posts (user_id, tweet_id, handle, url, comment)
+  values (uid, m[2], m[1], 'https://x.com/' || m[1] || '/status/' || m[2], c)
   on conflict (tweet_id) do nothing
   returning id into new_id;
   if new_id is null then
@@ -104,18 +113,19 @@ begin
 end;
 $$;
 
-revoke all on function public.ayatsumi_submit(text) from public, anon;
-grant execute on function public.ayatsumi_submit(text) to authenticated;
+revoke all on function public.ayatsumi_submit(text, text) from public, anon;
+grant execute on function public.ayatsumi_submit(text, text) to authenticated;
 
 -- 公開清單：最近的（沒下架的）貼文。沒登入也能看；只回傳公開資訊（暱稱），不回傳投稿人的 id 或 email
+drop function if exists public.ayatsumi_list(integer);
 create or replace function public.ayatsumi_list(p_limit integer default 5)
-returns table (id bigint, handle text, tweet_id text, url text, nickname text, created_at timestamptz, is_mine boolean, reported boolean)
+returns table (id bigint, handle text, tweet_id text, url text, comment text, nickname text, created_at timestamptz, is_mine boolean, reported boolean)
 language sql
 stable
 security definer
 set search_path = ''
 as $$
-  select p.id, p.handle, p.tweet_id, p.url, pr.nickname::text, p.created_at,
+  select p.id, p.handle, p.tweet_id, p.url, p.comment, pr.nickname::text, p.created_at,
          coalesce(p.user_id = auth.uid(), false),
          exists (select 1 from public.ayatsumi_reports r where r.post_id = p.id and r.user_id = auth.uid())
   from public.ayatsumi_posts p
@@ -195,9 +205,10 @@ grant execute on function public.ayatsumi_delete_mine(bigint) to authenticated;
 
 -- ===== 管理員（admin.html）=====
 -- 清單：預設只列被檢舉過或已下架／刪除的；p_all = true 列全部（最多 200 筆）
+drop function if exists public.admin_ayatsumi_list(boolean);
 create or replace function public.admin_ayatsumi_list(p_all boolean default false)
 returns table (
-  id bigint, url text, handle text, status text, report_count integer, reviewed boolean,
+  id bigint, url text, handle text, comment text, status text, report_count integer, reviewed boolean,
   created_at timestamptz, user_id uuid, email text, nickname text, banned boolean
 )
 language plpgsql
@@ -212,7 +223,7 @@ begin
   end if;
 
   return query
-    select p.id, p.url, p.handle, p.status, p.report_count, p.reviewed, p.created_at,
+    select p.id, p.url, p.handle, p.comment, p.status, p.report_count, p.reviewed, p.created_at,
            p.user_id, u.email::text, pr.nickname::text,
            exists (select 1 from public.ayatsumi_bans b where b.user_id = p.user_id)
     from public.ayatsumi_posts p

@@ -47,7 +47,8 @@
 /* #あちちみて（ファン投稿） */
 .hm-ay{display:flex;flex-direction:column;gap:12px}
 .ay-form{display:flex;flex-wrap:wrap;gap:8px}
-.ay-form input{flex:1 1 260px;min-width:0;font:inherit;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.ay-form input{flex:2 1 260px;min-width:0;font:inherit;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.ay-form input.say{flex:1 1 180px}
 .ay-form input:focus{outline:2px solid var(--accent);outline-offset:1px}
 .ay-form button{padding:9px 20px;font-size:14px}
 .ay-login{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
@@ -58,6 +59,7 @@
 .ay-top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
 .ay-handle{font-weight:700;font-size:15px;overflow-wrap:anywhere}
 .ay-meta{font-size:12px;color:var(--muted)}
+.ay-say{margin:6px 0 0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
 .ay-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .ay-acts .btn,.ay-acts button{font-size:12px;padding:5px 12px}
 .ay-acts .danger.sure{color:#b4232a;border-color:#e7a8ab}
@@ -107,6 +109,7 @@
       <div id="ayLogin" class="ay-login" hidden><span data-i18n="ayLoginMsg"></span><button type="button" class="primary" id="ayLoginBtn" data-i18n="ayLoginBtn"></button></div>
       <form class="ay-form" id="ayForm" autocomplete="off" hidden>
         <input type="url" id="ayUrl" inputmode="url" maxlength="300" data-i18n-ph="ayPh" data-i18n-aria="ayPh" required>
+        <input type="text" id="aySay" class="say" maxlength="20" data-i18n-ph="aySayPh" data-i18n-aria="aySayPh">
         <button type="submit" class="primary" id="aySend" data-i18n="ayPost"></button>
       </form>
       <p class="ay-msg" id="ayMsg" role="status" aria-live="polite"></p>
@@ -135,7 +138,7 @@
  */
 addStrings({
  zh:{hmTitle:"めら組應援中隊",ayKick:"在 X 看到的 #あちちみて 貼文，登入 Google 就能貼連結和大家分享！",ayLoginMsg:"登入 Google 後就能投稿貼文連結、檢舉。",ayLoginBtn:"Google 登入",
-   ayPh:"貼上 X（推特）貼文連結，例如 https://x.com/…/status/…",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿完成，謝謝！",
+   ayPh:"貼上 X（推特）貼文連結，例如 https://x.com/…/status/…",aySayPh:"說一句話（最多 20 字，可不填）",aySayLong:"一句話最多 20 個字。",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿完成，謝謝！",
    ayBad:"這不是 X 的貼文連結。請貼 https://x.com/帳號/status/數字 這種網址。",ayDup:"這則貼文已經有人投稿過了。",ayLimitErr:"今天的投稿次數用完了（每人每天 3 則），明天再來！",ayBanned:"你的帳號目前無法投稿。",ayErr:"投稿失敗，請稍後再試。",
    ayEmpty:"還沒有投稿，來當第一個吧！",ayLoading:"讀取中…",ayFail:"暫時讀不到投稿，請稍後再試。",ayBy:"投稿：{n}",ayAnon:"匿名",ayOpenX:"在 X 開啟 ↗",ayShow:"展開貼文",ayHideEmbed:"收合",
    ayReport:"檢舉",ayReportSure:"確定檢舉？",ayReported:"已檢舉",ayReportDone:"已收到檢舉，謝謝！",ayReportErr:"檢舉失敗，請稍後再試。",ayDelete:"刪除",ayDeleteSure:"確定刪除？",ayDeleteErr:"刪除失敗，請稍後再試。",ayMore:"顯示更多",
@@ -146,7 +149,7 @@ addStrings({
    hmPlay:"▶ 播放",hmOpenSrc:"開啟原文 ↗",hmYt:"在 YouTube 開啟 ↗",hmMoreClips:"更多回音 →",hmMoreSongs:"歌單 →",hmMoreShift:"出勤紀錄 →",hmMoreGoods:"周邊 →",hmCalendar:"月曆 →",
    hmUpcoming:"預定",hmLive:"直播中",hmLatest:"最近一場",hmNoShift:"目前沒有預定的直播。",hmGoodsRecent:"目前沒有預定發售的周邊，以下是最近發售的。",hmGoodsNone:"還沒有周邊資料。",hmShop:"官方商店 ↗",hmNew:"新",hmEmpty:"還沒有資料。"},
  ja:{hmTitle:"めら組応援中隊",ayKick:"X で見つけた #あちちみて のポストを、Google ログインでリンクを貼ってみんなにシェアしよう！",ayLoginMsg:"Google でログインすると、ポストのリンクを投稿したり通報したりできます。",ayLoginBtn:"Google でログイン",
-   ayPh:"X のポストのリンクを貼り付け（例：https://x.com/…/status/…）",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿しました。ありがとう！",
+   ayPh:"X のポストのリンクを貼り付け（例：https://x.com/…/status/…）",aySayPh:"ひとこと（20文字まで・任意）",aySayLong:"ひとことは20文字までです。",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿しました。ありがとう！",
    ayBad:"X のポストのリンクではありません。https://x.com/アカウント/status/数字 の形式で貼ってください。",ayDup:"このポストはすでに投稿されています。",ayLimitErr:"今日の投稿回数（1人1日3件）に達しました。また明日！",ayBanned:"このアカウントは現在投稿できません。",ayErr:"投稿に失敗しました。しばらくしてからお試しください。",
    ayEmpty:"まだ投稿がありません。最初の1件を投稿しよう！",ayLoading:"読み込み中…",ayFail:"投稿を読み込めません。しばらくしてからお試しください。",ayBy:"投稿：{n}",ayAnon:"匿名",ayOpenX:"X で開く ↗",ayShow:"ポストを表示",ayHideEmbed:"閉じる",
    ayReport:"通報",ayReportSure:"通報しますか？",ayReported:"通報済み",ayReportDone:"通報を受け付けました。ありがとうございます。",ayReportErr:"通報に失敗しました。しばらくしてからお試しください。",ayDelete:"削除",ayDeleteSure:"削除しますか？",ayDeleteErr:"削除に失敗しました。しばらくしてからお試しください。",ayMore:"もっと見る",
@@ -157,7 +160,7 @@ addStrings({
    hmPlay:"▶ 再生",hmOpenSrc:"元の投稿を開く ↗",hmYt:"YouTube で開く ↗",hmMoreClips:"こだま一覧 →",hmMoreSongs:"歌リスト →",hmMoreShift:"出勤記録 →",hmMoreGoods:"グッズ →",hmCalendar:"カレンダー →",
    hmUpcoming:"予定",hmLive:"配信中",hmLatest:"直近の配信",hmNoShift:"予定されている配信はありません。",hmGoodsRecent:"発売予定のグッズはありません。直近の発売分を表示しています。",hmGoodsNone:"グッズのデータがありません。",hmShop:"公式ショップ ↗",hmNew:"NEW",hmEmpty:"データがありません。"},
  en:{hmTitle:"Mela-Gumi Cheer Squad",ayKick:"Share #あちちみて posts you found on X: sign in with Google and paste the link!",ayLoginMsg:"Sign in with Google to submit post links and report posts.",ayLoginBtn:"Sign in with Google",
-   ayPh:"Paste an X (Twitter) post link, e.g. https://x.com/…/status/…",ayPost:"Submit",ayPosting:"Submitting…",ayOk:"Submitted — thank you!",
+   ayPh:"Paste an X (Twitter) post link, e.g. https://x.com/…/status/…",aySayPh:"Add a short comment (max 20 characters, optional)",aySayLong:"The comment can be at most 20 characters.",ayPost:"Submit",ayPosting:"Submitting…",ayOk:"Submitted — thank you!",
    ayBad:"That isn't an X post link. Please paste a link like https://x.com/username/status/123….",ayDup:"This post has already been submitted.",ayLimitErr:"You've reached today's limit (3 per person per day). Come back tomorrow!",ayBanned:"This account can't submit posts right now.",ayErr:"Couldn't submit. Please try again in a moment.",
    ayEmpty:"No posts yet — be the first!",ayLoading:"Loading…",ayFail:"Couldn't load the posts. Please try again later.",ayBy:"Posted by {n}",ayAnon:"Anonymous",ayOpenX:"Open on X ↗",ayShow:"Show post",ayHideEmbed:"Collapse",
    ayReport:"Report",ayReportSure:"Report this?",ayReported:"Reported",ayReportDone:"Report received. Thank you!",ayReportErr:"Couldn't report. Please try again in a moment.",ayDelete:"Delete",ayDeleteSure:"Delete this?",ayDeleteErr:"Couldn't delete. Please try again in a moment.",ayMore:"Show more",
@@ -273,7 +276,7 @@ const loadGoods=()=>new Promise(res=>{ try{ MelaCollect.loadSheet({url:GOODS_CSV
  * 規則都在資料庫檢查（網址格式、重複、每人每天 3 則、3 人檢舉自動下架），這裡只是介面。
  * 貼文內容預設不載入（不連 X），按「展開貼文」才載入 X 的內嵌元件（platform.twitter.com/widgets.js）。
  */
-const AY_ERR={bad_url:"ayBad",duplicate:"ayDup",limit:"ayLimitErr",banned:"ayBanned"};
+const AY_ERR={comment_long:"aySayLong",bad_url:"ayBad",duplicate:"ayDup",limit:"ayLimitErr",banned:"ayBanned"};
 let AY, ayLimit=5, ayBusy=false, ayConfirm=null;   // AY：undefined 讀取中／null 失敗／陣列；ayConfirm："r12" 或 "d12"（正在等第二次點擊確認）
 const ayEmbeds=new Set();                           // 已展開的貼文 id（重畫清單後再展開回來）
 const ayUser=()=>S&&S.user?S.user():null;
@@ -287,7 +290,7 @@ function renderAy(){ renderAyForm(); const ul=$("ayList");
   if(AY===null){ ul.innerHTML=`<li class="hm-s">${t("ayFail")}</li>`; $("ayMoreWrap").hidden=true; return; }
   if(!AY.length){ ul.innerHTML=`<li class="hm-s">${t("ayEmpty")}</li>`; $("ayMoreWrap").hidden=true; return; }
   ul.innerHTML=AY.map(p=>{ const open=ayEmbeds.has(p.id), cf=k=>ayConfirm===k+p.id;
-    return `<li class="ay-item" data-id="${p.id}"><div class="ay-top"><span class="ay-handle">@${esc(p.handle)}</span><span class="ay-meta">${esc(tq("ayBy",{n:p.nickname||t("ayAnon")}))} · ${esc(ayRel(p.created_at))}</span></div>
+    return `<li class="ay-item" data-id="${p.id}"><div class="ay-top"><span class="ay-handle">@${esc(p.handle)}</span><span class="ay-meta">${esc(tq("ayBy",{n:p.nickname||t("ayAnon")}))} · ${esc(ayRel(p.created_at))}</span></div>${p.comment?`<p class="ay-say">「${esc(p.comment)}」</p>`:""}
       <div class="ay-acts"><a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${t("ayOpenX")}</a>
         <button type="button" data-ay="embed" data-id="${p.id}">${t(open?"ayHideEmbed":"ayShow")}</button>
         ${p.is_mine?`<button type="button" class="danger${cf("d")?" sure":""}" data-ay="del" data-id="${p.id}">${t(cf("d")?"ayDeleteSure":"ayDelete")}</button>`
@@ -308,9 +311,9 @@ async function loadAy(){ try{ if(!S) throw new Error("no MelaSync"); await S.whe
     const {data,error}=await sb.rpc("ayatsumi_list",{p_limit:ayLimit}); if(error) throw error; AY=Array.isArray(data)?data:[]; }
   catch(e){ console.warn("ayatsumi list failed",e); AY=null; } renderAy(); }
 async function ayRpc(name,args){ const {data,error}=await S.client().rpc(name,args); if(error) throw error; return data; }
-$("ayForm").addEventListener("submit",async e=>{ e.preventDefault(); if(ayBusy) return; const url=$("ayUrl").value.trim(); if(!url) return;
+$("ayForm").addEventListener("submit",async e=>{ e.preventDefault(); if(ayBusy) return; const url=$("ayUrl").value.trim(), say=$("aySay").value.trim(); if(!url) return; if([...say].length>20) return ayMsg(t("aySayLong"),"err");
   ayBusy=true; $("aySend").disabled=true; ayMsg(t("ayPosting"));
-  try{ await ayRpc("ayatsumi_submit",{p_url:url}); $("ayUrl").value=""; ayMsg(t("ayOk"),"ok"); await loadAy(); }
+  try{ await ayRpc("ayatsumi_submit",{p_url:url,p_comment:say||null}); $("ayUrl").value=""; $("aySay").value=""; ayMsg(t("ayOk"),"ok"); await loadAy(); }
   catch(err){ console.warn("ayatsumi submit failed",err); ayMsg(t(AY_ERR[String(err&&err.message||"").trim()]||"ayErr"),"err"); }
   finally{ ayBusy=false; $("aySend").disabled=false; } });
 $("ayLoginBtn").addEventListener("click",()=>S?.login());
