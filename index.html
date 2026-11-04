@@ -44,6 +44,25 @@
 .hm-badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;border:1px solid var(--accent);color:var(--accent-text);margin-right:6px;vertical-align:1px}
 .hm-badge.live{border-color:#ff3b5c;color:#e0284a}
 .hm-sub{font-size:12px;color:var(--muted);margin:2px 0 -4px}
+/* #あちちみて（ファン投稿） */
+.hm-ay{display:flex;flex-direction:column;gap:12px}
+.ay-form{display:flex;flex-wrap:wrap;gap:8px}
+.ay-form input{flex:1 1 260px;min-width:0;font:inherit;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.ay-form input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.ay-form button{padding:9px 20px;font-size:14px}
+.ay-login{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.ay-msg{margin:0;font-size:13px;min-height:1.2em}
+.ay-msg.err{color:#d93d42}.ay-msg.ok{color:var(--accent-text)}
+.ay-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ay-item{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg);min-width:0}
+.ay-top{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
+.ay-handle{font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.ay-meta{font-size:12px;color:var(--muted)}
+.ay-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ay-acts .btn,.ay-acts button{font-size:12px;padding:5px 12px}
+.ay-acts .danger.sure{color:#b4232a;border-color:#e7a8ab}
+.ay-embed{margin-top:10px;min-height:0;overflow:hidden}
+.ay-note{margin:0;font-size:12px;color:var(--muted);line-height:1.7}
 @media (max-width:640px){.hm-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -82,13 +101,26 @@
       <section class="hm-card" id="hmShift" aria-live="polite"></section>
       <section class="hm-card" id="hmGoods" aria-live="polite"></section>
     </div>
+    <section class="hm-card hm-ay" id="hmAy">
+      <h2>#あちちみて</h2>
+      <p class="kick" data-i18n="ayKick" style="margin-top:-6px"></p>
+      <div id="ayLogin" class="ay-login" hidden><span data-i18n="ayLoginMsg"></span><button type="button" class="primary" id="ayLoginBtn" data-i18n="ayLoginBtn"></button></div>
+      <form class="ay-form" id="ayForm" autocomplete="off" hidden>
+        <input type="url" id="ayUrl" inputmode="url" maxlength="300" data-i18n-ph="ayPh" data-i18n-aria="ayPh" required>
+        <button type="submit" class="primary" id="aySend" data-i18n="ayPost"></button>
+      </form>
+      <p class="ay-msg" id="ayMsg" role="status" aria-live="polite"></p>
+      <ul class="ay-list" id="ayList" aria-live="polite"></ul>
+      <div class="hm-acts" id="ayMoreWrap" hidden><button type="button" id="ayMore" data-i18n="ayMore"></button></div>
+      <p class="ay-note" data-i18n="ayNote"></p>
+    </section>
   </section>
 
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
 <script src="assets/common.js?v=572a57bf"></script>
-<script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有） -->
+<script src="assets/sync.js?v=8e657a70"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script src="assets/clips.js?v=5f3ac17c"></script><!-- 回音片段資料（clips.json＋試算表），回音頁也用 -->
 <script src="assets/collect.js?v=3b84e306"></script><!-- 試算表讀取（含快取）、網址／日期小工具，周邊頁也用 -->
 <script src="assets/timeline-data.js?v=757eb4c8"></script><!-- 出勤紀錄資料（三個來源合併），出勤紀錄／月曆頁也用 -->
@@ -102,22 +134,41 @@
  *   近期發售周邊   Google 試算表「周邊頁紀錄」分頁（和周邊頁同一份，快取也共用）→ 日期在今天以後的企劃；沒有就顯示最近發售的
  */
 addStrings({
- zh:{hmTitle:"めら組應援中隊",hmSub:"熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲都在這裡。",
+ zh:{hmTitle:"めら組應援中隊",ayKick:"在 X 看到的 #あちちみて 貼文，登入 Google 就能貼連結和大家分享！",ayLoginMsg:"登入 Google 後就能投稿貼文連結、檢舉。",ayLoginBtn:"Google 登入",
+   ayPh:"貼上 X（推特）貼文連結，例如 https://x.com/…/status/…",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿完成，謝謝！",
+   ayBad:"這不是 X 的貼文連結。請貼 https://x.com/帳號/status/數字 這種網址。",ayDup:"這則貼文已經有人投稿過了。",ayLimitErr:"今天的投稿次數用完了（每人每天 3 則），明天再來！",ayBanned:"你的帳號目前無法投稿。",ayErr:"投稿失敗，請稍後再試。",
+   ayEmpty:"還沒有投稿，來當第一個吧！",ayLoading:"讀取中…",ayFail:"暫時讀不到投稿，請稍後再試。",ayBy:"投稿：{n}",ayAnon:"匿名",ayOpenX:"在 X 開啟 ↗",ayShow:"展開貼文",ayHideEmbed:"收合",
+   ayReport:"檢舉",ayReportSure:"確定檢舉？",ayReported:"已檢舉",ayReportDone:"已收到檢舉，謝謝！",ayReportErr:"檢舉失敗，請稍後再試。",ayDelete:"刪除",ayDeleteSure:"確定刪除？",ayDeleteErr:"刪除失敗，請稍後再試。",ayMore:"顯示更多",
+   ayNote:"每人每天最多投稿 3 則，只收 X（推特）的貼文連結。覺得不適合的貼文可以按「檢舉」，累積 3 位使用者檢舉會先下架，等管理員確認。按「展開貼文」才會載入 X 的內嵌元件（X 可能設定 cookie）。",ayEmbedFail:"貼文載入失敗，可能已被刪除，請用「在 X 開啟」查看。",
+   hmSub:"熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲都在這裡。",
    hmNews:"網站更新",hmNewsMore:"更多更新",hmNewsLess:"收合",hmLoading:"讀取中…",hmFail:"暫時讀不到資料，請稍後再試。",
    hmClip:"回音推薦",hmSong:"歌單推薦",hmShift:"出勤紀錄／直播預定",hmGoods:"近期發售周邊",hmDaily:"每天日本時間 5:00 更換",
    hmPlay:"▶ 播放",hmOpenSrc:"開啟原文 ↗",hmYt:"在 YouTube 開啟 ↗",hmMoreClips:"更多回音 →",hmMoreSongs:"歌單 →",hmMoreShift:"出勤紀錄 →",hmMoreGoods:"周邊 →",hmCalendar:"月曆 →",
    hmUpcoming:"預定",hmLive:"直播中",hmLatest:"最近一場",hmNoShift:"目前沒有預定的直播。",hmGoodsRecent:"目前沒有預定發售的周邊，以下是最近發售的。",hmGoodsNone:"還沒有周邊資料。",hmShop:"官方商店 ↗",hmNew:"新",hmEmpty:"還沒有資料。"},
- ja:{hmTitle:"めら組応援中隊",hmSub:"熱千めら（アソビ★まわり隊！）の非公式ファンサイト。こだま・歌リスト・出勤記録・グッズ・ミニゲームをまとめてチェック。",
+ ja:{hmTitle:"めら組応援中隊",ayKick:"X で見つけた #あちちみて のポストを、Google ログインでリンクを貼ってみんなにシェアしよう！",ayLoginMsg:"Google でログインすると、ポストのリンクを投稿したり通報したりできます。",ayLoginBtn:"Google でログイン",
+   ayPh:"X のポストのリンクを貼り付け（例：https://x.com/…/status/…）",ayPost:"投稿",ayPosting:"投稿中…",ayOk:"投稿しました。ありがとう！",
+   ayBad:"X のポストのリンクではありません。https://x.com/アカウント/status/数字 の形式で貼ってください。",ayDup:"このポストはすでに投稿されています。",ayLimitErr:"今日の投稿回数（1人1日3件）に達しました。また明日！",ayBanned:"このアカウントは現在投稿できません。",ayErr:"投稿に失敗しました。しばらくしてからお試しください。",
+   ayEmpty:"まだ投稿がありません。最初の1件を投稿しよう！",ayLoading:"読み込み中…",ayFail:"投稿を読み込めません。しばらくしてからお試しください。",ayBy:"投稿：{n}",ayAnon:"匿名",ayOpenX:"X で開く ↗",ayShow:"ポストを表示",ayHideEmbed:"閉じる",
+   ayReport:"通報",ayReportSure:"通報しますか？",ayReported:"通報済み",ayReportDone:"通報を受け付けました。ありがとうございます。",ayReportErr:"通報に失敗しました。しばらくしてからお試しください。",ayDelete:"削除",ayDeleteSure:"削除しますか？",ayDeleteErr:"削除に失敗しました。しばらくしてからお試しください。",ayMore:"もっと見る",
+   ayNote:"投稿は1人1日3件まで、X のポストのリンクのみ受け付けます。不適切なポストは「通報」を押してください。3人以上から通報されると、管理者が確認するまで一時的に非表示になります。「ポストを表示」を押すと X の埋め込み（X が cookie を設定する場合があります）を読み込みます。",ayEmbedFail:"ポストを読み込めませんでした。削除された可能性があります。「X で開く」でご確認ください。",
+   hmSub:"熱千めら（アソビ★まわり隊！）の非公式ファンサイト。こだま・歌リスト・出勤記録・グッズ・ミニゲームをまとめてチェック。",
    hmNews:"サイトの更新",hmNewsMore:"過去の更新",hmNewsLess:"閉じる",hmLoading:"読み込み中…",hmFail:"データを読み込めませんでした。しばらくしてからお試しください。",
    hmClip:"おすすめのこだま",hmSong:"おすすめの曲",hmShift:"出勤記録／配信予定",hmGoods:"もうすぐ発売のグッズ",hmDaily:"毎日 日本時間 5:00 に更新",
    hmPlay:"▶ 再生",hmOpenSrc:"元の投稿を開く ↗",hmYt:"YouTube で開く ↗",hmMoreClips:"こだま一覧 →",hmMoreSongs:"歌リスト →",hmMoreShift:"出勤記録 →",hmMoreGoods:"グッズ →",hmCalendar:"カレンダー →",
    hmUpcoming:"予定",hmLive:"配信中",hmLatest:"直近の配信",hmNoShift:"予定されている配信はありません。",hmGoodsRecent:"発売予定のグッズはありません。直近の発売分を表示しています。",hmGoodsNone:"グッズのデータがありません。",hmShop:"公式ショップ ↗",hmNew:"NEW",hmEmpty:"データがありません。"},
- en:{hmTitle:"Mela-Gumi Cheer Squad",hmSub:"An unofficial fan site for Achichi Mela (Asobi★Mawari-tai!): echoes, songs, shift log, goods and mini-games in one place.",
+ en:{hmTitle:"Mela-Gumi Cheer Squad",ayKick:"Share #あちちみて posts you found on X: sign in with Google and paste the link!",ayLoginMsg:"Sign in with Google to submit post links and report posts.",ayLoginBtn:"Sign in with Google",
+   ayPh:"Paste an X (Twitter) post link, e.g. https://x.com/…/status/…",ayPost:"Submit",ayPosting:"Submitting…",ayOk:"Submitted — thank you!",
+   ayBad:"That isn't an X post link. Please paste a link like https://x.com/username/status/123….",ayDup:"This post has already been submitted.",ayLimitErr:"You've reached today's limit (3 per person per day). Come back tomorrow!",ayBanned:"This account can't submit posts right now.",ayErr:"Couldn't submit. Please try again in a moment.",
+   ayEmpty:"No posts yet — be the first!",ayLoading:"Loading…",ayFail:"Couldn't load the posts. Please try again later.",ayBy:"Posted by {n}",ayAnon:"Anonymous",ayOpenX:"Open on X ↗",ayShow:"Show post",ayHideEmbed:"Collapse",
+   ayReport:"Report",ayReportSure:"Report this?",ayReported:"Reported",ayReportDone:"Report received. Thank you!",ayReportErr:"Couldn't report. Please try again in a moment.",ayDelete:"Delete",ayDeleteSure:"Delete this?",ayDeleteErr:"Couldn't delete. Please try again in a moment.",ayMore:"Show more",
+   ayNote:"Up to 3 submissions per person per day, X (Twitter) post links only. If a post seems inappropriate, press “Report” — after 3 different users report it, it is hidden until an admin reviews it. The X embed (X may set cookies) is only loaded when you press “Show post”.",ayEmbedFail:"The post couldn't be loaded; it may have been deleted. Use “Open on X” to check.",
+   hmSub:"An unofficial fan site for Achichi Mela (Asobi★Mawari-tai!): echoes, songs, shift log, goods and mini-games in one place.",
    hmNews:"Site updates",hmNewsMore:"Older updates",hmNewsLess:"Show less",hmLoading:"Loading…",hmFail:"Couldn't load the data. Please try again later.",
    hmClip:"Echo of the day",hmSong:"Song of the day",hmShift:"Shift log / upcoming streams",hmGoods:"Coming-soon goods",hmDaily:"Changes daily at 5:00 AM Japan time",
    hmPlay:"▶ Play",hmOpenSrc:"Open original ↗",hmYt:"Open on YouTube ↗",hmMoreClips:"All echoes →",hmMoreSongs:"Song list →",hmMoreShift:"Shift log →",hmMoreGoods:"Goods →",hmCalendar:"Calendar →",
    hmUpcoming:"Upcoming",hmLive:"Live",hmLatest:"Latest stream",hmNoShift:"No streams scheduled right now.",hmGoodsRecent:"Nothing is scheduled to release. Here are the most recent releases.",hmGoodsNone:"No goods data yet.",hmShop:"Official shop ↗",hmNew:"NEW",hmEmpty:"No data yet."}
 });
+const S=typeof MelaSync!=="undefined"?MelaSync:null; // assets/sync.js（const 宣告，不在 window 上）
 const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
 const L=v=>v==null?"":typeof v==="string"?v:(v[lang]||v.zh||v.ja||Object.values(v).find(Boolean)||"");
 const safeUrl=u=>{ if(!u||!String(u).trim()) return ""; try{ const x=new URL(String(u||"").trim(),location.href); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
@@ -173,7 +224,7 @@ function renderGoods(){ const el=$("hmGoods"); if(GOODS===undefined) return void
   el.innerHTML=head("hmGoods")+(GOODS.upcoming?"":`<p class="hm-s">${t("hmGoodsRecent")}</p>`)+`<ul class="hm-list">${GOODS.list.map(row).join("")}</ul><div class="hm-acts"><a class="btn" href="goods.html">${t("hmMoreGoods")}</a></div>`; }
 
 function render(){ renderNews(); renderClip(); renderSong(); renderShift(); renderGoods(); }
-window.onLangChange=()=>render();
+window.onLangChange=()=>{ render(); if(typeof renderAy==="function") renderAy(); };
 
 document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
   if(b.id==="newsToggle"){ newsAll=!newsAll; return renderNews(); }
@@ -217,8 +268,65 @@ const loadGoods=()=>new Promise(res=>{ try{ MelaCollect.loadSheet({url:GOODS_CSV
     text=>{ try{ GOODS=buildGoods(text); }catch(e){ console.warn("goods failed",e); GOODS=null; } renderGoods(); res(); },
     text=>{ try{ GOODS=buildGoods(text); renderGoods(); }catch(e){} }); }catch(e){ console.warn("goods failed",e); GOODS=null; renderGoods(); res(); } });
 
+/* ===== #あちちみて：登入的人投稿 X 貼文連結 =====
+ * 資料在 Supabase（supabase/ayatsumi-setup.sql）：ayatsumi_submit／ayatsumi_list／ayatsumi_report／ayatsumi_delete_mine。
+ * 規則都在資料庫檢查（網址格式、重複、每人每天 3 則、3 人檢舉自動下架），這裡只是介面。
+ * 貼文內容預設不載入（不連 X），按「展開貼文」才載入 X 的內嵌元件（platform.twitter.com/widgets.js）。
+ */
+const AY_ERR={bad_url:"ayBad",duplicate:"ayDup",limit:"ayLimitErr",banned:"ayBanned"};
+let AY, ayLimit=5, ayBusy=false, ayConfirm=null;   // AY：undefined 讀取中／null 失敗／陣列；ayConfirm："r12" 或 "d12"（正在等第二次點擊確認）
+const ayEmbeds=new Set();                           // 已展開的貼文 id（重畫清單後再展開回來）
+const ayUser=()=>S&&S.user?S.user():null;
+const ayRel=iso=>{ const d=new Date(iso); if(isNaN(d)) return ""; const sec=(d-Date.now())/1000, a=Math.abs(sec), rtf=new Intl.RelativeTimeFormat(LOC[lang],{numeric:"auto"});
+  if(a<3600) return rtf.format(Math.round(sec/60),"minute"); if(a<86400) return rtf.format(Math.round(sec/3600),"hour"); if(a<86400*30) return rtf.format(Math.round(sec/86400),"day");
+  return d.toLocaleDateString(LOC[lang],{year:"numeric",month:"numeric",day:"numeric"}); };
+function ayMsg(text,kind){ const m=$("ayMsg"); m.textContent=text||""; m.className="ay-msg"+(kind?" "+kind:""); }
+function renderAyForm(){ const u=ayUser(); $("ayForm").hidden=!u; $("ayLogin").hidden=!!u||!S; }
+function renderAy(){ renderAyForm(); const ul=$("ayList");
+  if(AY===undefined){ ul.innerHTML=`<li class="hm-s">${t("ayLoading")}</li>`; $("ayMoreWrap").hidden=true; return; }
+  if(AY===null){ ul.innerHTML=`<li class="hm-s">${t("ayFail")}</li>`; $("ayMoreWrap").hidden=true; return; }
+  if(!AY.length){ ul.innerHTML=`<li class="hm-s">${t("ayEmpty")}</li>`; $("ayMoreWrap").hidden=true; return; }
+  ul.innerHTML=AY.map(p=>{ const open=ayEmbeds.has(p.id), cf=k=>ayConfirm===k+p.id;
+    return `<li class="ay-item" data-id="${p.id}"><div class="ay-top"><span class="ay-handle">@${esc(p.handle)}</span><span class="ay-meta">${esc(tq("ayBy",{n:p.nickname||t("ayAnon")}))} · ${esc(ayRel(p.created_at))}</span></div>
+      <div class="ay-acts"><a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${t("ayOpenX")}</a>
+        <button type="button" data-ay="embed" data-id="${p.id}">${t(open?"ayHideEmbed":"ayShow")}</button>
+        ${p.is_mine?`<button type="button" class="danger${cf("d")?" sure":""}" data-ay="del" data-id="${p.id}">${t(cf("d")?"ayDeleteSure":"ayDelete")}</button>`
+          :p.reported?`<button type="button" disabled>${t("ayReported")}</button>`
+          :`<button type="button" class="danger${cf("r")?" sure":""}" data-ay="report" data-id="${p.id}">${t(cf("r")?"ayReportSure":"ayReport")}</button>`}</div>
+      <div class="ay-embed" id="ayE${p.id}"></div></li>`; }).join("");
+  $("ayMoreWrap").hidden=AY.length<ayLimit||ayLimit>=20;
+  for(const p of AY) if(ayEmbeds.has(p.id)) ayShowEmbed(p); }
+let twP=null;
+const loadWidgets=()=>twP||(twP=new Promise((res,rej)=>{ if(window.twttr&&twttr.widgets) return res(); const sc=document.createElement("script"); sc.src="https://platform.twitter.com/widgets.js"; sc.async=true; sc.charset="utf-8";
+  sc.onload=()=>{ (window.twttr&&twttr.ready)?twttr.ready(()=>res()):res(); }; sc.onerror=()=>{ twP=null; rej(new Error("widgets.js failed")); }; document.head.appendChild(sc); }));
+async function ayShowEmbed(p){ const box=$("ayE"+p.id); if(!box) return; box.innerHTML=`<p class="ay-note">${t("ayLoading")}</p>`;
+  try{ await loadWidgets(); const dark=document.documentElement.dataset.theme==="dark"||(!document.documentElement.dataset.theme&&matchMedia("(prefers-color-scheme: dark)").matches);
+    const el=await twttr.widgets.createTweet(p.tweet_id,box,{theme:dark?"dark":"light",dnt:true,conversation:"none",lang:{zh:"zh-tw",ja:"ja",en:"en"}[lang]}); box.querySelector(".ay-note")?.remove();
+    if(!el){ box.innerHTML=`<p class="ay-note">${t("ayEmbedFail")}</p>`; } }
+  catch(e){ console.warn("embed failed",e); box.innerHTML=`<p class="ay-note">${t("ayEmbedFail")}</p>`; } }
+async function loadAy(){ try{ if(!S) throw new Error("no MelaSync"); await S.whenReady(); const sb=S.client(); if(!sb) throw new Error("no client");
+    const {data,error}=await sb.rpc("ayatsumi_list",{p_limit:ayLimit}); if(error) throw error; AY=Array.isArray(data)?data:[]; }
+  catch(e){ console.warn("ayatsumi list failed",e); AY=null; } renderAy(); }
+async function ayRpc(name,args){ const {data,error}=await S.client().rpc(name,args); if(error) throw error; return data; }
+$("ayForm").addEventListener("submit",async e=>{ e.preventDefault(); if(ayBusy) return; const url=$("ayUrl").value.trim(); if(!url) return;
+  ayBusy=true; $("aySend").disabled=true; ayMsg(t("ayPosting"));
+  try{ await ayRpc("ayatsumi_submit",{p_url:url}); $("ayUrl").value=""; ayMsg(t("ayOk"),"ok"); await loadAy(); }
+  catch(err){ console.warn("ayatsumi submit failed",err); ayMsg(t(AY_ERR[String(err&&err.message||"").trim()]||"ayErr"),"err"); }
+  finally{ ayBusy=false; $("aySend").disabled=false; } });
+$("ayLoginBtn").addEventListener("click",()=>S?.login());
+$("ayMore").addEventListener("click",()=>{ ayLimit=20; AY=undefined; renderAy(); loadAy(); });
+$("ayList").addEventListener("click",async e=>{ const b=e.target.closest("button[data-ay]"); if(!b) return; const id=+b.dataset.id, a=b.dataset.ay, p=(AY||[]).find(x=>x.id===id); if(!p) return;
+  if(a==="embed"){ if(ayEmbeds.has(id)){ ayEmbeds.delete(id); $("ayE"+id).innerHTML=""; b.textContent=t("ayShow"); } else { ayEmbeds.add(id); b.textContent=t("ayHideEmbed"); ayShowEmbed(p); } return; }
+  const key=(a==="report"?"r":"d")+id; if(ayConfirm!==key){ ayConfirm=key; renderAy(); setTimeout(()=>{ if(ayConfirm===key){ ayConfirm=null; renderAy(); } },4000); return; } // 第一次點：變成「確定？」，4 秒內再點一次才送出
+  ayConfirm=null; b.disabled=true;
+  try{ if(a==="report"){ await ayRpc("ayatsumi_report",{p_id:id}); ayMsg(t("ayReportDone"),"ok"); p.reported=true; renderAy(); loadAy(); }
+    else { await ayRpc("ayatsumi_delete_mine",{p_id:id}); ayEmbeds.delete(id); await loadAy(); } }
+  catch(err){ console.warn("ayatsumi action failed",err); ayMsg(t(a==="report"?"ayReportErr":"ayDeleteErr"),"err"); renderAy(); } });
+S?.onAuth?.(()=>{ renderAyForm(); loadAy(); });
+
 setLang(pickLang());
 render();
+loadAy();
 loadNews(); loadClip(); loadSong(); loadShift(); loadGoods();
 </script>
 </body>
