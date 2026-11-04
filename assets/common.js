@@ -65,7 +65,7 @@ const isDark=()=>{ const v=document.documentElement.dataset.theme; return v?v===
 function setLang(l){ lang=l; try{localStorage.setItem("mela-lang",l)}catch(e){}
   document.documentElement.lang={zh:"zh-Hant",ja:"ja",en:"en"}[l];
   // 瀏覽器分頁標題：首頁（data-site-home）和標題跟網站名稱一樣的頁面只顯示網站名稱，其他是「頁面名｜網站名稱」
-  const tk=document.body.dataset.titleKey, site=`熱千めら ${t("siteName")}`;
+  const tk=document.body.dataset.titleKey, hk=document.body.getAttribute("data-site-home"), site=`熱千めら ${t(hk||"siteName")}`; // data-site-home="翻譯 key"：首頁用自己的標題（不填就用 siteName）
   if(tk) document.title=document.body.hasAttribute("data-site-home")||t(tk)===t("siteName")?site:`${t(tk)}｜${site}`;
   document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));

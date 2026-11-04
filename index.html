@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>熱千めら めらめら出勤紀錄</title>
+<title>熱千めら めら組應援中隊</title>
 <meta name="description" content="熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲的總覽首頁">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
@@ -47,13 +47,13 @@
 @media (max-width:640px){.hm-grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body data-title-key="siteName" data-site-home>
+<body data-title-key="hmTitle" data-site-home="hmTitle">
 <div class="wrap">
   <div class="topbar">
   <header>
     <div>
       <span class="unofficial" data-i18n="unofficial"></span>
-      <h1><span class="jp">熱千めら</span> <span data-i18n="siteName"></span></h1>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="hmTitle"></span></h1>
       <p class="sub" data-i18n="hmSub"></p>
     </div>
     <div class="right">
@@ -87,7 +87,7 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=18250fa9"></script>
+<script src="assets/common.js?v=572a57bf"></script>
 <script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script src="assets/clips.js?v=5f3ac17c"></script><!-- 回音片段資料（clips.json＋試算表），回音頁也用 -->
 <script src="assets/collect.js?v=3b84e306"></script><!-- 試算表讀取（含快取）、網址／日期小工具，周邊頁也用 -->
@@ -102,17 +102,17 @@
  *   近期發售周邊   Google 試算表「周邊頁紀錄」分頁（和周邊頁同一份，快取也共用）→ 日期在今天以後的企劃；沒有就顯示最近發售的
  */
 addStrings({
- zh:{hmSub:"熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲都在這裡。",
+ zh:{hmTitle:"めら組應援中隊",hmSub:"熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲都在這裡。",
    hmNews:"網站更新",hmNewsMore:"更多更新",hmNewsLess:"收合",hmLoading:"讀取中…",hmFail:"暫時讀不到資料，請稍後再試。",
    hmClip:"回音推薦",hmSong:"歌單推薦",hmShift:"出勤紀錄／直播預定",hmGoods:"近期發售周邊",hmDaily:"每天日本時間 5:00 更換",
    hmPlay:"▶ 播放",hmOpenSrc:"開啟原文 ↗",hmYt:"在 YouTube 開啟 ↗",hmMoreClips:"更多回音 →",hmMoreSongs:"歌單 →",hmMoreShift:"出勤紀錄 →",hmMoreGoods:"周邊 →",hmCalendar:"月曆 →",
    hmUpcoming:"預定",hmLive:"直播中",hmLatest:"最近一場",hmNoShift:"目前沒有預定的直播。",hmGoodsRecent:"目前沒有預定發售的周邊，以下是最近發售的。",hmGoodsNone:"還沒有周邊資料。",hmShop:"官方商店 ↗",hmNew:"新",hmEmpty:"還沒有資料。"},
- ja:{hmSub:"熱千めら（アソビ★まわり隊！）の非公式ファンサイト。こだま・歌リスト・出勤記録・グッズ・ミニゲームをまとめてチェック。",
+ ja:{hmTitle:"めら組応援中隊",hmSub:"熱千めら（アソビ★まわり隊！）の非公式ファンサイト。こだま・歌リスト・出勤記録・グッズ・ミニゲームをまとめてチェック。",
    hmNews:"サイトの更新",hmNewsMore:"過去の更新",hmNewsLess:"閉じる",hmLoading:"読み込み中…",hmFail:"データを読み込めませんでした。しばらくしてからお試しください。",
    hmClip:"おすすめのこだま",hmSong:"おすすめの曲",hmShift:"出勤記録／配信予定",hmGoods:"もうすぐ発売のグッズ",hmDaily:"毎日 日本時間 5:00 に更新",
    hmPlay:"▶ 再生",hmOpenSrc:"元の投稿を開く ↗",hmYt:"YouTube で開く ↗",hmMoreClips:"こだま一覧 →",hmMoreSongs:"歌リスト →",hmMoreShift:"出勤記録 →",hmMoreGoods:"グッズ →",hmCalendar:"カレンダー →",
    hmUpcoming:"予定",hmLive:"配信中",hmLatest:"直近の配信",hmNoShift:"予定されている配信はありません。",hmGoodsRecent:"発売予定のグッズはありません。直近の発売分を表示しています。",hmGoodsNone:"グッズのデータがありません。",hmShop:"公式ショップ ↗",hmNew:"NEW",hmEmpty:"データがありません。"},
- en:{hmSub:"An unofficial fan site for Achichi Mela (Asobi★Mawari-tai!): echoes, songs, shift log, goods and mini-games in one place.",
+ en:{hmTitle:"Mela-Gumi Cheer Squad",hmSub:"An unofficial fan site for Achichi Mela (Asobi★Mawari-tai!): echoes, songs, shift log, goods and mini-games in one place.",
    hmNews:"Site updates",hmNewsMore:"Older updates",hmNewsLess:"Show less",hmLoading:"Loading…",hmFail:"Couldn't load the data. Please try again later.",
    hmClip:"Echo of the day",hmSong:"Song of the day",hmShift:"Shift log / upcoming streams",hmGoods:"Coming-soon goods",hmDaily:"Changes daily at 5:00 AM Japan time",
    hmPlay:"▶ Play",hmOpenSrc:"Open original ↗",hmYt:"Open on YouTube ↗",hmMoreClips:"All echoes →",hmMoreSongs:"Song list →",hmMoreShift:"Shift log →",hmMoreGoods:"Goods →",hmCalendar:"Calendar →",
