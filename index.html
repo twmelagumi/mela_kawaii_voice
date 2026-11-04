@@ -4,22 +4,52 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>熱千めら めらめら出勤紀錄</title>
-<meta name="description" content="熱千めら 直播聲音片段整理（非官方粉絲網站）">
+<meta name="description" content="熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲的總覽首頁">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=42465201">
-<script>if(location.hash==="#songs") location.replace("songs.html");</script>
+<link rel="stylesheet" href="assets/style.css?v=f3f67a86">
+<style>
+/* ===== 首頁（總覽） ===== */
+.hm-news,.hm-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.hm-news{display:flex;flex-direction:column;gap:8px}
+.hm-news h2,.hm-card h2{margin:0;font-family:var(--f-display);font-size:16px}
+.hm-news ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.hm-news li{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.6}
+.hm-news time{flex:none;font-family:var(--f-code);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.hm-news a{color:var(--accent-text)}
+.hm-news .more{align-self:flex-start;font-size:12px;padding:4px 12px}
+.hm-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hm-card{display:flex;flex-direction:column;gap:10px;min-width:0}
+.hm-card .kick{font-size:12px;color:var(--muted);margin:-6px 0 0}
+.hm-t{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(18px,4.5vw,22px);line-height:1.4;text-wrap:pretty;overflow-wrap:anywhere}
+.hm-s{margin:0;font-size:13px;color:var(--muted);line-height:1.7;overflow-wrap:anywhere}
+.hm-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--accent-text)}
+.hm-play{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.hm-play iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hm-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+.hm-acts .btn,.hm-acts button{font-size:13px;padding:7px 14px}
+.hm-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hm-list li{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.hm-list .d{flex:none;min-width:5.4em;font-family:var(--f-code);font-size:12px;color:var(--muted);line-height:1.7;font-variant-numeric:tabular-nums}
+.hm-list .b{min-width:0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.hm-list a{color:inherit}
+.hm-list img{flex:none;width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--bg);border:1px solid var(--line)}
+.hm-badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;border:1px solid var(--accent);color:var(--accent-text);margin-right:6px;vertical-align:1px}
+.hm-badge.live{border-color:#ff3b5c;color:#e0284a}
+.hm-sub{font-size:12px;color:var(--muted);margin:2px 0 -4px}
+@media (max-width:640px){.hm-grid{grid-template-columns:1fr}}
+</style>
 </head>
-<body data-title-key="title" data-site-home>
+<body data-title-key="siteName" data-site-home>
 <div class="wrap">
   <div class="topbar">
   <header>
     <div>
       <span class="unofficial" data-i18n="unofficial"></span>
-      <h1><span class="jp">熱千めら</span> <span data-i18n="title"></span></h1>
-      <p class="sub" data-i18n="sub"></p>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="siteName"></span></h1>
+      <p class="sub" data-i18n="hmSub"></p>
     </div>
     <div class="right">
       <div class="lang" role="group" aria-label="Language">
@@ -27,15 +57,11 @@
         <button type="button" data-lang="ja">日本語</button>
         <button type="button" data-lang="en">EN</button>
       </div>
-      <div class="hrow">
-        <span class="count"><b id="count">0</b> <span data-i18n="clips"></span></span>
-        <a class="btn primary" id="submitBtn" href="#" target="_blank" rel="noopener" hidden data-i18n="submit"></a>
-      </div>
     </div>
   </header>
 
   <nav class="views">
-    <a href="./" aria-current="page" data-i18n="tabVoices"></a>
+    <a href="voices.html" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
     <a href="timeline.html" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>
@@ -44,188 +70,149 @@
   </div>
 
   <section class="view">
-    <div class="tools">
-      <div class="search">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
-        <input id="q" type="search" data-i18n-ph="search">
-      </div>
-      <select id="sort">
-        <option value="new" data-i18n="sortNew"></option>
-        <option value="stream" data-i18n="sortStream"></option>
-        <option value="short" data-i18n="sortShort"></option>
-      </select>
-      <button type="button" id="shuffle" data-i18n="random"></button>
+    <section class="hm-news" id="hmNews" aria-live="polite"></section>
+    <div class="hm-grid">
+      <section class="hm-card" id="hmClip" aria-live="polite"></section>
+      <section class="hm-card" id="hmSong" aria-live="polite"></section>
+      <section class="hm-card" id="hmShift" aria-live="polite"></section>
+      <section class="hm-card" id="hmGoods" aria-live="polite"></section>
     </div>
-    <div class="tags" id="tags"></div>
-    <section class="picks" id="picks" hidden>
-      <h2 class="picks-title"><span aria-hidden="true">★</span> <span data-i18n="todayPick"></span></h2>
-      <div class="grid" id="pickGrid"></div>
-    </section>
-    <div class="grid" id="grid"></div>
-    <div class="more" id="moreWrap" hidden><button type="button" id="moreBtn"></button></div>
   </section>
 
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<div class="player" id="player" hidden>
-  <button type="button" class="pmin" id="pMin" data-i18n-title="pMinimize"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-7 9z"/></svg></button>
-  <div class="player-in">
-    <div id="stage"></div>
-    <div class="pinfo">
-      <h3 id="pTitle"></h3>
-      <div class="meta" id="pMeta"></div>
-      <div class="pbtns">
-        <button type="button" class="primary" id="pReplay" data-i18n="replay"></button>
-        <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
-        <button type="button" id="pClose" data-i18n="close"></button>
-      </div>
-      <p class="pnote" data-i18n="playerNote"></p>
-      <div class="pmini">
-        <button type="button" class="pm" id="mToggle"></button>
-        <button type="button" class="pm" id="mMax" data-i18n-title="pExpand">▴</button>
-        <button type="button" class="pm" id="mClose" data-i18n-title="close">✕</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="assets/common.js?v=31998aa3"></script>
+<script src="assets/common.js?v=18250fa9"></script>
 <script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有） -->
+<script src="assets/clips.js?v=5f3ac17c"></script><!-- 回音片段資料（clips.json＋試算表），回音頁也用 -->
+<script src="assets/collect.js?v=3b84e306"></script><!-- 試算表讀取（含快取）、網址／日期小工具，周邊頁也用 -->
+<script src="assets/timeline-data.js?v=757eb4c8"></script><!-- 出勤紀錄資料（三個來源合併），出勤紀錄／月曆頁也用 -->
 <script>
-/* ===== 聲音頁設定 ===== */
-// ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
-const SUBMIT_URL = "https://forms.gle/xqC6PYvhdrvtkV1N6";
-// ② Google 試算表「公開」分頁發佈成 CSV 的網址（…/pub?gid=…&single=true&output=csv）。留空就只讀 clips.json。
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=656485988&single=true&output=csv";
-
+/* ===== 首頁（總覽） =====
+ * 五塊內容，各自讀資料、讀失敗只影響那一塊：
+ *   網站更新      news.json（每次改版時加一筆，新的放最前面：{date, zh, ja, en, url?}）
+ *   回音推薦      assets/clips.js（clips.json＋試算表）→ 每天（日本時間 5:00 換日）挑一則，大家一樣；可以直接在卡片上播放
+ *   歌單推薦      songs.json → 每天一首（和每日簽到的「今日推薦歌」是同一首）
+ *   出勤紀錄／直播預定  assets/timeline-data.js → 即將開始（或正在播）的直播；沒有預定就顯示最近一場
+ *   近期發售周邊   Google 試算表「周邊頁紀錄」分頁（和周邊頁同一份，快取也共用）→ 日期在今天以後的企劃；沒有就顯示最近發售的
+ */
 addStrings({
- zh:{title:"沙拉曼達のじゃ回音",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
-   sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",
-   todayPick:"今日推薦",showMore:"顯示更多（還有 {n} 段）",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
- ja:{title:"サラマンダーのじゃこだま",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
-   sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",
-   todayPick:"今日のおすすめ",showMore:"もっと見る（残り {n} 件）",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
- en:{title:"Salamander Noja Echoes",sub:"Laughs, weird noises and famous lines from Mela's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
-   sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",
-   todayPick:"Today's picks",showMore:"Show more ({n} left)",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
+ zh:{hmSub:"熱千めら（アソビ★まわり隊！）的非官方粉絲網站：回音、歌單、出勤紀錄、周邊和小遊戲都在這裡。",
+   hmNews:"網站更新",hmNewsMore:"更多更新",hmNewsLess:"收合",hmLoading:"讀取中…",hmFail:"暫時讀不到資料，請稍後再試。",
+   hmClip:"回音推薦",hmSong:"歌單推薦",hmShift:"出勤紀錄／直播預定",hmGoods:"近期發售周邊",hmDaily:"每天日本時間 5:00 更換",
+   hmPlay:"▶ 播放",hmOpenSrc:"開啟原文 ↗",hmYt:"在 YouTube 開啟 ↗",hmMoreClips:"更多回音 →",hmMoreSongs:"歌單 →",hmMoreShift:"出勤紀錄 →",hmMoreGoods:"周邊 →",hmCalendar:"月曆 →",
+   hmUpcoming:"預定",hmLive:"直播中",hmLatest:"最近一場",hmNoShift:"目前沒有預定的直播。",hmGoodsRecent:"目前沒有預定發售的周邊，以下是最近發售的。",hmGoodsNone:"還沒有周邊資料。",hmShop:"官方商店 ↗",hmNew:"新",hmEmpty:"還沒有資料。"},
+ ja:{hmSub:"熱千めら（アソビ★まわり隊！）の非公式ファンサイト。こだま・歌リスト・出勤記録・グッズ・ミニゲームをまとめてチェック。",
+   hmNews:"サイトの更新",hmNewsMore:"過去の更新",hmNewsLess:"閉じる",hmLoading:"読み込み中…",hmFail:"データを読み込めませんでした。しばらくしてからお試しください。",
+   hmClip:"おすすめのこだま",hmSong:"おすすめの曲",hmShift:"出勤記録／配信予定",hmGoods:"もうすぐ発売のグッズ",hmDaily:"毎日 日本時間 5:00 に更新",
+   hmPlay:"▶ 再生",hmOpenSrc:"元の投稿を開く ↗",hmYt:"YouTube で開く ↗",hmMoreClips:"こだま一覧 →",hmMoreSongs:"歌リスト →",hmMoreShift:"出勤記録 →",hmMoreGoods:"グッズ →",hmCalendar:"カレンダー →",
+   hmUpcoming:"予定",hmLive:"配信中",hmLatest:"直近の配信",hmNoShift:"予定されている配信はありません。",hmGoodsRecent:"発売予定のグッズはありません。直近の発売分を表示しています。",hmGoodsNone:"グッズのデータがありません。",hmShop:"公式ショップ ↗",hmNew:"NEW",hmEmpty:"データがありません。"},
+ en:{hmSub:"An unofficial fan site for Achichi Mela (Asobi★Mawari-tai!): echoes, songs, shift log, goods and mini-games in one place.",
+   hmNews:"Site updates",hmNewsMore:"Older updates",hmNewsLess:"Show less",hmLoading:"Loading…",hmFail:"Couldn't load the data. Please try again later.",
+   hmClip:"Echo of the day",hmSong:"Song of the day",hmShift:"Shift log / upcoming streams",hmGoods:"Coming-soon goods",hmDaily:"Changes daily at 5:00 AM Japan time",
+   hmPlay:"▶ Play",hmOpenSrc:"Open original ↗",hmYt:"Open on YouTube ↗",hmMoreClips:"All echoes →",hmMoreSongs:"Song list →",hmMoreShift:"Shift log →",hmMoreGoods:"Goods →",hmCalendar:"Calendar →",
+   hmUpcoming:"Upcoming",hmLive:"Live",hmLatest:"Latest stream",hmNoShift:"No streams scheduled right now.",hmGoodsRecent:"Nothing is scheduled to release. Here are the most recent releases.",hmGoodsNone:"No goods data yet.",hmShop:"Official shop ↗",hmNew:"NEW",hmEmpty:"No data yet."}
 });
-// 標籤翻譯（標籤本身用中文存，切換語言時顯示對應文字）
-const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
- "名台詞":{ja:"名言",en:"Iconic line"},"歌聲":{ja:"歌声",en:"Singing"},"可愛":{ja:"かわいい",en:"Cute"},"崩潰":{ja:"発狂",en:"Meltdown"},
- "打噴嚏":{ja:"くしゃみ",en:"Sneeze"},"打哈欠":{ja:"あくび",en:"Yawn"},"哼歌":{ja:"鼻歌",en:"Humming"},"語錄":{ja:"語録",en:"Quote"}};
-const tagName=tg=>lang==="zh"?tg:(TAG_I18N[tg]?.[lang]||tg);
+const tq=(k,o)=>t(k).replace(/\{(\w)\}/g,(_,x)=>o[x]??"");
+const L=v=>v==null?"":typeof v==="string"?v:(v[lang]||v.zh||v.ja||Object.values(v).find(Boolean)||"");
+const safeUrl=u=>{ if(!u||!String(u).trim()) return ""; try{ const x=new URL(String(u||"").trim(),location.href); return /^https?:$/.test(x.protocol)?x.href:""; }catch(e){ return ""; } };
+const LOC={zh:"zh-Hant",ja:"ja",en:"en"};
+const NEWS_SHOW=3;
+// 各塊的狀態：undefined＝讀取中、null＝讀失敗、其他＝資料
+let NEWS, CLIP, SONG, SHIFT, GOODS, newsAll=false;
 
-let CLIPS=[], activeTag=null;
-// 一次只畫 PAGE_SIZE 張卡片，下面用「顯示更多」再多畫一批（搜尋、篩選仍然是對全部資料）
-const PAGE_SIZE=48;
-let shown=PAGE_SIZE;
-function refilter(){ shown=PAGE_SIZE; render(); }
+const loading=()=>`<p class="hm-s">${t("hmLoading")}</p>`;
+const fail=()=>`<p class="hm-s">${t("hmFail")}</p>`;
+const head=(k,sub)=>`<h2>${t(k)}</h2>${sub?`<p class="kick">${t(sub)}</p>`:""}`;
+// 在卡片上直接播放（YouTube 內嵌播放器；按了才載入）
+const embedSrc=(vid,s,e)=>`https://www.youtube-nocookie.com/embed/${encodeURIComponent(vid)}?autoplay=1&rel=0&playsinline=1${s!=null?"&start="+Math.floor(s):""}${e!=null?"&end="+Math.ceil(e):""}`;
+const ytUrl=(vid,s)=>`https://www.youtube.com/watch?v=${encodeURIComponent(vid)}${s!=null?"&t="+Math.floor(s)+"s":""}`;
+const playBtn=(vid,s,e)=>`<button type="button" class="primary" data-play="1" data-vid="${esc(vid)}" data-s="${s??""}" data-e="${e??""}">${t("hmPlay")}</button>`;
 
-/* ===== 畫面 ===== */
-function wave(seed){ let h=hash(seed),o=""; for(let i=0;i<28;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0; const env=Math.sin(Math.PI*(i+.5)/28); o+=`<i style="height:${12+Math.round((h%88)*(.35+.65*env))}%"></i>`;} return o; }
-function render(){
-  $("count").textContent=CLIPS.length;
-  const q=$("q").value.trim().toLowerCase();
-  let list=CLIPS.filter(c=>(!activeTag||(c.tags||[]).includes(activeTag)) &&
-    (!q||[c.title,c.quote,c.note,...(c.tags||[]).map(x=>x+" "+tagName(x))].join(" ").toLowerCase().includes(q)));
-  const s=$("sort").value;
-  list.sort((a,b)=>s==="stream"?String(b.streamDate||"").localeCompare(String(a.streamDate||""))
-    :s==="short"?(dur(a)??1e9)-(dur(b)??1e9):(b.addedAt||0)-(a.addedAt||0));
-  const counts={}; CLIPS.forEach(c=>(c.tags||[]).forEach(x=>counts[x]=(counts[x]||0)+1));
-  const tags=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
-  $("tags").innerHTML=tags.length?`<button type="button" class="chip" data-chip="" aria-pressed="${!activeTag}">${t("all")}</button>`+
-    tags.map(x=>`<button type="button" class="chip" data-chip="${esc(x)}" aria-pressed="${activeTag===x}">${esc(tagName(x))} <span class="n">${counts[x]}</span></button>`).join(""):"";
-  $("moreWrap").hidden=true;
-  if(!CLIPS.length){ $("grid").innerHTML=`<div class="empty"><h2>${t("none")}</h2><p>${t("noneHint")}</p></div>`; return; }
-  const rest=list.length-shown;
-  if(rest>0){ $("moreWrap").hidden=false; $("moreBtn").textContent=t("showMore").replace("{n}",rest); }
-  // 今日推薦：試算表「推薦」欄打勾（或 clips.json 的 "pick": true）的片段。搜尋或篩選標籤時先收起來，避免和結果混在一起。
-  const picks=CLIPS.filter(c=>c.pick);
-  $("picks").hidden=!picks.length||!!q||!!activeTag;
-  $("pickGrid").innerHTML=picks.map(c=>card(c,true)).join("");
-  $("grid").innerHTML=list.length?list.slice(0,shown).map(c=>card(c)).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
-}
-function card(c,isPick){ return `<article class="pad${isPick?" pick":""}${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
-    <div class="pad-top">${c.src==="youtube"&&c.vid
-      ?`<button type="button" class="thumb" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(c.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>`
-      :`<button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button>`}<div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
-    <h3>${esc(c.title)}</h3>
-    ${c.quote?`<p class="quote">「${esc(c.quote)}」</p>`:""}${c.note?`<p class="note">${esc(c.note)}</p>`:""}
-    <div class="meta">${metaHTML(c)}</div>
-    ${(c.tags||[]).length?`<div class="ptags">${c.tags.map(x=>`<button type="button" data-tag="${esc(x)}">#${esc(tagName(x))}</button>`).join("")}</div>`:""}
-    <div class="pad-foot"><button type="button" data-copy="${esc(c.id)}">${t("copy")}</button></div>
-  </article>`; }
-window.onLangChange=render;
+function renderNews(){ const el=$("hmNews"); if(NEWS===undefined){ el.innerHTML=head("hmNews")+loading(); return; }
+  if(!NEWS||!NEWS.length){ el.hidden=true; return; } el.hidden=false;
+  const list=newsAll?NEWS:NEWS.slice(0,NEWS_SHOW), first=NEWS[0]&&NEWS[0].date;
+  el.innerHTML=head("hmNews")+`<ul>${list.map(n=>{ const u=safeUrl(n.url), txt=esc(L(n)); // L(n)：取 n.zh／ja／en
+    return `<li><time datetime="${esc(n.date)}">${esc(String(n.date).replace(/-/g,"."))}</time><span>${u?`<a href="${esc(u)}">${txt}</a>`:txt}</span></li>`; }).join("")}</ul>`
+    +(NEWS.length>NEWS_SHOW?`<button type="button" class="more" id="newsToggle">${t(newsAll?"hmNewsLess":"hmNewsMore")}</button>`:""); }
 
-/* ===== 事件 ===== */
-document.addEventListener("click",async e=>{
-  const b=e.target.closest("button"); if(!b) return;
-  const find=id=>CLIPS.find(c=>c.id===id);
-  if(b.dataset.play) return play(find(b.dataset.play));
-  if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return refilter(); }
-  if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return refilter(); }
-  if(b.dataset.copy){ const u=origUrl(find(b.dataset.copy)); try{ await navigator.clipboard.writeText(u); b.textContent=t("copied"); setTimeout(()=>b.textContent=t("copy"),1500);}catch(err){ prompt("",u); } }
-});
-$("q").addEventListener("input",refilter); $("sort").addEventListener("change",refilter);
-$("moreBtn").onclick=()=>{ shown+=PAGE_SIZE; render(); };
-$("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*CLIPS.length)]); };
-if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
+function renderClip(){ const el=$("hmClip"); if(CLIP===undefined) return void(el.innerHTML=head("hmClip","hmDaily")+loading()); if(CLIP===null) return void(el.innerHTML=head("hmClip")+fail());
+  if(!CLIP.c) return void(el.innerHTML=head("hmClip")+`<p class="hm-s">${t("hmEmpty")}</p>`);
+  const c=CLIP.c, yt=c.src==="youtube"&&c.vid;
+  el.innerHTML=head("hmClip","hmDaily")+`<div id="hmClipBox"><p class="hm-t">${esc(c.title)}</p></div>`
+    +(c.quote?`<p class="hm-s">「${esc(c.quote)}」</p>`:"")+(c.note?`<p class="hm-s">${esc(c.note)}</p>`:"")
+    +((c.tags||[]).length?`<div class="hm-tags">${c.tags.slice(0,5).map(x=>`<span>#${esc(x)}</span>`).join("")}</div>`:"")
+    +`<div class="hm-acts">${yt?playBtn(c.vid,c.start,c.end):`<a class="btn primary" href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">${t("hmOpenSrc")}</a>`}<a class="btn" href="voices.html">${t("hmMoreClips")}</a></div>`; }
 
-/* ===== 讀資料：clips.json + Google 試算表（發佈的 CSV） ===== */
-// 依標題文字找欄位，表單題目順序不同也沒關係
-const COLS={ts:["時間戳記","タイムスタンプ","timestamp"],url:["網址","url","link","連結"],start:["開始","开始","start"],end:["結束","结束","終了","end"],title:["標題","タイトル","title"],
-  quote:["台詞","セリフ","quote"],tags:["標籤","タグ","tag"],note:["備註","メモ","note"],date:["日期","配信日","date"],pick:["推薦","おすすめ","pick","recommend"]};
-// 「推薦」欄：打勾（TRUE）或填 v、1、是、○ 都算推薦（isYes 在 common.js）
-function sheetToClips(text){
-  const rows=parseCSV(text); if(rows.length<2) return [];
-  const head=rows[0].map(h=>h.trim().toLowerCase()); const idx={};
-  for(const k in COLS) idx[k]=head.findIndex(h=>COLS[k].some(w=>h.includes(w.toLowerCase())));
-  if(idx.end<0&&idx.start>=0) idx.end=idx.start+1; // 找不到「結束」就用開始時間的下一欄
-  console.info("[mela] sheet columns",rows[0],idx);
-  const get=(r,k)=>idx[k]>=0?(r[idx[k]]||"").trim():"";
-  return rows.slice(1).map((r,i)=>{ const p=parseClipUrl(get(r,"url")); const title=get(r,"title"); if(!p||!title) return null;
-    let start=parseTime(get(r,"start")); const end=parseTime(get(r,"end")); if(start==null&&p.t!=null) start=p.t;
-    return {id:"g"+hash(get(r,"ts")+"|"+get(r,"url")+"|"+i).toString(36),src:p.src,vid:p.vid||null,url:p.url,start,end:(end!=null&&start!=null&&end<=start)?null:end,
-      title,quote:get(r,"quote"),note:get(r,"note"),tags:[...new Set(get(r,"tags").split(/[,，、\s]+/).map(x=>x.split(/[／\/]/)[0].replace(/^[#＃]/,"").trim()).filter(Boolean))].slice(0,12),
-      streamDate:normDate(get(r,"date")),pick:isYes(get(r,"pick")),addedAt:2e12+i}; }).filter(Boolean);
-}
-// Google 試算表 CSV 的快取：存在訪客瀏覽器（localStorage），SHEET_TTL 內不會再連 Google。
-// 過期時先用舊資料立刻顯示，再在背景抓新的，有變動才重畫。
-const SHEET_TTL = 5*60*1000; // 5 分鐘
-const SHEET_KEY = "mela-sheet:"+hash(SHEET_CSV_URL);
-function readSheetCache(){ try{ const c=JSON.parse(localStorage.getItem(SHEET_KEY)||"null"); return c&&typeof c.text==="string"&&c.at?c:null; }catch(e){ return null; } }
-function writeSheetCache(text){ try{ localStorage.setItem(SHEET_KEY,JSON.stringify({text,at:Date.now()})); }catch(e){} }
-async function fetchSheet(){
-  const r=await fetch(SHEET_CSV_URL+(SHEET_CSV_URL.includes("?")?"&":"?")+"_="+Date.now());
-  if(!r.ok) throw new Error("HTTP "+r.status);
-  const text=await r.text(); writeSheetCache(text); return text;
-}
-let jsonClips=[], sheetClips=[];
-function mergeClips(){
-  const seen=new Set(); CLIPS=[];
-  const byKey={};
-  for(const c of [...jsonClips,...sheetClips]){ const key=(c.vid||c.url)+"@"+(c.start??"");
-    if(seen.has(key)){ if(c.pick) byKey[key].pick=true; continue; } // 重複的片段：只要任一邊標了推薦就算推薦
-    seen.add(key); const copy={...c}; byKey[key]=copy; CLIPS.push(copy); }
-  if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
-  render();
-}
-async function loadAll(){
-  const jsonP=fetch("clips.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(d=>(Array.isArray(d)?d:d.clips||[]).filter(c=>c&&c.title&&c.id)).catch(()=>[]);
-  const cached=SHEET_CSV_URL?readSheetCache():null;
-  let sheetText="";
-  if(cached) sheetText=cached.text;                       // 有快取：先用快取，不等網路
-  else if(SHEET_CSV_URL) sheetText=await fetchSheet().catch(e=>{ console.warn("sheet load failed",e); return ""; });
-  jsonClips=await jsonP; sheetClips=sheetToClips(sheetText); mergeClips();
-  // 快取過期：背景更新，內容有變才重畫
-  if(cached&&Date.now()-cached.at>=SHEET_TTL){
-    fetchSheet().then(text=>{ if(text!==cached.text){ sheetClips=sheetToClips(text); mergeClips(); } }).catch(e=>console.warn("sheet refresh failed",e));
-  }
-}
+function renderSong(){ const el=$("hmSong"); if(SONG===undefined) return void(el.innerHTML=head("hmSong","hmDaily")+loading()); if(SONG===null) return void(el.innerHTML=head("hmSong")+fail());
+  if(!SONG.s) return void(el.innerHTML=head("hmSong")+`<p class="hm-s">${t("hmEmpty")}</p>`);
+  const s=SONG.s;
+  el.innerHTML=head("hmSong","hmDaily")+`<p class="hm-t">${esc(s.title)}</p>`+(s.artist?`<p class="hm-s">${esc(s.artist)}</p>`:"")+(s.note?`<p class="hm-s">${esc(s.note)}</p>`:"")
+    +`<div class="hm-acts">${playBtn(s.vid,s.start,null)}<a class="btn" href="${esc(ytUrl(s.vid,s.start))}" target="_blank" rel="noopener">${t("hmYt")}</a><a class="btn" href="songs.html">${t("hmMoreSongs")}</a></div>`; }
+
+const fmtWhen=e=>{ if(e.start){ const d=new Date(e.start); if(!isNaN(d)) return d.toLocaleString(LOC[lang],{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}); }
+  return String(e.date||"").slice(5).replace("-","/"); };
+function renderShift(){ const el=$("hmShift"); if(SHIFT===undefined) return void(el.innerHTML=head("hmShift")+loading()); if(SHIFT===null) return void(el.innerHTML=head("hmShift")+fail());
+  const now=Date.now();
+  const row=(e,badge)=>{ const u=safeUrl(e.url), txt=esc(e.title||""); return `<li><span class="d">${esc(fmtWhen(e))}</span><span class="b">${badge||""}${u?`<a href="${esc(u)}" target="_blank" rel="noopener">${txt}</a>`:txt}</span></li>`; };
+  let body;
+  if(SHIFT.up.length) body=`<ul class="hm-list">${SHIFT.up.map(e=>row(e,e.start&&new Date(e.start).getTime()<=now?`<span class="hm-badge live">${t("hmLive")}</span>`:`<span class="hm-badge">${t("hmUpcoming")}</span>`)).join("")}</ul>`;
+  else body=`<p class="hm-s">${t("hmNoShift")}</p>`+(SHIFT.last?`<p class="hm-sub">${t("hmLatest")}</p><ul class="hm-list">${row(SHIFT.last)}</ul>`:"");
+  el.innerHTML=head("hmShift")+body+`<div class="hm-acts"><a class="btn" href="timeline.html">${t("hmMoreShift")}</a><a class="btn" href="calendar.html">${t("hmCalendar")}</a></div>`; }
+
+function renderGoods(){ const el=$("hmGoods"); if(GOODS===undefined) return void(el.innerHTML=head("hmGoods")+loading()); if(GOODS===null) return void(el.innerHTML=head("hmGoods")+fail());
+  if(!GOODS.list.length) return void(el.innerHTML=head("hmGoods")+`<p class="hm-s">${t("hmGoodsNone")}</p><div class="hm-acts"><a class="btn" href="goods.html">${t("hmMoreGoods")}</a></div>`);
+  const row=g=>`<li>${g.cover?`<img src="${esc(g.cover)}" alt="" width="56" height="56" loading="lazy" decoding="async">`:""}<div class="b"><span class="d" style="display:block;min-width:0">${esc(fmtDate(g.date))}</span>${esc(g.name)}${g.shop?` <a href="${esc(g.shop)}" target="_blank" rel="noopener" style="color:var(--accent-text);font-size:12px">${t("hmShop")}</a>`:""}</div></li>`;
+  el.innerHTML=head("hmGoods")+(GOODS.upcoming?"":`<p class="hm-s">${t("hmGoodsRecent")}</p>`)+`<ul class="hm-list">${GOODS.list.map(row).join("")}</ul><div class="hm-acts"><a class="btn" href="goods.html">${t("hmMoreGoods")}</a></div>`; }
+
+function render(){ renderNews(); renderClip(); renderSong(); renderShift(); renderGoods(); }
+window.onLangChange=()=>render();
+
+document.addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.id==="newsToggle"){ newsAll=!newsAll; return renderNews(); }
+  if(b.dataset.play){ const box=b.closest(".hm-card"), s=b.dataset.s===""?null:+b.dataset.s, en=b.dataset.e===""?null:+b.dataset.e;
+    const player=document.createElement("div"); player.className="hm-play";
+    player.innerHTML=`<iframe src="${esc(embedSrc(b.dataset.vid,s,en))}" title="YouTube" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    box.querySelector(".hm-acts").before(player); b.remove(); } });
+
+/* ===== 讀資料 ===== */
+const day=jstDay();
+const loadNews=async()=>{ try{ const r=await fetch("news.json",{cache:"no-cache"}); if(!r.ok) throw new Error("HTTP "+r.status); const d=await r.json();
+  NEWS=(Array.isArray(d)?d:[]).filter(n=>n&&n.date&&(n.zh||n.ja||n.en)).sort((a,b)=>String(b.date).localeCompare(String(a.date))); }catch(e){ console.warn("news failed",e); NEWS=null; } renderNews(); };
+const pickClip=list=>({c:pickOfDay(list.filter(c=>c&&c.title),"clip",day)});
+const loadClip=async()=>{ try{ CLIP=pickClip(await MelaClips.load(l=>{ CLIP=pickClip(l); renderClip(); })); }catch(e){ console.warn("clips failed",e); CLIP=null; } renderClip(); };
+const loadSong=async()=>{ try{ SONG={s:pickOfDay(await loadSongList(),"song",day)}; }catch(e){ console.warn("song failed",e); SONG=null; } renderSong(); };
+const loadShift=async()=>{ try{ const {raw}=await loadTimeline(), ev=raw.filter(e=>e&&e.title);
+    const at=e=>e.start?new Date(e.start).getTime():new Date((e.date||"")+"T12:00:00").getTime();
+    const up=ev.filter(e=>e.upcoming).sort((a,b)=>at(a)-at(b)).slice(0,3);
+    const today=new Date(), td=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    const past=ev.filter(e=>!e.upcoming&&(e.type||"stream")==="stream"&&e.date&&normDate(e.date)<=td).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+    SHIFT={up,last:past[0]||null}; }catch(e){ console.warn("shift failed",e); SHIFT=null; } renderShift(); };
+
+// 周邊：欄位依第一列標題認（和 goods.html 的 GCOLS 同一套，只取首頁要用的）。試算表網址要和 goods.html 的 GOODS_CSV_URL 一樣
+const GOODS_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQIjhyIETZ-Ky_Nydc7RRi81T3SxLzJ0tROU5xJC9pYiPma7MWY4qhWxRoD9CQZVaPB6q00znizevlf/pub?gid=1311668276&single=true&output=csv";
+const GCOLS=[["code",/project\s*code|企劃代號|コード/i],["pname",/project\s*name|企劃名|企画名/i],["date",/date|日期|日付|発売/i],["shop",/official|website|shop|商店|ショップ/i],["name",/goods\s*name|品名|商品名/i],["image",/picture|image|圖片|画像/i]];
+const imgUrl=u=>{ u=String(u||"").trim(); return /^(assets\/goods\/)[\w\-.%]+\.(webp|png|jpe?g|gif|avif)$/i.test(u)?u:webUrl(u); };
+function buildGoods(text){ const rows=parseCSV(text||""); if(!rows.length) return {list:[],upcoming:false};
+  const col={}; rows[0].forEach((h,i)=>{ const k=GCOLS.find(([k])=>col[k]==null&&GCOLS.find(x=>x[0]===k)[1].test(String(h).trim())); if(k) col[k[0]]=i; });
+  const get=(r,k)=>col[k]==null?"":String(r[col[k]]??"").trim();
+  const map=new Map(); let cur=null;
+  for(const r of rows.slice(1)){ const code=get(r,"code"), pname=get(r,"pname");
+    if(code||pname){ const key=code||pname; if(!map.has(key)) map.set(key,{name:pname||code,date:null,shop:"",cover:"",n:0}); cur=map.get(key);
+      if(pname) cur.name=pname; const d=normDate(get(r,"date")); if(d) cur.date=d; cur.shop=webUrl(get(r,"shop"))||cur.shop; }
+    if(!cur) continue;
+    const img=imgUrl(get(r,"image")); if(!get(r,"name")){ if(img) cur.cover=smallImg(img); } else { cur.n++; if(!cur.cover&&img) cur.cover=smallImg(img); } } // 沒有品名的列＝企劃資料（圖片＝企劃封面）
+  const now=new Date(), td=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+  const all=[...map.values()].filter(g=>g.n&&g.date), up=all.filter(g=>g.date>=td).sort((a,b)=>a.date.localeCompare(b.date));
+  if(up.length) return {list:up.slice(0,3),upcoming:true};
+  return {list:all.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,2),upcoming:false}; }
+const loadGoods=()=>new Promise(res=>{ try{ MelaCollect.loadSheet({url:GOODS_CSV_URL,key:"mela-goods-csv",ttl:5*60*1000},
+    text=>{ try{ GOODS=buildGoods(text); }catch(e){ console.warn("goods failed",e); GOODS=null; } renderGoods(); res(); },
+    text=>{ try{ GOODS=buildGoods(text); renderGoods(); }catch(e){} }); }catch(e){ console.warn("goods failed",e); GOODS=null; renderGoods(); res(); } });
 
 setLang(pickLang());
-loadAll();
+render();
+loadNews(); loadClip(); loadSong(); loadShift(); loadGoods();
 </script>
 </body>
 </html>

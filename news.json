@@ -1,0 +1,7 @@
+[
+  {"date":"2026-11-04","zh":"新增總覽首頁：回音、歌單、直播預定和近期周邊的推薦都在這裡。回音頁移到「回音」分頁（voices.html）。","ja":"総合ホームを追加しました。おすすめのこだま・曲・配信予定・グッズをここでチェックできます。こだまページは「こだま」タブ（voices.html）に移動しました。","en":"Added this home page with picks for echoes, songs, upcoming streams and new goods. The echoes page now lives under the Echoes tab (voices.html)."},
+  {"date":"2026-11-03","zh":"小遊戲新增「每日簽到」：登入 Google 後每天選一個圖案簽到，累積連續天數，簽到後還有今日推薦歌。","ja":"ミニゲームに「毎日チェックイン」を追加。Google でログインして毎日アイコンを選び、連続日数を伸ばそう。チェックイン後は今日のおすすめ曲も表示されます。","en":"New mini-game “Daily Check-in”: sign in with Google, pick an icon each day and build a streak. A song of the day shows up after you check in.","url":"checkin.html"},
+  {"date":"2026-10-25","zh":"小遊戲新增「推し診斷」：回答 YES／NO，找出アソビ★まわり隊！裡最適合你的成員。","ja":"ミニゲームに「推し診断」を追加。YES／NO で答えて、アソビ★まわり隊！であなたにぴったりなメンバーを見つけよう。","en":"New mini-game “Oshi Finder”: answer YES / NO to find your best-matching member of Asobi★Mawari-tai!.","url":"oshi.html"},
+  {"date":"2026-10-25","zh":"小遊戲「今日問答」公開，全部答對的人會上全對排行榜。所有人都可以用 Google 登入、設定暱稱和頭像。","ja":"ミニゲーム「今日のクイズ」を公開。全問正解した人は全問正解ランキングに載ります。Google ログイン、ニックネーム・アイコンの設定は誰でも使えます。","en":"The “Daily Quiz” mini-game is now public, with a perfect-score leaderboard. Everyone can sign in with Google and set a nickname and avatar.","url":"quiz.html"},
+  {"date":"2026-10-24","zh":"周邊、音聲頁可選擇用 Google 登入，把「已入手」同步到雲端。","ja":"グッズ・ボイスページで Google ログインすると、「入手済み」をクラウドに同期できるようになりました。","en":"On the Goods and Voice goods pages you can now sign in with Google to sync your “owned” list to the cloud.","url":"goods.html"}
+]

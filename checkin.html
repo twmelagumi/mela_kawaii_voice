@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=42465201">
+<link rel="stylesheet" href="assets/style.css?v=f3f67a86">
 <style>
 /* ===== 小遊戲：每日簽到 ===== */
 .view{gap:14px}
@@ -71,7 +71,7 @@
   </header>
 
   <nav class="views">
-    <a href="./" data-i18n="tabVoices"></a>
+    <a href="voices.html" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
     <a href="timeline.html" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>
@@ -94,7 +94,7 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=31998aa3"></script>
+<script src="assets/common.js?v=18250fa9"></script>
 <script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有）；這頁也用它確認登入、簽到、讀統計 -->
 <script>
 /* ===== 小遊戲：每日簽到 =====
@@ -159,15 +159,12 @@ function render(){ const box=$("ck");
     box.innerHTML=head+icons+go+m+nums; }
   renderStats(); renderSong(); }
 
-// 今天推薦的歌：用「使用者 id＋簽到日」當種子從 songs.json 選一首（同一天重新整理不會變，不用存進資料庫）
+// 今天推薦的歌：用簽到日當種子從 songs.json 選一首（同一天重新整理不會變，大家一樣，首頁也是同一首；不用存進資料庫）
 let SONGS=null;
-async function loadSongs(){ if(SONGS) return; try{ const r=await fetch("songs.json",{cache:"no-cache"}); const d=r.ok?await r.json():[]; const a=Array.isArray(d)?d:(d.songs||[]);
-    SONGS=a.map(x=>{ if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null; let st=parseTime(x.start); if(st==null&&p.t!=null) st=p.t;
-      return {title:String(x.title),artist:x.artist?String(x.artist):"",note:x.note?String(x.note):"",vid:p.vid,start:st}; }).filter(Boolean); }catch(e){ console.warn("songs.json load failed",e); SONGS=[]; }
-  renderSong(); }
+async function loadSongs(){ if(SONGS) return; SONGS=await loadSongList(); renderSong(); } // common.js
 function renderSong(){ const el=$("ckSong"); el.hidden=true;
   if(st!=="ready"||!me||!me.icon){ return; } if(!SONGS){ loadSongs(); return; } if(!SONGS.length) return;
-  const s=SONGS[hash((S.user()?.id||"")+"|"+me.today)%SONGS.length];
+  const s=pickOfDay(SONGS,"song",me.today); // 每天一首，大家都一樣（首頁的「歌單推薦」同一首）
   const url=`https://www.youtube.com/watch?v=${encodeURIComponent(s.vid)}${s.start!=null?"&t="+Math.floor(s.start)+"s":""}`;
   el.hidden=false;
   el.innerHTML=`<h2>${t("ckSongTitle")}</h2><p class="st">${esc(s.title)}</p>${s.artist?`<p class="sa">${esc(s.artist)}</p>`:""}${s.note?`<p class="sn">${esc(s.note)}</p>`:""}

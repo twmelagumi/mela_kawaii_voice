@@ -236,7 +236,7 @@ def page(fname, key, docs, desc):
   </header>
 
   <nav class="views">
-    <a href="./" data-i18n="tabVoices"></a>
+    <a href="voices.html" data-i18n="tabVoices"></a>
     <a href="songs.html" data-i18n="tabSongs"></a>
     <a href="timeline.html" data-i18n="tabShift"></a>
     <a href="goods.html" data-i18n="tabTax"></a>

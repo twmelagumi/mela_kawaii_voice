@@ -4,7 +4,10 @@
 
 | 檔案 | 用途 |
 |---|---|
-| `index.html` | 聲音頁（投稿的聲音片段、搜尋、標籤） |
+| `index.html` | 首頁（總覽）：網站更新、回音推薦、歌單推薦、出勤紀錄／直播預定、近期發售周邊（見最後「首頁」） |
+| `voices.html` | 回音頁（投稿的聲音片段、搜尋、標籤；原本的 `index.html`） |
+| `news.json` | 首頁「網站更新」的內容，每次改版加一筆（新的放最前面） |
+| `assets/clips.js` | 回音片段資料（`clips.json`＋Google 試算表），回音頁和首頁共用；試算表網址在這裡改 |
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
 | `timeline.html` | 編年史頁（直播、影片、紀念日的時間線） |
 | `calendar.html` | 出勤 Calendar（月曆，顯示有 YouTube 網址的直播／聯動／影片封面；資料跟編年史共用） |
@@ -96,7 +99,7 @@
 
 ### 5. 把兩個網址填進網站
 
-打開 `index.html`，找到這兩行，填入網址後存檔，再上傳到 GitHub：
+打開 `voices.html`（投稿表單網址）和 `assets/clips.js`（試算表網址），找到這兩行，填入網址後存檔，再上傳到 GitHub：
 
 ```js
 const SUBMIT_URL = "";      // ← 表單的「傳送」→ 連結（https://forms.gle/…）
@@ -117,7 +120,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 ## 第一次上線到 GitHub Pages
 
 1. 到 https://github.com 登入 → 右上角「＋」→ **New repository** → 選 **Public** → **Create repository**。
-2. 點 **uploading an existing file**，把 `index.html`、`clips.json` 拖進去 → **Commit changes**。
+2. 點 **uploading an existing file**，把 `index.html`、`voices.html`、`clips.json` 拖進去 → **Commit changes**。
 3. **Settings → Pages** → Source 選 **Deploy from a branch**，Branch 選 `main`、`/ (root)` → **Save**。
 4. 等 1～2 分鐘，網址是 `https://你的帳號.github.io/repository名稱/`。
 
@@ -366,3 +369,14 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 資料庫要先把 `supabase/checkin-setup.sql` 貼到 Supabase SQL Editor 執行一次：`public.checkins`、`checkin_today()`、`checkin(p_icon)`、`checkin_me()`、`checkin_stats()`。
 - 想增減圖案：改 `checkin.html` 的 `ICONS`，同時改 `checkin-setup.sql` 的 `check (icon in (...))` 和 `checkin()` 的清單，再重新執行該 SQL。
 - 「刪除雲端紀錄」（sync.js）會一併刪掉 `checkins`；隱私權政策與使用條款（`scripts/mklegal.py`）已加上這一項。
+
+## 首頁（index.html）
+
+- 根網址（`https://…github.io/mela_kawaii_voice/`）是首頁；回音頁改放在 `voices.html`，導覽列的「回音」連到它。網站標題（めら＋網站名稱）點下去回首頁，浮動選單最上面也有「首頁」。
+- 五塊內容各自讀資料，某一塊讀失敗只會影響那一塊：
+  - **網站更新**：讀 `news.json`（`{date, zh, ja, en, url?}`，新的放最前面）。預設顯示最新 3 筆，其餘按「更多更新」展開。每次改版記得加一筆。
+  - **回音推薦**：從 `assets/clips.js` 的全部片段，每天挑一則（日本時間 5:00 換日，所有人一樣），YouTube 的片段可以直接在卡片上播放。
+  - **歌單推薦**：從 `songs.json` 每天挑一首，和每日簽到的「今日推薦歌」是同一首（`common.js` 的 `pickOfDay`／`jstDay`／`loadSongList`）。
+  - **出勤紀錄／直播預定**：用 `assets/timeline-data.js` 的 `loadTimeline()`，顯示即將開始（或正在播）的直播最多 3 筆；沒有預定就顯示最近一場。
+  - **近期發售周邊**：讀周邊頁同一份 Google 試算表（網址要和 `goods.html` 的 `GOODS_CSV_URL` 一樣，快取共用），顯示日期在今天以後的企劃最多 3 個；沒有就顯示最近發售的 2 個。
+- 注意：每天推薦用「日期＋清單長度」挑，`songs.json`／試算表新增項目的那一天，當天的推薦可能會換成另一首（隔天起照新清單）。

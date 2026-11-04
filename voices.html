@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>熱千めら めらめら出勤紀錄</title>
+<meta name="description" content="熱千めら 直播聲音片段整理（非官方粉絲網站）">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
+<!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
+<script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
+<link rel="stylesheet" href="assets/style.css?v=f3f67a86">
+<script>if(location.hash==="#songs") location.replace("songs.html");</script>
+</head>
+<body data-title-key="title">
+<div class="wrap">
+  <div class="topbar">
+  <header>
+    <div>
+      <span class="unofficial" data-i18n="unofficial"></span>
+      <h1><span class="jp">熱千めら</span> <span data-i18n="title"></span></h1>
+      <p class="sub" data-i18n="sub"></p>
+    </div>
+    <div class="right">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="zh">中文</button>
+        <button type="button" data-lang="ja">日本語</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <div class="hrow">
+        <span class="count"><b id="count">0</b> <span data-i18n="clips"></span></span>
+        <a class="btn primary" id="submitBtn" href="#" target="_blank" rel="noopener" hidden data-i18n="submit"></a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="views">
+    <a href="voices.html" aria-current="page" data-i18n="tabVoices"></a>
+    <a href="songs.html" data-i18n="tabSongs"></a>
+    <a href="timeline.html" data-i18n="tabShift"></a>
+    <a href="goods.html" data-i18n="tabTax"></a>
+    <a href="quiz.html" data-i18n="tabGames"></a>
+  </nav>
+  </div>
+
+  <section class="view">
+    <div class="tools">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.32 12.9l5.39 5.4-1.41 1.4-5.4-5.39A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+        <input id="q" type="search" data-i18n-ph="search">
+      </div>
+      <select id="sort">
+        <option value="new" data-i18n="sortNew"></option>
+        <option value="stream" data-i18n="sortStream"></option>
+        <option value="short" data-i18n="sortShort"></option>
+      </select>
+      <button type="button" id="shuffle" data-i18n="random"></button>
+    </div>
+    <div class="tags" id="tags"></div>
+    <section class="picks" id="picks" hidden>
+      <h2 class="picks-title"><span aria-hidden="true">★</span> <span data-i18n="todayPick"></span></h2>
+      <div class="grid" id="pickGrid"></div>
+    </section>
+    <div class="grid" id="grid"></div>
+    <div class="more" id="moreWrap" hidden><button type="button" id="moreBtn"></button></div>
+  </section>
+
+  <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
+</div>
+
+<div class="player" id="player" hidden>
+  <button type="button" class="pmin" id="pMin" data-i18n-title="pMinimize"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-7 9z"/></svg></button>
+  <div class="player-in">
+    <div id="stage"></div>
+    <div class="pinfo">
+      <h3 id="pTitle"></h3>
+      <div class="meta" id="pMeta"></div>
+      <div class="pbtns">
+        <button type="button" class="primary" id="pReplay" data-i18n="replay"></button>
+        <a class="btn" id="pOpen" target="_blank" rel="noopener" data-i18n="openOriginal"></a>
+        <button type="button" id="pClose" data-i18n="close"></button>
+      </div>
+      <p class="pnote" data-i18n="playerNote"></p>
+      <div class="pmini">
+        <button type="button" class="pm" id="mToggle"></button>
+        <button type="button" class="pm" id="mMax" data-i18n-title="pExpand">▴</button>
+        <button type="button" class="pm" id="mClose" data-i18n-title="close">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/common.js?v=18250fa9"></script>
+<script src="assets/sync.js?v=28ae5e17"></script><!-- 標題列的登入按鈕（每頁都有） -->
+<script src="assets/clips.js?v=5f3ac17c"></script><!-- 回音片段資料（clips.json＋試算表），首頁也用 -->
+<script>
+/* ===== 聲音頁設定 ===== */
+// ① Google 表單的分享連結（例如 https://forms.gle/xxxx）。留空就不顯示「投稿」按鈕。
+const SUBMIT_URL = "https://forms.gle/xqC6PYvhdrvtkV1N6";
+// ② 回音片段的來源（clips.json＋Google 試算表）在 assets/clips.js 設定（SHEET_CSV_URL）。
+
+addStrings({
+ zh:{title:"沙拉曼達のじゃ回音",sub:"めらちゃん直播裡的笑聲、怪聲、名台詞，按一下就在這裡播放。",clips:"段聲音",search:"搜尋標題、台詞、標籤…",
+   sortNew:"最新加入",sortStream:"直播日期",sortShort:"最短的先",random:"隨機播一段",all:"全部",
+   todayPick:"今日推薦",showMore:"顯示更多（還有 {n} 段）",noMatch:"找不到符合的片段",noMatchHint:"換個關鍵字，或點「全部」清除標籤篩選。",none:"還沒有收錄任何聲音",noneHint:"片段審核通過後就會出現在這裡。",submit:"＋ 投稿片段"},
+ ja:{title:"サラマンダーのじゃこだま",sub:"めらちゃんの配信から笑い声・奇声・名言を集めました。押すとこのページで再生します。",clips:"件",search:"タイトル・セリフ・タグで検索…",
+   sortNew:"新着順",sortStream:"配信日順",sortShort:"短い順",random:"ランダム再生",all:"すべて",
+   todayPick:"今日のおすすめ",showMore:"もっと見る（残り {n} 件）",noMatch:"該当するクリップがありません",noMatchHint:"キーワードを変えるか「すべて」でタグを解除してください。",none:"まだクリップがありません",noneHint:"承認されたクリップがここに表示されます。",submit:"＋ クリップを投稿"},
+ en:{title:"Salamander Noja Echoes",sub:"Laughs, weird noises and famous lines from Mela's streams. Press a button to play it right here.",clips:"clips",search:"Search titles, lines, tags…",
+   sortNew:"Newest",sortStream:"Stream date",sortShort:"Shortest first",random:"Play a random one",all:"All",
+   todayPick:"Today's picks",showMore:"Show more ({n} left)",noMatch:"No matching clips",noMatchHint:"Try another keyword, or press “All” to clear the tag filter.",none:"No clips yet",noneHint:"Approved clips will show up here.",submit:"+ Submit a clip"}
+});
+// 標籤翻譯（標籤本身用中文存，切換語言時顯示對應文字）
+const TAG_I18N={"笑聲":{ja:"笑い声",en:"Laugh"},"尖叫":{ja:"悲鳴",en:"Scream"},"怪聲":{ja:"奇声",en:"Weird noise"},"口癖":{ja:"口癖",en:"Catchphrase"},
+ "名台詞":{ja:"名言",en:"Iconic line"},"歌聲":{ja:"歌声",en:"Singing"},"可愛":{ja:"かわいい",en:"Cute"},"崩潰":{ja:"発狂",en:"Meltdown"},
+ "打噴嚏":{ja:"くしゃみ",en:"Sneeze"},"打哈欠":{ja:"あくび",en:"Yawn"},"哼歌":{ja:"鼻歌",en:"Humming"},"語錄":{ja:"語録",en:"Quote"}};
+const tagName=tg=>lang==="zh"?tg:(TAG_I18N[tg]?.[lang]||tg);
+
+let CLIPS=[], activeTag=null;
+// 一次只畫 PAGE_SIZE 張卡片，下面用「顯示更多」再多畫一批（搜尋、篩選仍然是對全部資料）
+const PAGE_SIZE=48;
+let shown=PAGE_SIZE;
+function refilter(){ shown=PAGE_SIZE; render(); }
+
+/* ===== 畫面 ===== */
+function wave(seed){ let h=hash(seed),o=""; for(let i=0;i<28;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0; const env=Math.sin(Math.PI*(i+.5)/28); o+=`<i style="height:${12+Math.round((h%88)*(.35+.65*env))}%"></i>`;} return o; }
+function render(){
+  $("count").textContent=CLIPS.length;
+  const q=$("q").value.trim().toLowerCase();
+  let list=CLIPS.filter(c=>(!activeTag||(c.tags||[]).includes(activeTag)) &&
+    (!q||[c.title,c.quote,c.note,...(c.tags||[]).map(x=>x+" "+tagName(x))].join(" ").toLowerCase().includes(q)));
+  const s=$("sort").value;
+  list.sort((a,b)=>s==="stream"?String(b.streamDate||"").localeCompare(String(a.streamDate||""))
+    :s==="short"?(dur(a)??1e9)-(dur(b)??1e9):(b.addedAt||0)-(a.addedAt||0));
+  const counts={}; CLIPS.forEach(c=>(c.tags||[]).forEach(x=>counts[x]=(counts[x]||0)+1));
+  const tags=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  $("tags").innerHTML=tags.length?`<button type="button" class="chip" data-chip="" aria-pressed="${!activeTag}">${t("all")}</button>`+
+    tags.map(x=>`<button type="button" class="chip" data-chip="${esc(x)}" aria-pressed="${activeTag===x}">${esc(tagName(x))} <span class="n">${counts[x]}</span></button>`).join(""):"";
+  $("moreWrap").hidden=true;
+  if(!CLIPS.length){ $("grid").innerHTML=`<div class="empty"><h2>${t("none")}</h2><p>${t("noneHint")}</p></div>`; return; }
+  const rest=list.length-shown;
+  if(rest>0){ $("moreWrap").hidden=false; $("moreBtn").textContent=t("showMore").replace("{n}",rest); }
+  // 今日推薦：試算表「推薦」欄打勾（或 clips.json 的 "pick": true）的片段。搜尋或篩選標籤時先收起來，避免和結果混在一起。
+  const picks=CLIPS.filter(c=>c.pick);
+  $("picks").hidden=!picks.length||!!q||!!activeTag;
+  $("pickGrid").innerHTML=picks.map(c=>card(c,true)).join("");
+  $("grid").innerHTML=list.length?list.slice(0,shown).map(c=>card(c)).join(""):`<div class="empty"><h2>${t("noMatch")}</h2><p>${t("noMatchHint")}</p></div>`;
+}
+function card(c,isPick){ return `<article class="pad${isPick?" pick":""}${current&&current.id===c.id?" playing":""}" data-id="${esc(c.id)}">
+    <div class="pad-top">${c.src==="youtube"&&c.vid
+      ?`<button type="button" class="thumb" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(c.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>`
+      :`<button type="button" class="play" data-play="${esc(c.id)}" aria-label="${t("play")}: ${esc(c.title)}">${playSvg}</button>`}<div class="wave" aria-hidden="true">${wave(c.id)}</div></div>
+    <h3>${esc(c.title)}</h3>
+    ${c.quote?`<p class="quote">「${esc(c.quote)}」</p>`:""}${c.note?`<p class="note">${esc(c.note)}</p>`:""}
+    <div class="meta">${metaHTML(c)}</div>
+    ${(c.tags||[]).length?`<div class="ptags">${c.tags.map(x=>`<button type="button" data-tag="${esc(x)}">#${esc(tagName(x))}</button>`).join("")}</div>`:""}
+    <div class="pad-foot"><button type="button" data-copy="${esc(c.id)}">${t("copy")}</button></div>
+  </article>`; }
+window.onLangChange=render;
+
+/* ===== 事件 ===== */
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const find=id=>CLIPS.find(c=>c.id===id);
+  if(b.dataset.play) return play(find(b.dataset.play));
+  if(b.dataset.chip!==undefined){ activeTag=b.dataset.chip||null; return refilter(); }
+  if(b.dataset.tag){ activeTag=b.dataset.tag; window.scrollTo({top:0,behavior:"smooth"}); return refilter(); }
+  if(b.dataset.copy){ const u=origUrl(find(b.dataset.copy)); try{ await navigator.clipboard.writeText(u); b.textContent=t("copied"); setTimeout(()=>b.textContent=t("copy"),1500);}catch(err){ prompt("",u); } }
+});
+$("q").addEventListener("input",refilter); $("sort").addEventListener("change",refilter);
+$("moreBtn").onclick=()=>{ shown+=PAGE_SIZE; render(); };
+$("shuffle").onclick=()=>{ if(CLIPS.length) play(CLIPS[Math.floor(Math.random()*CLIPS.length)]); };
+if(SUBMIT_URL){ $("submitBtn").href=SUBMIT_URL; $("submitBtn").hidden=false; }
+
+/* ===== 讀資料：clips.json + Google 試算表（發佈的 CSV） ===== */
+async function loadAll(){
+  CLIPS=await MelaClips.load(list=>{ CLIPS=list; render(); }); // 試算表在背景更新、內容有變時重畫（assets/clips.js）
+  if(!CLIPS.length&&location.protocol==="file:"){ $("grid").innerHTML=`<div class="empty"><h2>clips.json</h2><p>Open via GitHub Pages or a local server (python -m http.server).</p></div>`; return; }
+  render();
+}
+
+setLang(pickLang());
+loadAll();
+</script>
+</body>
+</html>
