@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=f3f67a86">
+<link rel="stylesheet" href="assets/style.css?v=869b1eac">
 </head>
 <body data-title-key="titleTimeline">
 <div class="wrap">
@@ -71,6 +71,7 @@
 <script src="assets/common.js?v=572a57bf"></script>
 <script src="assets/sync.js?v=8e657a70"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script src="assets/timeline-data.js?v=757eb4c8"></script>
+<script src="assets/members.js?v=074ffdfb"></script><!-- 成員清單：聯動對象旁邊顯示頻道頭像（members.json） -->
 <script>
 /* ===== 編年史頁 =====
  * 事件資料放在 timeline.json，每個事件：
@@ -195,7 +196,7 @@ function cardHTML(e,isL,future,foldable){
     ${dateHTML(e)}<span class="tl-dot" aria-hidden="true"></span>
     <div class="tl-card"><span class="tl-badge">${t("ty_"+e.type)}${e.upcoming?` · ${t("upcoming")}`:""}${counts?` · ${counts}`:""}</span>
       ${e.vid?`<a class="thumb tl-thumb" href="${ytLink(e.vid)}" target="_blank" rel="noopener" aria-label="YouTube: ${esc(titleOf(e))}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(e.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.parentNode.hidden=true"><span class="tplay">${playSvg}</span></a>`:""}
-      <h3>${esc(titleOf(e))}</h3>${e.with&&e.with.length?`<p class="tl-with"><i>${t("withLabel")}</i>${e.with.map(n=>`<span>${esc(n)}</span>`).join("")}</p>`:""}${e.note?`<p class="note">${esc(e.note)}</p>`:""}${subsHTML(e)}${postBox}${acts}</div></article>`; }
+      <h3>${esc(titleOf(e))}</h3>${e.with&&e.with.length?`<p class="tl-with"><i>${t("withLabel")}</i>${e.with.map(n=>`<span>${MelaMembers.img(n)}${esc(n)}</span>`).join("")}</p>`:""}${e.note?`<p class="note">${esc(e.note)}</p>`:""}${subsHTML(e)}${postBox}${acts}</div></article>`; }
 
 // 精簡列：圓點＋日期＋種類＋標題，點了展開成完整卡片
 function miniHTML(e){ const d=D(e.date), md=`${String(d.getUTCMonth()+1).padStart(2,"0")}.${String(d.getUTCDate()).padStart(2,"0")}`;
@@ -296,7 +297,7 @@ $("toToday").onclick=()=>{ if(!$("todayRow")){ period="recent"; fMonth=null; ren
 window.onLangChange=render;
 
 (async()=>{
-  const d=await loadTimeline({songs:true});
+  const [d]=await Promise.all([loadTimeline({songs:true}),MelaMembers.load()]); // 成員頭像讀不到也沒關係（MelaMembers.load 不會丟錯）
   raw=d.raw; songs=d.songs; build(); setLang(pickLang());
   // 試算表快取過期：背景更新，有變才重畫
   d.refresh?.then(r=>{ if(r){ raw=r; build(); render(); } });

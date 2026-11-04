@@ -6,6 +6,10 @@
 |---|---|
 | `index.html` | 首頁（總覽）：網站更新、回音推薦、歌單推薦、出勤紀錄／直播預定、近期發售周邊（見最後「首頁」） |
 | `voices.html` | 回音頁（投稿的聲音片段、搜尋、標籤；原本的 `index.html`） |
+| `members.json` | 成員清單：聯動對象、合唱對象的名字旁邊顯示 YouTube 頻道頭像（見最後「成員清單」） |
+| `members_auto.json` | 各成員的頻道頭像網址（GitHub Actions 用 YouTube API 自動產生，不用手動改） |
+| `assets/members.js` | 讀成員清單、比對名字、產生頭像小圖的共用程式 |
+| `scripts/update_members.py`、`.github/workflows/update-members.yml` | 每週（以及改了 `members.json` 時）更新 `members_auto.json` |
 | `news.json` | 首頁「網站更新」的內容，每次改版加一筆（新的放最前面） |
 | `assets/clips.js` | 回音片段資料（`clips.json`＋Google 試算表），回音頁和首頁共用；試算表網址在這裡改 |
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
@@ -388,3 +392,11 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 管理員在 `admin.html` 的「#あちちみて 貼文審核」處理：預設只列被檢舉過或已下架的；「恢復」（之後不會再被自動下架）、「下架」、「永久刪除」（同一則貼文也不能再被投稿）、「停止投稿權」（`ayatsumi_bans`）。
 - 資料表：`ayatsumi_posts`、`ayatsumi_reports`、`ayatsumi_bans`，都不直接開放寫入；函式：`ayatsumi_submit`／`ayatsumi_list`／`ayatsumi_report`／`ayatsumi_delete_mine`，管理員用 `admin_ayatsumi_list`／`admin_ayatsumi_set`／`admin_ayatsumi_ban`。
 - 「刪除雲端紀錄」（sync.js）會一併刪掉自己的投稿與檢舉；隱私權政策（`scripts/mklegal.py`）已加上這一項。
+
+## 成員清單（members.json）：名字旁邊顯示頻道頭像
+
+- 編年史的「聯動對象」和歌單的「演唱／合唱對象」，名字旁邊會顯示該成員的 YouTube 頻道頭像（圓形小圖）。沒登記、沒填頻道或還沒抓到頭像的名字，就和以前一樣只顯示文字。
+- `members.json` 是手動維護的清單，每位成員：`name`（主要名字）、`aliases`（別名，例如簡稱、英文名，可以空陣列）、`channel`（YouTube 頻道，三種寫法都可以：`@handle`、頻道網址 `https://www.youtube.com/@handle`、或 `https://www.youtube.com/channel/UC…`）。`channel` 留空＝先不顯示頭像。名字比對會忽略大小寫、空白、「・」和全形半形的差別，`name` 或 `aliases` 對得上任何一個就會顯示。
+- 新增成員：在 `members.json` 加一筆、填好 `channel`、commit。`update-members` 這個 Action 會在 `members.json` 有變動時自動跑一次（也可以到 GitHub Actions 分頁手動 Run workflow），用 YouTube Data API 查出頭像網址，寫進 `members_auto.json`，網站再讀這個檔。每週一也會自動更新一次（頭像很少換）。
+- 金鑰用的是更新編年史同一把 `YT_API_KEY`（repo 的 Actions secrets）；沒有金鑰時這個 Action 什麼都不做。某個頻道這次查不到（API 暫時錯誤、頻道改名…）時會保留上一次的資料，頭像不會突然消失。
+- 頭像圖片直接從 YouTube 的圖片伺服器載入（不送 referrer），載入失敗的話會自動不顯示。

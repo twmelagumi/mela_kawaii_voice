@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=M+PLUS+1+Code:wght@400;600&display=swap">
 <!-- 改了 assets 裡的檔案時，把 ?v= 後面的版本號改掉，訪客的瀏覽器才會抓新版 -->
 <script>(function(){try{var v=localStorage.getItem("mela-theme");if(v==="dark"||v==="light")document.documentElement.dataset.theme=v}catch(e){}})()</script>
-<link rel="stylesheet" href="assets/style.css?v=f3f67a86">
+<link rel="stylesheet" href="assets/style.css?v=869b1eac">
 </head>
 <body data-title-key="titleSongs">
 <div class="wrap">
@@ -118,6 +118,7 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="assets/common.js?v=572a57bf"></script>
+<script src="assets/members.js?v=074ffdfb"></script><!-- 成員清單：合唱對象旁邊顯示頻道頭像（members.json） -->
 <script src="assets/sync.js?v=8e657a70"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script>
 /* ===== 歌單頁 =====
@@ -185,7 +186,7 @@ function renderSongs(){
   const names=Object.keys(sc).sort((a,b)=>sc[b]-sc[a]||a.localeCompare(b));
   $("singerChips").hidden=!names.length;
   $("singerChips").innerHTML=names.length?`<span class="chips-label">${t("withLabel")}</span><button type="button" class="chip" data-singer="" aria-pressed="${!activeSinger}">${t("catAll")}</button>`+
-    names.map(n=>`<button type="button" class="chip" data-singer="${esc(n)}" aria-pressed="${activeSinger===n}">${esc(n)} <span class="n">${sc[n]}</span></button>`).join(""):"";
+    names.map(n=>`<button type="button" class="chip" data-singer="${esc(n)}" aria-pressed="${activeSinger===n}">${MelaMembers.img(n)}${esc(n)} <span class="n">${sc[n]}</span></button>`).join(""):"";
   // 期間：年份 → 月份
   const ym={}; SONGS.forEach(s=>{ const m=/^(\d{4})-(\d{2})/.exec(s.streamDate||""); if(m){ (ym[m[1]]=ym[m[1]]||{})[+m[2]]=(ym[m[1]][+m[2]]||0)+1; } });
   const years=Object.keys(ym).sort().reverse(), ycount=y=>Object.values(ym[y]).reduce((a,b)=>a+b,0);
@@ -206,7 +207,7 @@ function renderSongs(){
   const mode=$("ssort").value, coll=new Intl.Collator(lang==="zh"?"zh-Hant":lang);
   const row=(s,showDate)=>`<div class="song${current&&current.id===s.id?" playing":""}" data-id="${esc(s.id)}">
       <button type="button" class="thumb" data-splay="${esc(s.id)}" aria-label="${t("play")}: ${esc(s.title)}"><img src="https://i.ytimg.com/vi/${encodeURIComponent(s.vid)}/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span class="tplay">${playSvg}</span></button>
-      <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span>${isDuet(s)?`<span class="singers"><i>${t("singersLabel")}</i>${s.singers.map(n=>`<button type="button" data-singer="${esc(n)}">${esc(n)}</button>`).join('<span class="sl">/</span>')}</span>`:""}</div>
+      <div class="sinfo"><b>${esc(s.title)}</b><span><em class="cat cat-${s.category}">${t("cat_"+s.category)}</em>${esc(s.artist)}</span>${isDuet(s)?`<span class="singers"><i>${t("singersLabel")}</i>${s.singers.map(n=>`<button type="button" data-singer="${esc(n)}">${MelaMembers.img(n)}${esc(n)}</button>`).join('<span class="sl">/</span>')}</span>`:""}</div>
       <div class="sside">${viewsOf(s)!=null?`<span class="vcount" title="${t("viewsTitle")}">▶ ${fmtViews(viewsOf(s))}</span>`:""}</div>
       ${addBtn(s)}
     </div>`;
@@ -320,6 +321,7 @@ $("qFab").onclick=()=>{ if(Q.ids.length) jumpTo(Math.max(0,Math.min(Q.idx,Q.ids.
 
 /* ===== 讀資料：songs.json ===== */
 async function loadSongs(){
+  await MelaMembers.load(); // 成員頭像（讀不到也沒關係）
   const statsReq=fetch("song_stats.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null); // 還沒有這個檔也沒關係
   let d=[]; try{ const r=await fetch("songs.json",{cache:"no-cache"}); if(r.ok) d=await r.json(); }catch(e){ console.warn("songs.json load failed（格式可能有誤）",e); }
   STATS=await statsReq;

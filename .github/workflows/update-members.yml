@@ -1,0 +1,61 @@
+# 成員清單：把 members.json 裡每位成員的 YouTube 頻道頭像抓下來，寫進 members_auto.json（網站上顯示在名字旁邊）。
+# 每週一次（頭像很少換）；改了 members.json（新增成員、填頻道）時也會自動跑一次；也可以到 Actions 分頁 → Update members → Run workflow 手動執行。
+name: Update members
+
+on:
+  schedule:
+    - cron: "37 3 * * 1"   # 每週一 UTC 03:37（台灣時間 11:37）
+  push:
+    branches: [main]
+    paths:
+      - members.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: update-members
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch channel avatars
+        env:
+          # YouTube Data API 金鑰：repo Settings → Secrets and variables → Actions → YT_API_KEY（和更新編年史用的同一把）
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+        run: python scripts/update_members.py
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- members_auto.json && git ls-files --error-unmatch members_auto.json >/dev/null 2>&1; then
+            echo "no changes"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ ! -f members_auto.json ]; then
+            echo "no members_auto.json"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add members_auto.json
+          git commit -m "Members: update channel avatars from YouTube"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Actions 推的 commit 有時不會觸發 GitHub Pages 重新部署，這裡手動叫一次（失敗也沒關係）
+      - name: Rebuild GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

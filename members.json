@@ -1,0 +1,99 @@
+[
+  {
+    "name": "熱千めら",
+    "aliases": [
+      "めら",
+      "Mela",
+      "Achichi Mela",
+      "Achichi"
+    ],
+    "channel": "@AchichiMela"
+  },
+  {
+    "name": "アソビ★まわり隊！",
+    "aliases": [
+      "アソビまわり隊",
+      "アソビ★まわり隊",
+      "Asobi Mawari-tai"
+    ],
+    "channel": "@hololive_ASOBIMAWARITAI"
+  },
+  {
+    "name": "百灯キョーコ",
+    "aliases": [
+      "キョーコ",
+      "Hyakuto Kyoko"
+    ],
+    "channel": "@HyakutoKyoko"
+  },
+  {
+    "name": "宙科そぴあ",
+    "aliases": [
+      "そぴあ",
+      "Sorashina Sopia"
+    ],
+    "channel": "@SorashinaSopia"
+  },
+  {
+    "name": "鈴鳴つづり",
+    "aliases": [
+      "つづり",
+      "Suzuna Tsuzuri"
+    ],
+    "channel": "@SuzunaTsuzuri"
+  },
+  {
+    "name": "AZKi",
+    "aliases": [],
+    "channel": "@AZKi"
+  },
+  {
+    "name": "博衣こより",
+    "aliases": [
+      "こより",
+      "Hakui Koyori"
+    ],
+    "channel": "@HakuiKoyori"
+  },
+  {
+    "name": "獅白ぼたん",
+    "aliases": [
+      "ぼたん",
+      "Shishiro Botan"
+    ],
+    "channel": "@ShishiroBotan"
+  },
+  {
+    "name": "尾丸ポルカ",
+    "aliases": [
+      "ポルカ",
+      "Omaru Polka"
+    ],
+    "channel": "@OmaruPolka"
+  },
+  {
+    "name": "夏色まつり",
+    "aliases": [
+      "まつり",
+      "Natsuiro Matsuri"
+    ],
+    "channel": "@NatsuiroMatsuri"
+  },
+  {
+    "name": "Mori Calliope",
+    "aliases": [
+      "森カリオペ",
+      "カリオペ",
+      "Calliope"
+    ],
+    "channel": "@MoriCalliope"
+  },
+  {
+    "name": "響咲リオナ",
+    "aliases": [
+      "リオナ",
+      "Isaki Riona"
+    ],
+    "channel": "@IsakiRiona"
+  }
+]
