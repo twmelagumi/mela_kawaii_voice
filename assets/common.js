@@ -90,8 +90,8 @@ function pickOfDay(list,salt,day){ return list&&list.length?list[hash((day||jstD
 // songs.json → 歌曲清單（只收 YouTube 的）。首頁和每日簽到的「今日推薦歌」用同一份
 let _songsP=null;
 function loadSongList(){ return _songsP||(_songsP=fetch("songs.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).catch(e=>{ console.warn("songs.json load failed",e); return []; }).then(d=>(Array.isArray(d)?d:(d.songs||[])).map(x=>{
-  if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null; let st=parseTime(x.start); if(st==null&&p.t!=null) st=p.t;
-  return {title:String(x.title),artist:x.artist?String(x.artist):"",note:x.note?String(x.note):"",vid:p.vid,start:st}; }).filter(Boolean))); }
+  if(!x||!x.title) return null; const p=parseClipUrl(x.url||""); if(!p||p.src!=="youtube") return null; let st=parseTime(x.start), en=parseTime(x.end); if(st==null&&p.t!=null) st=p.t;
+  return {title:String(x.title),artist:x.artist?String(x.artist):"",note:x.note?String(x.note):"",vid:p.vid,start:st,end:(en!=null&&st!=null&&en>st)?en:null}; }).filter(Boolean))); }
 const playSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
 const origUrl=c=>c.src==="youtube"?`https://www.youtube.com/watch?v=${encodeURIComponent(c.vid)}${c.start?`&t=${c.start}s`:""}`:c.url;
 const dur=c=>(c.end!=null&&c.start!=null&&c.end>c.start)?c.end-c.start:null;

@@ -122,7 +122,7 @@
   <footer></footer><!-- 頁尾內容由 assets/common.js 產生（各頁共用） -->
 </div>
 
-<script src="assets/common.js?v=572a57bf"></script>
+<script src="assets/common.js?v=9e7843b7"></script>
 <script src="assets/sync.js?v=8e657a70"></script><!-- 標題列的登入按鈕（每頁都有） -->
 <script src="assets/clips.js?v=5f3ac17c"></script><!-- 回音片段資料（clips.json＋試算表），回音頁也用 -->
 <script src="assets/collect.js?v=3b84e306"></script><!-- 試算表讀取（含快取）、網址／日期小工具，周邊頁也用 -->
@@ -208,7 +208,7 @@ function renderClip(){ const el=$("hmClip"); if(CLIP===undefined) return void(el
 function renderSong(){ const el=$("hmSong"); if(SONG===undefined) return void(el.innerHTML=head("hmSong","hmDaily")+loading()); if(SONG===null) return void(el.innerHTML=head("hmSong")+fail());
   if(!SONG.s) return void(el.innerHTML=head("hmSong")+`<p class="hm-s">${t("hmEmpty")}</p>`);
   const s=SONG.s;
-  el.innerHTML=head("hmSong","hmDaily")+thumbBtn(s.vid,s.start,null,s.title)+`<p class="hm-t">${esc(s.title)}</p>`+(s.artist?`<p class="hm-s">${esc(s.artist)}</p>`:"")+(s.note?`<p class="hm-s">${esc(s.note)}</p>`:"")
+  el.innerHTML=head("hmSong","hmDaily")+thumbBtn(s.vid,s.start,s.end,s.title)+`<p class="hm-t">${esc(s.title)}</p>`+(s.artist?`<p class="hm-s">${esc(s.artist)}</p>`:"")+(s.note?`<p class="hm-s">${esc(s.note)}</p>`:"")
     +`<div class="hm-acts"><a class="btn primary" href="${esc(ytUrl(s.vid,s.start))}" target="_blank" rel="noopener">${t("hmYt")}</a><a class="btn" href="songs.html">${t("hmMoreSongs")}</a></div>`; }
 
 const fmtWhen=e=>{ if(e.start){ const d=new Date(e.start); if(!isNaN(d)) return d.toLocaleString(LOC[lang],{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}); }
