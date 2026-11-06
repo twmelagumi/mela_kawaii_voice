@@ -95,5 +95,21 @@
       "Isaki Riona"
     ],
     "channel": "@IsakiRiona"
+  },
+  {
+    "name": "大空スバル",
+    "aliases": [
+      "スバル",
+      "Oozora Subaru"
+    ],
+    "channel": "@OozoraSubaru"
+  },
+  {
+    "name": "百鬼あやめ",
+    "aliases": [
+      "あやめ",
+      "Nakiri Ayame"
+    ],
+    "channel": "@NakiriAyame"
   }
 ]
