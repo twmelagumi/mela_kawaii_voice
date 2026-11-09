@@ -111,5 +111,23 @@
       "Nakiri Ayame"
     ],
     "channel": "@NakiriAyame"
+  },
+  {
+    "name": "古石ビジュー",
+    "aliases": [
+      "ビジュー",
+      "Koseki Bijou",
+      "Bijou"
+    ],
+    "channel": "@KosekiBijou"
+  },
+  {
+    "name": "カエラ・コヴァルスキア",
+    "aliases": [
+      "カエラ",
+      "Kaela Kovalskia",
+      "Kaela"
+    ],
+    "channel": "@KaelaKovalskia"
   }
 ]
