@@ -1,7 +1,7 @@
 /* 熱千めら めらめら出勤紀錄 — 成員清單（聯動對象、合唱對象的名字旁邊顯示 YouTube 頻道頭像）
  * 資料：
  *   members.json       手動維護的成員清單：[{ "name": "顯示用的名字", "aliases": ["別名", …], "channel": "@handle 或頻道網址" }, …]
- *   members_auto.json  GitHub Actions（update-members.yml／scripts/update_members.py）用 YouTube API 查出來的頭像，不用手動改
+ *   members_auto.json  GitHub Actions（daily-update.yml／scripts/update_members.py）用 YouTube API 查出來的頭像，不用手動改
  * 名字比對時會忽略大小寫、空白、「・」「･」、全形半形的差別，所以 name 或 aliases 其中一個對得上就會顯示頭像。
  * 沒有登記的名字、沒填 channel 的成員、或 members_auto.json 還沒產生：什麼都不顯示（和以前一樣）。
  * 用法（要先載入 common.js）：

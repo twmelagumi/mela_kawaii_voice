@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """從 YouTube 抓歌單裡「原創曲（original）」和「Cover（cover）」影片的播放次數，寫進 song_stats.json。
 
-由 GitHub Actions（.github/workflows/update-song-stats.yml）每兩天執行一次，歌單頁讀這個檔顯示播放次數。
+由 GitHub Actions（.github/workflows/daily-update.yml）每天執行一次，歌單頁讀這個檔顯示播放次數。
 需要 YouTube Data API v3 金鑰：環境變數 YT_API_KEY（跟編年史共用同一個 GitHub Secret）。本機測試：
     YT_API_KEY=… python scripts/update_song_stats.py            # 更新 song_stats.json
     YT_API_KEY=… python scripts/update_song_stats.py --dry-run  # 只印出結果，不寫檔

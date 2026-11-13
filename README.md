@@ -9,7 +9,7 @@
 | `members.json` | 成員清單：聯動對象、合唱對象的名字旁邊顯示 YouTube 頻道頭像（見最後「成員清單」） |
 | `members_auto.json` | 各成員的頻道頭像網址（GitHub Actions 用 YouTube API 自動產生，不用手動改） |
 | `assets/members.js` | 讀成員清單、比對名字、產生頭像小圖的共用程式 |
-| `scripts/update_members.py`、`.github/workflows/update-members.yml` | 每週（以及改了 `members.json` 時）更新 `members_auto.json` |
+| `scripts/update_members.py` | 更新 `members_auto.json`（由 `.github/workflows/daily-update.yml` 每天執行，改了 `members.json` 時也會跑） |
 | `news.json` | 首頁「網站更新」的內容，每次改版加一筆（新的放最前面） |
 | `assets/clips.js` | 回音片段資料（`clips.json`＋Google 試算表），回音頁和首頁共用；試算表網址在這裡改 |
 | `songs.html` | 歌單頁（讀 `songs.json`），要改歌單頁只改這個檔 |
@@ -32,8 +32,8 @@
 | `timeline_auto.json` | 編年史自動抓到的 YouTube 直播／影片（GitHub Actions 自動更新，不用手動改） |
 | `song_stats.json` | 歌單原創曲／Cover 的 YouTube 播放次數（GitHub Actions 自動更新） |
 | `scripts/update_timeline.py` | 自動抓 YouTube 的程式 |
-| `.github/workflows/update-timeline.yml` | 每天早上 9 點（台灣時間）執行上面的程式 |
-| `scripts/update_song_stats.py`、`.github/workflows/update-song-stats.yml` | 每兩天更新 `song_stats.json` |
+| `.github/workflows/daily-update.yml` | 每天台灣時間 00:00 依序執行：Supabase keepalive、編年史、歌單播放次數、成員頭像，有變動的檔案合成一個 commit |
+| `scripts/update_song_stats.py` | 更新 `song_stats.json`（由 `daily-update.yml` 每天執行） |
 | `scripts/bump_version.py` | 改了網站程式後、commit 前執行：更新 `updated.json`（頁尾「最後更新」時間）並對齊各頁的 `?v=` 版本號 |
 | `updated.json` | 頁尾「最後更新」的時間（由上面的腳本更新） |
 
@@ -214,9 +214,9 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 歌單裡分類是 `original`、`cover` 的歌，會在日期旁邊顯示 YouTube 播放次數（整支影片的數字；歌回片段不顯示）。
 
-- 資料檔：`song_stats.json`，由 GitHub Actions「Update song stats」（`.github/workflows/update-song-stats.yml` → `scripts/update_song_stats.py`）每兩天台灣時間早上 9 點多自動更新並 commit，不用手動改。
+- 資料檔：`song_stats.json`，由 GitHub Actions「Daily update」（`.github/workflows/daily-update.yml` → `scripts/update_song_stats.py`）每天台灣時間 00:00 自動更新並 commit，不用手動改。
 - API 金鑰和編年史共用 `YT_API_KEY`（見下面「YouTube API 金鑰」）。
-- 第一次上線、或新增原創曲／Cover 後想馬上看到數字：GitHub → Actions → Update song stats → Run workflow。
+- 第一次上線、或新增原創曲／Cover 後想馬上看到數字：GitHub → Actions → Daily update → Run workflow。
 - 想改更新頻率：改 workflow 裡的 `cron`（目前 `23 1 */2 * *`）。
 
 ## 「編年史」分頁（timeline.html）
@@ -231,7 +231,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
    - **預定中的直播**也會顯示（標「預定」和開播時間）；常駐待機室（フリーチャット）不收；預定被取消就自動拿掉。
    - 只會新增、不會刪除：以前抓到的影片會一直留在 `timeline_auto.json`，看過的影片不再查。不收的影片（待機室等）會記成 `"hide": true`，之後也不再查。
    - 標題最後的【ホロライブ/アソビ★まわり隊！/熱千めら】這類固定標籤會自動拿掉。
-   - 想馬上抓：GitHub → **Actions** → **Update timeline** → **Run workflow**。
+   - 想馬上抓：GitHub → **Actions** → **Daily update** → **Run workflow**。
    - 要加／拿掉頻道：改 `scripts/update_timeline.py` 最上面的 `CHANNELS`。
 2. **`timeline.json`**：手動維護的固定資料。
 3. **Google 試算表「編年史」分頁**：日常新增、修改自動抓到的內容（設定見下面）。
@@ -272,7 +272,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 3. 「API 和服務」→「憑證」→「建立憑證」→「API 金鑰」→ 複製金鑰。
 4. （建議）在金鑰設定頁「API 限制」選「限制金鑰」→ 只勾 YouTube Data API v3 → 儲存。
 5. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**：Name 填 `YT_API_KEY`，Secret 貼上金鑰 → Add secret。
-6. Actions → Update timeline → Run workflow，紀錄出現「@AchichiMela: RSS 15 支，要查 N 支」就成功了（金鑰沒設好會顯示「沒有 YT_API_KEY」）。
+6. Actions → Daily update → Run workflow，紀錄出現「@AchichiMela: RSS 15 支，要查 N 支」就成功了（金鑰沒設好會顯示「沒有 YT_API_KEY」）。
 
 每天只用到幾個配額單位（免費額度每天 10,000），不需要綁信用卡。
 
@@ -343,7 +343,7 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 - 「刪除雲端紀錄」：呼叫資料庫函式 `delete_me()`（連登入帳號一起刪）；沒有這個函式時只刪紀錄。
 - Supabase 免費方案一週沒有使用會暫停，要到 Supabase 後台恢復（資料不會不見）；暫停期間網站照常運作，只是不能同步。
 - 隱私權政策 `privacy.html`、服務條款 `terms.html`（Google 登入的同意畫面需要這兩個網址）：中日英三語在同一頁，內容寫在 `scripts/mklegal.py`，改文字後在 repo 根目錄跑 `python scripts/mklegal.py` 重新產生。頁尾和「雲端」說明都有連結。
-- `.github/workflows/supabase-keepalive.yml`：每週一、週四對資料庫發一個很小的查詢（用公開的 publishable key，只會拿到空陣列），避免免費方案因為一週沒使用而暫停。失敗時 Actions 會顯示紅色並寄信通知。
+- `.github/workflows/daily-update.yml` 的第一個步驟（Supabase keepalive）：每天對資料庫發一個很小的查詢（用公開的 publishable key，只會拿到空陣列），避免免費方案因為一週沒使用而暫停。失敗時 Actions 會顯示紅色並寄信通知。
 - 每一頁的標題列都有登入按鈕（`assets/sync.js` 每頁都載入；收藏頁之外只有帳號功能，不同步）。
 - 個人設定（帳號選單 →「個人設定」）：暱稱（最多 24 字）和頭像。頭像在瀏覽器裡先裁成正方形、縮成 256×256 的 webp（100KB 以內）才上傳到 Supabase Storage 的 `avatars` bucket（`使用者ID/avatar.webp`，公開讀取）；資料存在 `public.profiles`（`nickname`、`avatar_url`、`upload_banned`、`nickname_banned`）。
 - 管理後台：先登入網站一次，再把 `supabase/admin-setup.sql` 貼到 Supabase SQL Editor 執行；將 SQL 最後的 `lower(NULL)` 換成 `lower('管理員 Google email')`（只在 SQL Editor 裡改，不要 commit 進 git）。之後開啟 `admin.html` 可搜尋使用者、移除暱稱／頭像，或停用／恢復該使用者的暱稱設定與頭像上傳。管理員帳號清單只能由 Supabase SQL Editor 維護；後台資料存取由資料庫 RPC 驗證，頭像上傳限制也由 Storage RLS 強制執行。
@@ -397,6 +397,6 @@ const SHEET_CSV_URL = "";   // ← 第 4 步複製的 CSV 網址
 
 - 編年史的「聯動對象」和歌單的「演唱／合唱對象」，名字旁邊會顯示該成員的 YouTube 頻道頭像（圓形小圖）。沒登記、沒填頻道或還沒抓到頭像的名字，就和以前一樣只顯示文字。
 - `members.json` 是手動維護的清單，每位成員：`name`（主要名字）、`aliases`（別名，例如簡稱、英文名，可以空陣列）、`channel`（YouTube 頻道，三種寫法都可以：`@handle`、頻道網址 `https://www.youtube.com/@handle`、或 `https://www.youtube.com/channel/UC…`）。`channel` 留空＝先不顯示頭像。名字比對會忽略大小寫、空白、「・」和全形半形的差別，`name` 或 `aliases` 對得上任何一個就會顯示。
-- 新增成員：在 `members.json` 加一筆、填好 `channel`、commit。`update-members` 這個 Action 會在 `members.json` 有變動時自動跑一次（也可以到 GitHub Actions 分頁手動 Run workflow），用 YouTube Data API 查出頭像網址，寫進 `members_auto.json`，網站再讀這個檔。每週一也會自動更新一次（頭像很少換）。
+- 新增成員：在 `members.json` 加一筆、填好 `channel`、commit。`Daily update` 這個 Action 會在 `members.json` 有變動時自動跑一次（也可以到 GitHub Actions 分頁手動 Run workflow），用 YouTube Data API 查出頭像網址，寫進 `members_auto.json`，網站再讀這個檔。每天台灣時間 00:00 也會跑一次。
 - 金鑰用的是更新編年史同一把 `YT_API_KEY`（repo 的 Actions secrets）；沒有金鑰時這個 Action 什麼都不做。某個頻道這次查不到（API 暫時錯誤、頻道改名…）時會保留上一次的資料，頭像不會突然消失。
 - 頭像圖片直接從 YouTube 的圖片伺服器載入（不送 referrer），載入失敗的話會自動不顯示。

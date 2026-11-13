@@ -1,0 +1,87 @@
+# 每日更新（整合 4 個舊排程）：每天台灣時間 00:00 依序執行
+#   1. Supabase keepalive：對資料庫發一個很小的查詢，避免免費方案閒置被暫停（失敗會顯示紅色並寄信通知 → 到 Supabase 後台按 Restore）
+#   2. 編年史：從 YouTube 抓新的直播／影片 → timeline_auto.json
+#   3. 歌單：抓原創曲／Cover 影片的播放次數 → song_stats.json
+#   4. 成員：抓成員的 YouTube 頻道頭像 → members_auto.json
+# 有變動的檔案會合成「一個 commit」推上去，再叫 GitHub Pages 重新部署一次。
+# 各步驟互相獨立：某一步失敗，後面的步驟還是會跑，最後整個 workflow 才顯示紅色。
+# 改了 members.json（新增成員、填頻道）時也會自動跑一次；也可以到 Actions 分頁 → Daily update → Run workflow 手動執行。
+# 需要的 secret：YT_API_KEY（repo Settings → Secrets and variables → Actions）。
+name: Daily update
+
+on:
+  schedule:
+    - cron: "0 16 * * *"   # UTC 16:00＝台灣時間每天 00:00（GitHub 排程有時會晚幾分鐘到半小時）
+  push:
+    branches: [main]
+    paths:
+      - members.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      YT_API_KEY: ${{ secrets.YT_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 查詢用的是公開的 publishable key（跟網頁裡的一樣），因為 RLS 的關係只會回傳空陣列 []，不會讀到任何人的資料
+      - name: Supabase keepalive
+        env:
+          SB_URL: https://qmpmejxmsfidilszqqkk.supabase.co
+          SB_KEY: sb_publishable_7wF1GaIca73NnLCbFaoL2g_-mH8UjfH
+        run: |
+          code=$(curl -sS -o body.txt -w "%{http_code}" --max-time 30 \
+            "$SB_URL/rest/v1/collection?select=item_id&limit=1" -H "apikey: $SB_KEY")
+          echo "HTTP $code"; head -c 300 body.txt; echo
+          rm -f body.txt
+          test "$code" = "200"
+
+      - name: Update timeline
+        if: always()
+        run: python scripts/update_timeline.py
+
+      - name: Update song stats
+        if: always()
+        run: python scripts/update_song_stats.py
+
+      - name: Update members
+        if: always()
+        run: python scripts/update_members.py
+
+      - name: Commit if changed
+        id: commit
+        if: always()
+        run: |
+          files="timeline_auto.json song_stats.json members_auto.json"
+          if [ -z "$(git status --porcelain -- $files)" ]; then
+            echo "no changes"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- $files
+          git commit -m "Daily update: timeline / song stats / members"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Actions 推的 commit 有時不會觸發 GitHub Pages 重新部署，這裡手動叫一次（失敗也沒關係）
+      - name: Rebuild GitHub Pages
+        if: always() && steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"
