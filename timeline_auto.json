@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-11-19",
+    "type": "stream",
+    "title": "楽曲オタクの歌枠なのじゃ！",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "upcoming": true,
+    "start": "2026-11-19T10:00:00Z"
+  },
+  {
     "date": "2026-11-18",
     "type": "stream",
     "title": "【のじゃEnglish】ENGLISH STUDY noja!",
@@ -9,9 +17,7 @@
     "date": "2026-11-18",
     "type": "collab",
     "title": "【飲酒オフコラボ】初飲酒🍺キョーコに見守ってもらうのじゃ",
-    "url": "https://www.youtube.com/watch?v=Hh0IwJFFq1c",
-    "upcoming": true,
-    "start": "2026-11-18T12:00:00Z"
+    "url": "https://www.youtube.com/watch?v=Hh0IwJFFq1c"
   },
   {
     "date": "2026-11-17",
