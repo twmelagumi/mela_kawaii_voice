@@ -1,10 +1,84 @@
 [
   {
+    "title": "カワキヲアメク",
+    "artist": "美波",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:13:03",
+    "end": "00:17:20",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "サイバーパンクデッドボーイ",
+    "artist": "マイキP",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:26:41",
+    "end": "00:30:28",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "- Across the line -",
+    "artist": "鳥遊六花(CV:内田真礼)",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:34:30",
+    "end": "00:38:47",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "メリュー",
+    "artist": "n-buna ft.初音ミク",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:45:20",
+    "end": "00:48:58",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "アノニマスファンフアレ",
+    "artist": "ツミキ ft.GUMI",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:53:21",
+    "end": "00:56:39",
+    "streamDate": "2026-11-19",
+    "pick": true
+  },
+  {
+    "title": "殲琴・ダウルダブラ",
+    "artist": "キャロル・マールス・ディーンハイム(CV:水瀬いのり)",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "00:59:30",
+    "end": "01:04:08",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "スーパーウルトラハイパーミラクルロマンチック",
+    "artist": "敷島魅零 (CV: 井口裕香)、處女守 (CV: 井澤美香子)",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "01:14:37",
+    "end": "01:18:24",
+    "streamDate": "2026-11-19"
+  },
+  {
+    "title": "天ノ弱",
+    "artist": "164 ft.GUMI",
+    "category": "clip",
+    "url": "https://www.youtube.com/watch?v=_NIc65kdfsI",
+    "start": "01:28:29",
+    "end": "01:31:37",
+    "streamDate": "2026-11-19"
+  },
+  {
     "title": "UNDEAD",
     "artist": "YOASOBI",
     "category": "cover",
     "url": "https://www.youtube.com/watch?v=pm4Vck0LCqE",
-    "streamDate": "2026-10-31"
+    "streamDate": "2026-10-31",
+    "pick": true
   },
   {
     "title": "Happy Halloween",
@@ -76,8 +150,7 @@
     "url": "https://www.youtube.com/watch?v=GtTgOHWTJ-c",
     "start": "01:04:28",
     "end": "01:07:53",
-    "streamDate": "2026-10-28",
-    "pick": true
+    "streamDate": "2026-10-28"
   },
   {
     "title": "オリオンをなぞる",
@@ -90,8 +163,7 @@
       "宙科そぴあ",
       "鈴鳴つづり",
       "百灯キョーコ"
-    ],
-    "pick": true
+    ]
   },
   {
     "title": "め組のひと",
