@@ -1,11 +1,17 @@
 [
   {
+    "date": "2026-11-24",
+    "type": "stream",
+    "title": "【🔒メン限】デビューして２ヵ月、今後の方針考えるのじゃ！",
+    "url": "https://www.youtube.com/watch?v=ERmu-UTxW_g",
+    "upcoming": true,
+    "start": "2026-11-24T10:00:00Z"
+  },
+  {
     "date": "2026-11-23",
     "type": "stream",
     "title": "【JSP】そろそろ‘‘ガチ‘‘ホラゲに挑戦するのじゃ（閲覧注意）",
-    "url": "https://www.youtube.com/watch?v=IEgmaNWRo8s",
-    "upcoming": true,
-    "start": "2026-11-23T10:00:00Z"
+    "url": "https://www.youtube.com/watch?v=IEgmaNWRo8s"
   },
   {
     "date": "2026-11-22",
