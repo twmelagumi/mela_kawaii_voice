@@ -1,5 +1,19 @@
 [
   {
+    "title": "千本桜",
+    "artist": "WhiteFlame feat. 初音ミク",
+    "category": "cover",
+    "url": "https://www.youtube.com/watch?v=iuxkrntoBVg",
+    "streamDate": "2026-11-27",
+    "singers": [
+      "百灯キョーコ",
+      "熱千めら",
+      "鈴鳴つづり",
+      "宙科そぴあ"
+    ],
+    "pick": true
+  },
+  {
     "title": "カワキヲアメク",
     "artist": "美波",
     "category": "clip",
@@ -77,8 +91,7 @@
     "artist": "YOASOBI",
     "category": "cover",
     "url": "https://www.youtube.com/watch?v=pm4Vck0LCqE",
-    "streamDate": "2026-10-31",
-    "pick": true
+    "streamDate": "2026-10-31"
   },
   {
     "title": "Happy Halloween",
