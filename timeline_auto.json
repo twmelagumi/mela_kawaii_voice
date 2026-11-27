@@ -1,11 +1,15 @@
 [
   {
     "date": "2026-11-26",
+    "type": "short",
+    "title": "学校が特定できてしまう例を紹介するホロライブの新人Vtuber #熱千めら",
+    "url": "https://www.youtube.com/watch?v=zdbVcDoB-80"
+  },
+  {
+    "date": "2026-11-26",
     "type": "stream",
-    "title": "山登りゲーム「PEAK」のじゃEnglishで挑む！",
-    "url": "https://www.youtube.com/watch?v=qrwosOBgFno",
-    "upcoming": true,
-    "start": "2026-11-26T03:00:00Z"
+    "title": "ついに頂上へ！ENGLISH PEAK STREAMのじゃ！",
+    "url": "https://www.youtube.com/watch?v=qrwosOBgFno"
   },
   {
     "date": "2026-11-25",
